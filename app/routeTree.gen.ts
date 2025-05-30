@@ -11,60 +11,268 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
+import { Route as ClientImport } from './routes/_client'
+import { Route as ClientIndexImport } from './routes/_client/index'
+import { Route as AuthLoginImport } from './routes/auth/login'
+import { Route as ClientTeamImport } from './routes/_client/team'
+import { Route as ClientServicesImport } from './routes/_client/services'
+import { Route as ClientGalleryImport } from './routes/_client/gallery'
+import { Route as ClientContactImport } from './routes/_client/contact'
+import { Route as ClientAboutImport } from './routes/_client/about'
+import { Route as ClientProfileMyBookingsImport } from './routes/_client/profile/my-bookings'
+import { Route as ClientProfileBookingImport } from './routes/_client/profile/booking'
 
 // Create/Update Routes
 
-const IndexRoute = IndexImport.update({
+const ClientRoute = ClientImport.update({
+  id: '/_client',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ClientIndexRoute = ClientIndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => ClientRoute,
+} as any)
+
+const AuthLoginRoute = AuthLoginImport.update({
+  id: '/auth/login',
+  path: '/auth/login',
   getParentRoute: () => rootRoute,
+} as any)
+
+const ClientTeamRoute = ClientTeamImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => ClientRoute,
+} as any)
+
+const ClientServicesRoute = ClientServicesImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => ClientRoute,
+} as any)
+
+const ClientGalleryRoute = ClientGalleryImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => ClientRoute,
+} as any)
+
+const ClientContactRoute = ClientContactImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => ClientRoute,
+} as any)
+
+const ClientAboutRoute = ClientAboutImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => ClientRoute,
+} as any)
+
+const ClientProfileMyBookingsRoute = ClientProfileMyBookingsImport.update({
+  id: '/profile/my-bookings',
+  path: '/profile/my-bookings',
+  getParentRoute: () => ClientRoute,
+} as any)
+
+const ClientProfileBookingRoute = ClientProfileBookingImport.update({
+  id: '/profile/booking',
+  path: '/profile/booking',
+  getParentRoute: () => ClientRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_client': {
+      id: '/_client'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ClientImport
+      parentRoute: typeof rootRoute
+    }
+    '/_client/about': {
+      id: '/_client/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof ClientAboutImport
+      parentRoute: typeof ClientImport
+    }
+    '/_client/contact': {
+      id: '/_client/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ClientContactImport
+      parentRoute: typeof ClientImport
+    }
+    '/_client/gallery': {
+      id: '/_client/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof ClientGalleryImport
+      parentRoute: typeof ClientImport
+    }
+    '/_client/services': {
+      id: '/_client/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ClientServicesImport
+      parentRoute: typeof ClientImport
+    }
+    '/_client/team': {
+      id: '/_client/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof ClientTeamImport
+      parentRoute: typeof ClientImport
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/_client/': {
+      id: '/_client/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof ClientIndexImport
+      parentRoute: typeof ClientImport
+    }
+    '/_client/profile/booking': {
+      id: '/_client/profile/booking'
+      path: '/profile/booking'
+      fullPath: '/profile/booking'
+      preLoaderRoute: typeof ClientProfileBookingImport
+      parentRoute: typeof ClientImport
+    }
+    '/_client/profile/my-bookings': {
+      id: '/_client/profile/my-bookings'
+      path: '/profile/my-bookings'
+      fullPath: '/profile/my-bookings'
+      preLoaderRoute: typeof ClientProfileMyBookingsImport
+      parentRoute: typeof ClientImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface ClientRouteChildren {
+  ClientAboutRoute: typeof ClientAboutRoute
+  ClientContactRoute: typeof ClientContactRoute
+  ClientGalleryRoute: typeof ClientGalleryRoute
+  ClientServicesRoute: typeof ClientServicesRoute
+  ClientTeamRoute: typeof ClientTeamRoute
+  ClientIndexRoute: typeof ClientIndexRoute
+  ClientProfileBookingRoute: typeof ClientProfileBookingRoute
+  ClientProfileMyBookingsRoute: typeof ClientProfileMyBookingsRoute
+}
+
+const ClientRouteChildren: ClientRouteChildren = {
+  ClientAboutRoute: ClientAboutRoute,
+  ClientContactRoute: ClientContactRoute,
+  ClientGalleryRoute: ClientGalleryRoute,
+  ClientServicesRoute: ClientServicesRoute,
+  ClientTeamRoute: ClientTeamRoute,
+  ClientIndexRoute: ClientIndexRoute,
+  ClientProfileBookingRoute: ClientProfileBookingRoute,
+  ClientProfileMyBookingsRoute: ClientProfileMyBookingsRoute,
+}
+
+const ClientRouteWithChildren =
+  ClientRoute._addFileChildren(ClientRouteChildren)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '': typeof ClientRouteWithChildren
+  '/about': typeof ClientAboutRoute
+  '/contact': typeof ClientContactRoute
+  '/gallery': typeof ClientGalleryRoute
+  '/services': typeof ClientServicesRoute
+  '/team': typeof ClientTeamRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/': typeof ClientIndexRoute
+  '/profile/booking': typeof ClientProfileBookingRoute
+  '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/about': typeof ClientAboutRoute
+  '/contact': typeof ClientContactRoute
+  '/gallery': typeof ClientGalleryRoute
+  '/services': typeof ClientServicesRoute
+  '/team': typeof ClientTeamRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/': typeof ClientIndexRoute
+  '/profile/booking': typeof ClientProfileBookingRoute
+  '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
+  '/_client': typeof ClientRouteWithChildren
+  '/_client/about': typeof ClientAboutRoute
+  '/_client/contact': typeof ClientContactRoute
+  '/_client/gallery': typeof ClientGalleryRoute
+  '/_client/services': typeof ClientServicesRoute
+  '/_client/team': typeof ClientTeamRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/_client/': typeof ClientIndexRoute
+  '/_client/profile/booking': typeof ClientProfileBookingRoute
+  '/_client/profile/my-bookings': typeof ClientProfileMyBookingsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | ''
+    | '/about'
+    | '/contact'
+    | '/gallery'
+    | '/services'
+    | '/team'
+    | '/auth/login'
+    | '/'
+    | '/profile/booking'
+    | '/profile/my-bookings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/about'
+    | '/contact'
+    | '/gallery'
+    | '/services'
+    | '/team'
+    | '/auth/login'
+    | '/'
+    | '/profile/booking'
+    | '/profile/my-bookings'
+  id:
+    | '__root__'
+    | '/_client'
+    | '/_client/about'
+    | '/_client/contact'
+    | '/_client/gallery'
+    | '/_client/services'
+    | '/_client/team'
+    | '/auth/login'
+    | '/_client/'
+    | '/_client/profile/booking'
+    | '/_client/profile/my-bookings'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  ClientRoute: typeof ClientRouteWithChildren
+  AuthLoginRoute: typeof AuthLoginRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  ClientRoute: ClientRouteWithChildren,
+  AuthLoginRoute: AuthLoginRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +285,57 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/_client",
+        "/auth/login"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_client": {
+      "filePath": "_client.tsx",
+      "children": [
+        "/_client/about",
+        "/_client/contact",
+        "/_client/gallery",
+        "/_client/services",
+        "/_client/team",
+        "/_client/",
+        "/_client/profile/booking",
+        "/_client/profile/my-bookings"
+      ]
+    },
+    "/_client/about": {
+      "filePath": "_client/about.tsx",
+      "parent": "/_client"
+    },
+    "/_client/contact": {
+      "filePath": "_client/contact.tsx",
+      "parent": "/_client"
+    },
+    "/_client/gallery": {
+      "filePath": "_client/gallery.tsx",
+      "parent": "/_client"
+    },
+    "/_client/services": {
+      "filePath": "_client/services.tsx",
+      "parent": "/_client"
+    },
+    "/_client/team": {
+      "filePath": "_client/team.tsx",
+      "parent": "/_client"
+    },
+    "/auth/login": {
+      "filePath": "auth/login.tsx"
+    },
+    "/_client/": {
+      "filePath": "_client/index.tsx",
+      "parent": "/_client"
+    },
+    "/_client/profile/booking": {
+      "filePath": "_client/profile/booking.tsx",
+      "parent": "/_client"
+    },
+    "/_client/profile/my-bookings": {
+      "filePath": "_client/profile/my-bookings.tsx",
+      "parent": "/_client"
     }
   }
 }

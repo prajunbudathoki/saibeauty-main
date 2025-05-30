@@ -1,10 +1,13 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar, Star } from "lucide-react";
 import { motion } from "motion/react";
-import { Image } from "@radix-ui/react-avatar";
+export const Route = createFileRoute("/_client/about")({
+  component: RouteComponent,
+});
 
-export default function AboutUs() {
+function RouteComponent() {
   const services = [
     {
       title: "Hair Styling & Treatments",
@@ -257,7 +260,7 @@ export default function AboutUs() {
               variants={slideInRight}
             >
               <div className="relative w-full h-80 rounded-2xl overflow-hidden shadow-xl">
-                <Image
+                <img
                   src="/banner.png"
                   alt="Beauty salon services"
                   className="object-cover"
@@ -312,7 +315,7 @@ export default function AboutUs() {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <Image
+              <img
                 src="/founder.png"
                 alt="Founder portrait"
                 className="object-cover rounded-full shadow-lg"
@@ -463,7 +466,7 @@ export default function AboutUs() {
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <Image
+                    <img
                       src={`/placeholder.svg?height=192&width=400`}
                       alt={`${branch.location} branch`}
                       className="object-cover transition-transform duration-300 group-hover:scale-110"
