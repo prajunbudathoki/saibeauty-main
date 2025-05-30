@@ -15,58 +15,57 @@ import { Separator } from "./ui/separator";
 import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { authClient, useSession } from "../lib/auth-client";
 
 export const CurrentUserAvatar = () => {
-
-  const [loading, setLoading] = useState(true);
-
-
-
-
+  const { data: session, isPending } = useSession();
   const navigate = useNavigate();
+  const name = session?.user.name || session?.user.email || "";
+  const initials = name
+    ?.split(" ")
+    ?.map((word) => word[0])
+    ?.join("")
+    ?.toUpperCase();
 
-
-  const logout = async () => {
+  async function handleSignout() {
+    await authClient.signOut();
     navigate({
-        to: "/auth/login"
+      to: "/auth/login",
     });
-  };
+  }
 
-  if (loading) {
+  // if (loading) {
+  // }
+  if (isPending) {
     return <Skeleton className="h-10 w-10 rounded-full" />;
   }
 
-//   if (!session) {
+  if (!session) {
     return (
       <Button asChild>
         <Link to="/auth/login">Login</Link>
       </Button>
     );
-//   }
+  }
 
-//   return (
-//     <DropdownMenu>
-//       <DropdownMenuTrigger>
-//         <Avatar>
-//           {session.user_metadata.avatar_url && (
-//             <AvatarImage
-//               src={session.user_metadata.avatar_url}
-//               alt={initials}
-//             />
-//           )}
-//           <AvatarFallback>{initials}</AvatarFallback>
-//         </Avatar>
-//       </DropdownMenuTrigger>
-//       <DropdownMenuContent>
-//         <DropdownMenuItem>
-//           <DropdownMenuLabel>{name}</DropdownMenuLabel>
-//         </DropdownMenuItem>
-//         <Separator className="my-1" />
-//         <DropdownMenuItem>
-//           <Link href="/profile/my-bookings">Bookings</Link>
-//         </DropdownMenuItem>
-//         <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
-//       </DropdownMenuContent>
-//     </DropdownMenu>
-//   );
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Avatar>
+          {session.user?.image && <AvatarImage src={session.user.image} />}
+          <AvatarFallback>{initials}</AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>
+          <DropdownMenuLabel>{name}</DropdownMenuLabel>
+        </DropdownMenuItem>
+        <Separator className="my-1" />
+        <DropdownMenuItem>
+          <Link to="/profile/my-bookings">Bookings</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleSignout}>Logout</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 };

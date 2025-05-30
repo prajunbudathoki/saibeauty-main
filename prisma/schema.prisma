@@ -24,10 +24,11 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
-  role       String?
-  banned     Boolean?
-  banReason  String?
-  banExpires DateTime?
+  role          String?
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
+  phone String
 
   @@unique([email])
   @@map("user")

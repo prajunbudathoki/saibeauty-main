@@ -11,9 +11,13 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthImport } from './routes/auth'
 import { Route as ClientImport } from './routes/_client'
 import { Route as ClientIndexImport } from './routes/_client/index'
+import { Route as AuthUpdatePasswordImport } from './routes/auth/update-password'
+import { Route as AuthSignupImport } from './routes/auth/signup'
 import { Route as AuthLoginImport } from './routes/auth/login'
+import { Route as AuthForgotPasswordImport } from './routes/auth/forgot-password'
 import { Route as ClientTeamImport } from './routes/_client/team'
 import { Route as ClientServicesImport } from './routes/_client/services'
 import { Route as ClientGalleryImport } from './routes/_client/gallery'
@@ -23,6 +27,12 @@ import { Route as ClientProfileMyBookingsImport } from './routes/_client/profile
 import { Route as ClientProfileBookingImport } from './routes/_client/profile/booking'
 
 // Create/Update Routes
+
+const AuthRoute = AuthImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ClientRoute = ClientImport.update({
   id: '/_client',
@@ -35,10 +45,28 @@ const ClientIndexRoute = ClientIndexImport.update({
   getParentRoute: () => ClientRoute,
 } as any)
 
+const AuthUpdatePasswordRoute = AuthUpdatePasswordImport.update({
+  id: '/update-password',
+  path: '/update-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthSignupRoute = AuthSignupImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 const AuthLoginRoute = AuthLoginImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRoute,
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthForgotPasswordRoute = AuthForgotPasswordImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthRoute,
 } as any)
 
 const ClientTeamRoute = ClientTeamImport.update({
@@ -94,6 +122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientImport
       parentRoute: typeof rootRoute
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
     '/_client/about': {
       id: '/_client/about'
       path: '/about'
@@ -129,12 +164,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientTeamImport
       parentRoute: typeof ClientImport
     }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordImport
+      parentRoute: typeof AuthImport
+    }
     '/auth/login': {
       id: '/auth/login'
-      path: '/auth/login'
+      path: '/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthImport
+    }
+    '/auth/signup': {
+      id: '/auth/signup'
+      path: '/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupImport
+      parentRoute: typeof AuthImport
+    }
+    '/auth/update-password': {
+      id: '/auth/update-password'
+      path: '/update-password'
+      fullPath: '/auth/update-password'
+      preLoaderRoute: typeof AuthUpdatePasswordImport
+      parentRoute: typeof AuthImport
     }
     '/_client/': {
       id: '/_client/'
@@ -187,26 +243,50 @@ const ClientRouteChildren: ClientRouteChildren = {
 const ClientRouteWithChildren =
   ClientRoute._addFileChildren(ClientRouteChildren)
 
+interface AuthRouteChildren {
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+  AuthUpdatePasswordRoute: typeof AuthUpdatePasswordRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthSignupRoute: AuthSignupRoute,
+  AuthUpdatePasswordRoute: AuthUpdatePasswordRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 export interface FileRoutesByFullPath {
   '': typeof ClientRouteWithChildren
+  '/auth': typeof AuthRouteWithChildren
   '/about': typeof ClientAboutRoute
   '/contact': typeof ClientContactRoute
   '/gallery': typeof ClientGalleryRoute
   '/services': typeof ClientServicesRoute
   '/team': typeof ClientTeamRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/': typeof ClientIndexRoute
   '/profile/booking': typeof ClientProfileBookingRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
 }
 
 export interface FileRoutesByTo {
+  '/auth': typeof AuthRouteWithChildren
   '/about': typeof ClientAboutRoute
   '/contact': typeof ClientContactRoute
   '/gallery': typeof ClientGalleryRoute
   '/services': typeof ClientServicesRoute
   '/team': typeof ClientTeamRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/': typeof ClientIndexRoute
   '/profile/booking': typeof ClientProfileBookingRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
@@ -215,12 +295,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_client': typeof ClientRouteWithChildren
+  '/auth': typeof AuthRouteWithChildren
   '/_client/about': typeof ClientAboutRoute
   '/_client/contact': typeof ClientContactRoute
   '/_client/gallery': typeof ClientGalleryRoute
   '/_client/services': typeof ClientServicesRoute
   '/_client/team': typeof ClientTeamRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/_client/': typeof ClientIndexRoute
   '/_client/profile/booking': typeof ClientProfileBookingRoute
   '/_client/profile/my-bookings': typeof ClientProfileMyBookingsRoute
@@ -230,35 +314,47 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
+    | '/auth'
     | '/about'
     | '/contact'
     | '/gallery'
     | '/services'
     | '/team'
+    | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/signup'
+    | '/auth/update-password'
     | '/'
     | '/profile/booking'
     | '/profile/my-bookings'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/auth'
     | '/about'
     | '/contact'
     | '/gallery'
     | '/services'
     | '/team'
+    | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/signup'
+    | '/auth/update-password'
     | '/'
     | '/profile/booking'
     | '/profile/my-bookings'
   id:
     | '__root__'
     | '/_client'
+    | '/auth'
     | '/_client/about'
     | '/_client/contact'
     | '/_client/gallery'
     | '/_client/services'
     | '/_client/team'
+    | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/signup'
+    | '/auth/update-password'
     | '/_client/'
     | '/_client/profile/booking'
     | '/_client/profile/my-bookings'
@@ -267,12 +363,12 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   ClientRoute: typeof ClientRouteWithChildren
-  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRoute: typeof AuthRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   ClientRoute: ClientRouteWithChildren,
-  AuthLoginRoute: AuthLoginRoute,
+  AuthRoute: AuthRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -286,7 +382,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/_client",
-        "/auth/login"
+        "/auth"
       ]
     },
     "/_client": {
@@ -300,6 +396,15 @@ export const routeTree = rootRoute
         "/_client/",
         "/_client/profile/booking",
         "/_client/profile/my-bookings"
+      ]
+    },
+    "/auth": {
+      "filePath": "auth.tsx",
+      "children": [
+        "/auth/forgot-password",
+        "/auth/login",
+        "/auth/signup",
+        "/auth/update-password"
       ]
     },
     "/_client/about": {
@@ -322,8 +427,21 @@ export const routeTree = rootRoute
       "filePath": "_client/team.tsx",
       "parent": "/_client"
     },
+    "/auth/forgot-password": {
+      "filePath": "auth/forgot-password.tsx",
+      "parent": "/auth"
+    },
     "/auth/login": {
-      "filePath": "auth/login.tsx"
+      "filePath": "auth/login.tsx",
+      "parent": "/auth"
+    },
+    "/auth/signup": {
+      "filePath": "auth/signup.tsx",
+      "parent": "/auth"
+    },
+    "/auth/update-password": {
+      "filePath": "auth/update-password.tsx",
+      "parent": "/auth"
     },
     "/_client/": {
       "filePath": "_client/index.tsx",
