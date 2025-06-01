@@ -45,6 +45,8 @@ function RouteComponent() {
           setIsLoading(false);
           if (ctx.error.status === 403) {
             toast.error("Please Verify Your Email Address!!");
+          } else if (ctx.error.status === 401) {
+            toast.error(ctx.error.message);
           }
         },
       }

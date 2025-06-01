@@ -20,7 +20,7 @@ export const Route = createFileRoute("/auth/update-password")({
 
 function RouteComponent() {
   // const token = new URLSearchParams(window.location.search).get("token");
-  const token:string = Route.useSearch();
+  const { token } = Route.useSearch() as { token: string };
   if (!token) {
     return toast.error("Token is not valid");
   }
@@ -31,10 +31,11 @@ function RouteComponent() {
 
   async function handleForgotPassword(e: React.FormEvent) {
     e.preventDefault();
-    setIsLoading(false);
+    setIsLoading(true);
     const { error } = await authClient.resetPassword({ newPassword, token });
     if (error) {
-      toast.error(error.message);
+      toast.error(error.code);
+      setIsLoading(false);
       return;
     }
     toast.success("Password reset successgully");
