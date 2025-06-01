@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 export const Route = createFileRoute("/auth/forgot-password")({
   component: RouteComponent,
@@ -36,9 +37,9 @@ function RouteComponent() {
     setIsLoading(false);
 
     if (error) {
-      console.log(error);
       toast.error(error.message);
     } else {
+      setSuccess(true);
       toast.success("Please check your email to get reset link.");
     }
   };
@@ -83,7 +84,7 @@ function RouteComponent() {
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Sending..." : "Send reset email"}
+                  {isLoading ? <Spinner /> : "Send reset email"}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
