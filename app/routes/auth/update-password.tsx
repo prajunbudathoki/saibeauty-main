@@ -12,11 +12,6 @@ import { authClient } from "@/lib/auth-client";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import {z} from "zod"
-const resetPasswordSearchSchema = z.object({
-  token: z.string(),
-});
-
 
 export const Route = createFileRoute("/auth/update-password")({
   component: RouteComponent,
