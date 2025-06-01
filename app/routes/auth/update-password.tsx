@@ -18,7 +18,11 @@ export const Route = createFileRoute("/auth/update-password")({
 });
 
 function RouteComponent() {
-  const { token } = Route.useSearch();
+  // const token = new URLSearchParams(window.location.search).get("token");
+  const token = Route.useSearch();
+  if (!token) {
+    return toast.error("Token is not valid");
+  }
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,8 +59,8 @@ function RouteComponent() {
                   type="password"
                   placeholder="New password"
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}

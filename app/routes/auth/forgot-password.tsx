@@ -36,6 +36,7 @@ function RouteComponent() {
     setIsLoading(false);
 
     if (error) {
+      console.log(error);
       toast.error(error.message);
     } else {
       toast.success("Please check your email to get reset link.");
