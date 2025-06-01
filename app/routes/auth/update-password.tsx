@@ -20,7 +20,7 @@ export const Route = createFileRoute("/auth/update-password")({
 
 function RouteComponent() {
   // const token = new URLSearchParams(window.location.search).get("token");
-  const token = Route.useSearch();
+  const token:string = Route.useSearch();
   if (!token) {
     return toast.error("Token is not valid");
   }

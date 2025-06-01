@@ -7,6 +7,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import appCss from "@/styles/app.css?url";
+import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -19,7 +20,7 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: "Saibeauty",
       },
     ],
     links: [
@@ -35,6 +36,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <RootDocument>
+      <Toaster position="top-right" richColors />
       <Outlet />
     </RootDocument>
   );

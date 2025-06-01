@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 export const Route = createFileRoute("/auth/signup")({
   component: RouteComponent,
@@ -51,7 +52,6 @@ function RouteComponent() {
         },
         onSuccess: (ctx) => {
           setIsLoading(false);
-
           toast.success("SignUp Successfull Please Check Your Email To Verify");
           navigate({
             to: "/auth/login",
@@ -133,7 +133,7 @@ function RouteComponent() {
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating an account..." : "Sign up"}
+                {isLoading ? <Spinner /> : "Sign up"}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">

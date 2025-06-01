@@ -8,22 +8,11 @@ import Mail from "nodemailer/lib/mailer";
 const prisma = new PrismaClient();
 
 const transporter = createTransport({
-  // host: process.env.SMTP_HOST!,
-  // port: Number(process.env.SMTP_PORT),
-  // secure: process.env.SMTP_SECURE === "true",
-  // auth: {
-  //   user: process.env.SMTP_USER,
-  //   pass: process.env.SMTP_PASS,
-  // },
   host: "localhost",
   port: 1025,
   secure: false,
-  // auth: { user: "user", pass: "pass" },
+  auth: { user: "user", pass: "pass" },
 });
-// console.log("SMTP_HOST:", process.env.SMTP_HOST);
-// console.log("SMTP_PORT:", process.env.SMTP_PORT);
-// console.log("SMTP_SECURE:", process.env.SMTP_SECURE);
-// console.log("SMTP_USER:", process.env.SMTP_USER);
 
 async function sendEmail(options: Mail) {
   return await transporter.sendMail({
@@ -46,7 +35,7 @@ export const auth = betterAuth({
         html: `<p>Click <a href="${url}">here</a> to reset your password.</p>`,
       });
     },
-    // requireEmailVerification: true,
+    requireEmailVerification: true,
   },
   emailVerification: {
     sendOnSignUp: true,
