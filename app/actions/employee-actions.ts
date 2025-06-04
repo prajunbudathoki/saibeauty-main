@@ -7,7 +7,7 @@ export const getEmployees = createServerFn({
 }).handler(async () => {
   const { data: session, error } = await authClient.getSession();
   if (session?.user.role !== "admin") {
-    throw new Error("User is not an admin");
+    throw new Error("Role doesnot have access");
   }
   if (error) {
     console.log("Failed to fetch Employess", error);
@@ -28,7 +28,7 @@ export const addEmployee = createServerFn({
   .handler(async ({ data: { name, email, phone } }) => {
     const { data: session, error } = await authClient.getSession();
     if (session?.user.role !== "admin") {
-      throw new Error("User is not an admin");
+      throw new Error("Role doesnot have access");
     }
     if (error) {
       console.log("Failed to add employee", error);
@@ -49,7 +49,7 @@ export const deleteEmployee = createServerFn()
   .handler(async ({ data }) => {
     const { data: session, error } = await authClient.getSession();
     if (session?.user.role !== "admin") {
-      throw new Error("User is not an admin");
+      throw new Error("Role doesnot have access");
     }
     if (error) {
       console.log("Failed to delete users", error);
@@ -61,3 +61,21 @@ export const deleteEmployee = createServerFn()
       },
     });
   });
+
+// export const updateEmployee = createServerFn()
+//   .validator((id: string) => id)
+//   .handler(async () => {
+//     const { data: session, error } = await authClient.getSession();
+//     if (session?.user.role !== "admin") {
+//       throw new Error("Role doesnot have access");
+//     }
+//     if (error) {
+//       console.log("Error updating employee", error);
+//       throw new Error("Failed to update employee");
+//     }
+//     await prisma.user.update({
+//       where: {
+//         role: ,
+//       },
+//     });
+//   });
