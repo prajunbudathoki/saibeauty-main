@@ -41,14 +41,28 @@ export const getStaffReviews = createServerFn({
     });
   });
 
-export const getStaffAverageRating = createServerFn()
+export const getStaffAverageRating = createServerFn({
+  method: "GET",
+})
   .validator((d: { staffId: string }) => d)
   .handler(async ({ data: { staffId } }) => {
-    await prisma.appointment.findMany({
+    const ratings = await prisma.appointment.findMany({
       where: { staff_id: staffId, status: "completed", NOT: { rating: null } },
       select: {
         rating: true,
       },
     });
-    
+    if (!ratings.length) {
+      return { averageRating: null, totalReviews: null };
+    }
+    const totalRating = ratings.reduce(
+      (sum, appointment) => sum + (appointment.rating || 0),
+      0
+    );
+    const averageRating = totalRating / ratings.length;
+
+    return {
+      averageRating: Number.parseFloat(averageRating.toFixed(1)),
+      totalReviews: ratings.length,
+    };
   });
