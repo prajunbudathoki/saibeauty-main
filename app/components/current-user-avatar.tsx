@@ -45,7 +45,7 @@ export const CurrentUserAvatar = () => {
       <Button asChild>
         <Link to="/auth/login">Login</Link>
       </Button>
-    );
+    )
   }
 
   return (
