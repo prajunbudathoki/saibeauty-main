@@ -24,7 +24,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
-  role          String?
+  role          String?    
   banned        Boolean?
   banReason     String?
   banExpires    DateTime?

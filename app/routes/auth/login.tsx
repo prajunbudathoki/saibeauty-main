@@ -13,6 +13,7 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import { Mail } from "lucide-react";
 
 export const Route = createFileRoute("/auth/login")({
   component: RouteComponent,
@@ -40,6 +41,7 @@ function RouteComponent() {
         onSuccess: (ctx) => {
           setIsLoading(false);
           toast.success("Login Successfull");
+          setError(null);
         },
         onError: (ctx) => {
           setIsLoading(false);
@@ -71,14 +73,16 @@ function RouteComponent() {
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <div className="relative">
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">

@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@/generated/prisma";
-import { admin } from "better-auth/plugins";
+import { admin, role } from "better-auth/plugins";
 import { createTransport } from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 
@@ -55,6 +55,11 @@ export const auth = betterAuth({
         type: "string",
         required: true,
         input: true,
+      },
+      role: {
+        type: "string",
+        required: false,
+        input: false,
       },
     },
   },
