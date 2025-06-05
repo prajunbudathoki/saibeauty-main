@@ -24,6 +24,7 @@ import { Route as ClientGalleryImport } from './routes/_client/gallery'
 import { Route as ClientContactImport } from './routes/_client/contact'
 import { Route as ClientAboutImport } from './routes/_client/about'
 import { Route as ClientProfileUserInfoImport } from './routes/_client/profile/user-info'
+import { Route as ClientProfileUserAppointmentImport } from './routes/_client/profile/user-appointment'
 import { Route as ClientProfileMyBookingsImport } from './routes/_client/profile/my-bookings'
 import { Route as ClientProfileBookingImport } from './routes/_client/profile/booking'
 
@@ -105,6 +106,13 @@ const ClientProfileUserInfoRoute = ClientProfileUserInfoImport.update({
   path: '/profile/user-info',
   getParentRoute: () => ClientRoute,
 } as any)
+
+const ClientProfileUserAppointmentRoute =
+  ClientProfileUserAppointmentImport.update({
+    id: '/profile/user-appointment',
+    path: '/profile/user-appointment',
+    getParentRoute: () => ClientRoute,
+  } as any)
 
 const ClientProfileMyBookingsRoute = ClientProfileMyBookingsImport.update({
   id: '/profile/my-bookings',
@@ -220,6 +228,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientProfileMyBookingsImport
       parentRoute: typeof ClientImport
     }
+    '/_client/profile/user-appointment': {
+      id: '/_client/profile/user-appointment'
+      path: '/profile/user-appointment'
+      fullPath: '/profile/user-appointment'
+      preLoaderRoute: typeof ClientProfileUserAppointmentImport
+      parentRoute: typeof ClientImport
+    }
     '/_client/profile/user-info': {
       id: '/_client/profile/user-info'
       path: '/profile/user-info'
@@ -241,6 +256,7 @@ interface ClientRouteChildren {
   ClientIndexRoute: typeof ClientIndexRoute
   ClientProfileBookingRoute: typeof ClientProfileBookingRoute
   ClientProfileMyBookingsRoute: typeof ClientProfileMyBookingsRoute
+  ClientProfileUserAppointmentRoute: typeof ClientProfileUserAppointmentRoute
   ClientProfileUserInfoRoute: typeof ClientProfileUserInfoRoute
 }
 
@@ -253,6 +269,7 @@ const ClientRouteChildren: ClientRouteChildren = {
   ClientIndexRoute: ClientIndexRoute,
   ClientProfileBookingRoute: ClientProfileBookingRoute,
   ClientProfileMyBookingsRoute: ClientProfileMyBookingsRoute,
+  ClientProfileUserAppointmentRoute: ClientProfileUserAppointmentRoute,
   ClientProfileUserInfoRoute: ClientProfileUserInfoRoute,
 }
 
@@ -290,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/': typeof ClientIndexRoute
   '/profile/booking': typeof ClientProfileBookingRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
+  '/profile/user-appointment': typeof ClientProfileUserAppointmentRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
 }
 
@@ -307,6 +325,7 @@ export interface FileRoutesByTo {
   '/': typeof ClientIndexRoute
   '/profile/booking': typeof ClientProfileBookingRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
+  '/profile/user-appointment': typeof ClientProfileUserAppointmentRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
 }
 
@@ -326,6 +345,7 @@ export interface FileRoutesById {
   '/_client/': typeof ClientIndexRoute
   '/_client/profile/booking': typeof ClientProfileBookingRoute
   '/_client/profile/my-bookings': typeof ClientProfileMyBookingsRoute
+  '/_client/profile/user-appointment': typeof ClientProfileUserAppointmentRoute
   '/_client/profile/user-info': typeof ClientProfileUserInfoRoute
 }
 
@@ -346,6 +366,7 @@ export interface FileRouteTypes {
     | '/'
     | '/profile/booking'
     | '/profile/my-bookings'
+    | '/profile/user-appointment'
     | '/profile/user-info'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -362,6 +383,7 @@ export interface FileRouteTypes {
     | '/'
     | '/profile/booking'
     | '/profile/my-bookings'
+    | '/profile/user-appointment'
     | '/profile/user-info'
   id:
     | '__root__'
@@ -379,6 +401,7 @@ export interface FileRouteTypes {
     | '/_client/'
     | '/_client/profile/booking'
     | '/_client/profile/my-bookings'
+    | '/_client/profile/user-appointment'
     | '/_client/profile/user-info'
   fileRoutesById: FileRoutesById
 }
@@ -418,6 +441,7 @@ export const routeTree = rootRoute
         "/_client/",
         "/_client/profile/booking",
         "/_client/profile/my-bookings",
+        "/_client/profile/user-appointment",
         "/_client/profile/user-info"
       ]
     },
@@ -476,6 +500,10 @@ export const routeTree = rootRoute
     },
     "/_client/profile/my-bookings": {
       "filePath": "_client/profile/my-bookings.tsx",
+      "parent": "/_client"
+    },
+    "/_client/profile/user-appointment": {
+      "filePath": "_client/profile/user-appointment.tsx",
       "parent": "/_client"
     },
     "/_client/profile/user-info": {
