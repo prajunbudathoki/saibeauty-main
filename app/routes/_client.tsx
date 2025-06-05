@@ -29,7 +29,7 @@ function RouteComponent() {
         <div className="container mx-auto flex items-center justify-between text-sm">
           Opening Time: 10 am to 10 pm
           <p>
-            <a href="tel:+971508471241" className="hover:text-accent">
+            <a href="tel:+971508471241" className="hover:text-gray-500">
               <span className="hidden md:inline">Call us: </span>
               <span className="md:hidden">📞</span>
               +971 50 847 1241
@@ -88,7 +88,7 @@ function RouteComponent() {
           <div className="flex items-center space-x-3">
             <Link
               to="/profile/booking"
-              className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition-colors"
+              className="bg-primary text-white px-4 py-2 rounded hover:text-gray-500 transition-colors"
             >
               Book Now
             </Link>
@@ -150,9 +150,9 @@ function RouteComponent() {
         <Outlet />
       </main>
 
-      <BookingCTA />
+      {/* <BookingCTA /> */}
 
-      <footer className="bg-muted py-12 border-t">
+      {/* <footer className="bg-muted py-12 border-t">
         <div className="container grid gap-8 md:grid-cols-3">
           <div>
             <h3 className="text-lg font-semibold mb-4">Sai Beauty</h3>
@@ -260,22 +260,7 @@ function RouteComponent() {
                   <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                 </svg>
               </a>
-              {/* <a href="#" className="text-foreground hover:text-primary transition-colors">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-twitter"
-                >
-                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-                </svg>
-              </a> */}
+              
             </div>
           </div>
         </div>
@@ -283,7 +268,7 @@ function RouteComponent() {
         <div className="container mt-8 pt-8 border-t border-muted-foreground/20 text-center text-sm text-muted-foreground">
           © {new Date().getFullYear()} Sai Beauty. All rights reserved.
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 }

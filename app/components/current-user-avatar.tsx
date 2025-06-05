@@ -45,7 +45,7 @@ export const CurrentUserAvatar = () => {
       <Button asChild>
         <Link to="/auth/login">Login</Link>
       </Button>
-    )
+    );
   }
 
   return (
@@ -58,7 +58,9 @@ export const CurrentUserAvatar = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
-          <DropdownMenuLabel>{name}</DropdownMenuLabel>
+          <Link to="/profile/user-info">
+            <DropdownMenuLabel>{name}</DropdownMenuLabel>
+          </Link>
         </DropdownMenuItem>
         <Separator className="my-1" />
         <DropdownMenuItem>
