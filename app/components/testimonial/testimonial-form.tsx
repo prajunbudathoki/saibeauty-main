@@ -1,70 +1,87 @@
-import type React from "react"
-import { useState } from "react"
-import type { Testimonial } from "@/lib/type"
-import { ImageUpload } from "@/components/shared/image-upload"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast } from "sonner"
-import { createTestimonial, updateTestimonial } from "@/actions/testimonial-actions"
-import { useNavigate } from "@tanstack/react-router"
+import type React from "react";
+import { useState } from "react";
+import type { Testimonial } from "@/lib/type";
+import { ImageUpload } from "@/components/shared/image-upload";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import {
+  createTestimonial,
+  updateTestimonial,
+} from "@/actions/testimonial-actions";
+import { useNavigate } from "@tanstack/react-router";
 
 interface TestimonialFormProps {
-  testimonial?: Testimonial
-  onSuccess?: () => void
+  testimonial?: Testimonial;
+  onSuccess?: () => void;
 }
 
-export function TestimonialForm({ testimonial, onSuccess }: TestimonialFormProps) {
-  const [loading, setLoading] = useState(false)
-  const [imageFile, setImageFile] = useState<File | null>(null)
-  const navigate = useNavigate()
+export function TestimonialForm({
+  testimonial,
+  onSuccess,
+}: TestimonialFormProps) {
+  const [loading, setLoading] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const navigate = useNavigate();
 
-  const isEditing = !!testimonial
+  const isEditing = !!testimonial;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      const formData = new FormData(e.currentTarget)
+      const formData = new FormData(e.currentTarget);
 
       // Add the image file if it exists
       if (imageFile) {
-        formData.set("image", imageFile)
+        formData.set("image", imageFile);
       } else if (testimonial?.image) {
         // Keep the existing image if no new one is provided
-        formData.set("image", "")
+        formData.set("image", "");
       }
 
-      if (isEditing) {
-        await updateTestimonial(testimonial.id, formData)
-        toast.success("Testimonial updated successfully")
-      } else {
-        await createTestimonial(formData)
-        toast.success("Testimonial created successfully")
-      }
+      // if (isEditing) {
+      //   await updateTestimonial(testimonial.id, formData);
+      //   toast.success("Testimonial updated successfully");
+      // } else {
+      //   await createTestimonial(formData);
+      //   toast.success("Testimonial created successfully");
+      // }
 
       if (onSuccess) {
-        onSuccess()
+        onSuccess();
       } else {
-        navigate({to:""})
+        navigate({ to: "" });
       }
     } catch (error) {
-      console.error("Error submitting form:", error)
-      toast.error("There was a problem saving the testimonial")
+      console.error("Error submitting form:", error);
+      toast.error("There was a problem saving the testimonial");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="name">Name *</Label>
-          <Input id="name" name="name" defaultValue={testimonial?.name} required />
+          <Input
+            id="name"
+            name="name"
+            defaultValue={testimonial?.name}
+            required
+          />
         </div>
 
         <div className="space-y-2">
@@ -79,7 +96,11 @@ export function TestimonialForm({ testimonial, onSuccess }: TestimonialFormProps
 
         <div className="space-y-2">
           <Label htmlFor="rating">Rating *</Label>
-          <Select name="rating" defaultValue={testimonial?.rating?.toString() || "5"} required>
+          <Select
+            name="rating"
+            defaultValue={testimonial?.rating?.toString() || "5"}
+            required
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select rating" />
             </SelectTrigger>
@@ -95,18 +116,20 @@ export function TestimonialForm({ testimonial, onSuccess }: TestimonialFormProps
 
         <div className="space-y-2">
           <Label htmlFor="review">Review *</Label>
-          <Textarea id="review" name="review" rows={4} defaultValue={testimonial?.review} required />
+          <Textarea
+            id="review"
+            name="review"
+            rows={4}
+            defaultValue={testimonial?.review}
+            required
+          />
         </div>
 
         <div className="space-y-2">
           <Label>Customer Photo</Label>
           <ImageUpload
             onChange={setImageFile}
-            value={
-              testimonial?.image
-                ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/saibeauty/${testimonial.image}`
-                : null
-            }
+            value={"https://picsum.photos/seed/picsum/200/300"}
           />
         </div>
       </div>
@@ -117,9 +140,9 @@ export function TestimonialForm({ testimonial, onSuccess }: TestimonialFormProps
           variant="outline"
           onClick={() => {
             if (onSuccess) {
-              onSuccess()
+              onSuccess();
             } else {
-              navigate({to:"/admin/testimonials"})
+              navigate({ to: "/admin/testimonials" });
             }
           }}
           disabled={loading}
@@ -127,10 +150,13 @@ export function TestimonialForm({ testimonial, onSuccess }: TestimonialFormProps
           Cancel
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? "Saving..." : isEditing ? "Update Testimonial" : "Create Testimonial"}
+          {loading
+            ? "Saving..."
+            : isEditing
+            ? "Update Testimonial"
+            : "Create Testimonial"}
         </Button>
       </div>
     </form>
-  )
+  );
 }
-

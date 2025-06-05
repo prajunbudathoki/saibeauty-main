@@ -39,6 +39,11 @@ export const addEmployee = createServerFn({
         name,
         email,
         phone,
+        id: crypto.randomUUID(),
+        emailVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        role: "user",
       },
     });
     return employee;

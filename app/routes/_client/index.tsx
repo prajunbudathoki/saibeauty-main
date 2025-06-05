@@ -1,5 +1,6 @@
 import { FeaturedServices } from "@/components/home/featured-services";
 import { ServicesSkeleton } from "@/components/home/services-skeleton";
+import { TestimonialCarousel } from "@/components/testimonial/testimonial-carousel";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
@@ -204,7 +205,7 @@ function RouteComponent() {
                 </div>
               }
             >
-              {/* <TestimonialCarousel /> */}
+              <TestimonialCarousel />
             </Suspense>
           </div>
         </div>

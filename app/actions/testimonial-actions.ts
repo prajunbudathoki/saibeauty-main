@@ -20,7 +20,7 @@ export const getTestimonials = createServerFn({
 export const getTestimonialById = createServerFn()
   .validator((id: string) => id)
   .handler(async ({ data }) => {
-    await prisma.testimonial.findUnique({
+    return await prisma.testimonial.findUnique({
       where: {
         id: data,
       },
@@ -58,9 +58,7 @@ export const updateTestimonial = createServerFn({
   method: "POST",
 })
   .validator((d: { id: string; name: string; designaton: string }) => d)
-  .handler(async ({ data }) => {
-    
-  });
+  .handler(async ({ data }) => {});
 
 export const deleteTestimonial = createServerFn()
   .validator((id: string) => id)

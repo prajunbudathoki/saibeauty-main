@@ -1,5 +1,7 @@
 import { authClient } from "@/lib/auth-client";
 import prisma from "@/lib/prisma";
+import { Category } from "@/lib/type";
+import { generateUniqueFileName } from "@/lib/utils";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getCategories = createServerFn({
@@ -17,6 +19,16 @@ export const getCategories = createServerFn({
   }
 });
 
+export const getCategoryById = createServerFn()
+  .validator((id: string) => id)
+  .handler(async ({ data }) => {
+    await prisma.category.findUnique({
+      where: {
+        id: data,
+      },
+    });
+  });
+
 export const deleteCategory = createServerFn()
   .validator((id: string) => id)
   .handler(async ({ data }) => {
@@ -33,12 +45,15 @@ export const deleteCategory = createServerFn()
     });
   });
 
-// export const getCategoryServiceCount = createServerFn({
-//     method:"GET"
-// }).handler(async ({params}) => {
-//     const category = await prisma.service.count({
-//         where: {
-//             category_id: params.categoryId
-//         }
-//     })
-// })
+export const getCategoryServiceCount = createServerFn({
+  method: "GET",
+})
+  .validator((id: string) => id)
+  .handler(async ({ data }) => {
+    const category = await prisma.service.count({
+      where: {
+        id: data,
+      },
+    });
+    return category;
+  });

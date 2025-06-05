@@ -1,3 +1,4 @@
+import { GalleryCard } from '@/components/gallery/gallery-card'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_client/gallery')({
@@ -5,5 +6,8 @@ export const Route = createFileRoute('/_client/gallery')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/_client/gallery"!</div>
+  return (
+    <div>
+    </div>
+  )
 }

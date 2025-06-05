@@ -19,9 +19,9 @@ interface TestimonialCardProps {
 }
 
 export function TestimonialCard({ testimonial }: TestimonialCardProps) {
-  const handleDelete = async () => {
+  const handleDelete = async (id: string) => {
     try {
-      await deleteTestimonial(testimonial.id);
+      await deleteTestimonial({ data: id });
       toast.success("Testimonial deleted successfully");
     } catch (error) {
       toast.error("Failed to delete the testimonial");
@@ -32,7 +32,7 @@ export function TestimonialCard({ testimonial }: TestimonialCardProps) {
 
   // Render stars based on rating
   const renderStars = () => {
-    const stars = [];
+    const stars: React.ReactNode[] = [];
     const rating = testimonial.rating;
 
     for (let i = 1; i <= 5; i++) {
@@ -98,7 +98,7 @@ export function TestimonialCard({ testimonial }: TestimonialCardProps) {
             <ConfirmDialog
               title="Delete Testimonial"
               description="Are you sure you want to delete this testimonial? This action cannot be undone."
-              onConfirm={handleDelete}
+              onConfirm={() => handleDelete(testimonial.id)}
               trigger={
                 <Button
                   variant="ghost"
