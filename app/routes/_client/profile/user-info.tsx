@@ -89,7 +89,7 @@ function RouteComponent() {
                   <Label htmlFor="fullName">Full Name</Label>
                   <Input
                     id="fullName"
-                    value={fullName}
+                    defaultValue={session?.user.name}
                     onChange={(e) => setFullName(e.target.value)}
                   />
                 </div>
@@ -98,7 +98,7 @@ function RouteComponent() {
                   <div className="relative">
                     <Input
                       id="phone"
-                      value={phone}
+                      defaultValue={session?.user.phone}
                       onChange={(e) => setPhone(e.target.value)}
                     />
                     <PhoneIcon className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
