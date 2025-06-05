@@ -1,8 +1,10 @@
+import { UserSidebar } from "@/components/shared/user-sidebar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { authClient, useSession } from "@/lib/auth-client";
 import { createFileRoute } from "@tanstack/react-router";
 import { EyeIcon, EyeOffIcon, MailIcon, PhoneIcon } from "lucide-react";
@@ -16,18 +18,21 @@ export const Route = createFileRoute("/_client/profile/user-info")({
 function RouteComponent() {
   const { data: session } = useSession();
 
-  if (!session) {
-    return null;
-  }
+  //   if (!session) {
+  //   return null;
+  // }
 
-  const [fullName, setFullName] = useState(session.user.name ?? "");
-  const [phone, setPhone] = useState(session.user.phone ?? "");
+  const isVerified = session?.user.emailVerified;
+
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+
   const [newPassword, setNewPassword] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const isVerified = session.user.emailVerified;
 
   async function updateUserInfo(e: React.FormEvent) {
     e.preventDefault();
@@ -58,12 +63,12 @@ function RouteComponent() {
 
   return (
     <div className="flex">
-      {/* <UserSidebar /> */}
+      <UserSidebar />
       <main className="flex-1 p-6 space-y-6">
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-xl font-semibold text-muted-foreground">
-              Welcome, {session?.user.name ?? "User"}
+              Welcome, {session?.user.name}
             </h2>
             <p className="text-sm text-muted-foreground">
               {new Date().toDateString()}
@@ -210,7 +215,7 @@ function RouteComponent() {
 
               <div className="pt-4">
                 <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Updating..." : "Update"}
+                  {isLoading ? <Spinner /> : "Update"}
                 </Button>
               </div>
             </form>
