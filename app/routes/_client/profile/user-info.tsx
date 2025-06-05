@@ -5,12 +5,9 @@ import { Label } from "@/components/ui/label";
 import { useSession } from "@/lib/auth-client";
 import { UserSidebar } from "@/components/shared/user-sidebar";
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  EyeIcon,
-  EyeOffIcon,
-  MailIcon,
-  PhoneIcon,
-} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { EyeIcon, EyeOffIcon, MailIcon, PhoneIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_client/profile/user-info")({
@@ -19,9 +16,14 @@ export const Route = createFileRoute("/_client/profile/user-info")({
 
 function RouteComponent() {
   const { data } = useSession();
+
+  if (!data) {
+    return null;
+  }
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const isVerified = data.user.emailVerified;
   return (
     <div className="flex">
       <UserSidebar />
@@ -63,7 +65,56 @@ function RouteComponent() {
                     id="email"
                     type="email"
                     defaultValue={data?.user.email}
+                    readOnly
                   />
+                  <Badge
+                    variant={isVerified ? "default" : "destructive"}
+                    className={`
+                    absolute right-10 top-1/2 -translate-y-1/2
+                    flex items-center gap-1 px-2 py-0.5 rounded-full text-xs
+                    ${
+                      isVerified
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }
+      `}
+                  >
+                    {isVerified ? (
+                      <>
+                        <svg
+                          className="w-3 h-3 mr-1 text-green-500"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        Verified
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-3 h-3 mr-1 text-red-500"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                        Not Verified
+                      </>
+                    )}
+                  </Badge>
                   <MailIcon className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
                 </div>
               </div>
