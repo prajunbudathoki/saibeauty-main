@@ -23,22 +23,26 @@ export function UserSidebar() {
     image: data?.user.image,
     phone: data?.user.phone,
   };
+  const initalPhaseName = data?.user.name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
   const pathname = window.location.pathname;
 
   const sidebarItems: SidebarItem[] = [
     {
-      title: "Home",
-      href: "/user",
-      icon: <Home className="h-5 w-5" />,
+      title: "Profile",
+      href: "/profile/user-info",
+      icon: <User className="h-5 w-5" />,
     },
     {
       title: "My Appointments",
-      href: "/user/appointments",
+      href: "/profile/user-appointments",
       icon: <Calendar className="h-5 w-5" />,
     },
   ];
 
-  const toggleSidebar = () => setCollapsed(!collapsed);
   const toggleMobileSidebar = () => setMobileOpen(!mobileOpen);
 
   const sidebarVariants = {
@@ -107,8 +111,8 @@ export function UserSidebar() {
         >
           <img
             src={user.image ?? undefined}
-            alt="U"
-            className="w-14 flex items-center justify-center h-14 rounded-full mb-2 shadow"
+            alt={initalPhaseName}
+            className="w-14 text-xl bg-gray-200 flex items-center justify-center h-14 rounded-full mb-2 shadow"
           />
           {!collapsed && (
             <>

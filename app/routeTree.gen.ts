@@ -24,7 +24,7 @@ import { Route as ClientGalleryImport } from './routes/_client/gallery'
 import { Route as ClientContactImport } from './routes/_client/contact'
 import { Route as ClientAboutImport } from './routes/_client/about'
 import { Route as ClientProfileUserInfoImport } from './routes/_client/profile/user-info'
-import { Route as ClientProfileUserAppointmentImport } from './routes/_client/profile/user-appointment'
+import { Route as ClientProfileUserAppointmentsImport } from './routes/_client/profile/user-appointments'
 import { Route as ClientProfileMyBookingsImport } from './routes/_client/profile/my-bookings'
 import { Route as ClientProfileBookingImport } from './routes/_client/profile/booking'
 
@@ -107,10 +107,10 @@ const ClientProfileUserInfoRoute = ClientProfileUserInfoImport.update({
   getParentRoute: () => ClientRoute,
 } as any)
 
-const ClientProfileUserAppointmentRoute =
-  ClientProfileUserAppointmentImport.update({
-    id: '/profile/user-appointment',
-    path: '/profile/user-appointment',
+const ClientProfileUserAppointmentsRoute =
+  ClientProfileUserAppointmentsImport.update({
+    id: '/profile/user-appointments',
+    path: '/profile/user-appointments',
     getParentRoute: () => ClientRoute,
   } as any)
 
@@ -228,11 +228,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientProfileMyBookingsImport
       parentRoute: typeof ClientImport
     }
-    '/_client/profile/user-appointment': {
-      id: '/_client/profile/user-appointment'
-      path: '/profile/user-appointment'
-      fullPath: '/profile/user-appointment'
-      preLoaderRoute: typeof ClientProfileUserAppointmentImport
+    '/_client/profile/user-appointments': {
+      id: '/_client/profile/user-appointments'
+      path: '/profile/user-appointments'
+      fullPath: '/profile/user-appointments'
+      preLoaderRoute: typeof ClientProfileUserAppointmentsImport
       parentRoute: typeof ClientImport
     }
     '/_client/profile/user-info': {
@@ -256,7 +256,7 @@ interface ClientRouteChildren {
   ClientIndexRoute: typeof ClientIndexRoute
   ClientProfileBookingRoute: typeof ClientProfileBookingRoute
   ClientProfileMyBookingsRoute: typeof ClientProfileMyBookingsRoute
-  ClientProfileUserAppointmentRoute: typeof ClientProfileUserAppointmentRoute
+  ClientProfileUserAppointmentsRoute: typeof ClientProfileUserAppointmentsRoute
   ClientProfileUserInfoRoute: typeof ClientProfileUserInfoRoute
 }
 
@@ -269,7 +269,7 @@ const ClientRouteChildren: ClientRouteChildren = {
   ClientIndexRoute: ClientIndexRoute,
   ClientProfileBookingRoute: ClientProfileBookingRoute,
   ClientProfileMyBookingsRoute: ClientProfileMyBookingsRoute,
-  ClientProfileUserAppointmentRoute: ClientProfileUserAppointmentRoute,
+  ClientProfileUserAppointmentsRoute: ClientProfileUserAppointmentsRoute,
   ClientProfileUserInfoRoute: ClientProfileUserInfoRoute,
 }
 
@@ -307,7 +307,7 @@ export interface FileRoutesByFullPath {
   '/': typeof ClientIndexRoute
   '/profile/booking': typeof ClientProfileBookingRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
-  '/profile/user-appointment': typeof ClientProfileUserAppointmentRoute
+  '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
 }
 
@@ -325,7 +325,7 @@ export interface FileRoutesByTo {
   '/': typeof ClientIndexRoute
   '/profile/booking': typeof ClientProfileBookingRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
-  '/profile/user-appointment': typeof ClientProfileUserAppointmentRoute
+  '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
 }
 
@@ -345,7 +345,7 @@ export interface FileRoutesById {
   '/_client/': typeof ClientIndexRoute
   '/_client/profile/booking': typeof ClientProfileBookingRoute
   '/_client/profile/my-bookings': typeof ClientProfileMyBookingsRoute
-  '/_client/profile/user-appointment': typeof ClientProfileUserAppointmentRoute
+  '/_client/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/_client/profile/user-info': typeof ClientProfileUserInfoRoute
 }
 
@@ -366,7 +366,7 @@ export interface FileRouteTypes {
     | '/'
     | '/profile/booking'
     | '/profile/my-bookings'
-    | '/profile/user-appointment'
+    | '/profile/user-appointments'
     | '/profile/user-info'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -383,7 +383,7 @@ export interface FileRouteTypes {
     | '/'
     | '/profile/booking'
     | '/profile/my-bookings'
-    | '/profile/user-appointment'
+    | '/profile/user-appointments'
     | '/profile/user-info'
   id:
     | '__root__'
@@ -401,7 +401,7 @@ export interface FileRouteTypes {
     | '/_client/'
     | '/_client/profile/booking'
     | '/_client/profile/my-bookings'
-    | '/_client/profile/user-appointment'
+    | '/_client/profile/user-appointments'
     | '/_client/profile/user-info'
   fileRoutesById: FileRoutesById
 }
@@ -441,7 +441,7 @@ export const routeTree = rootRoute
         "/_client/",
         "/_client/profile/booking",
         "/_client/profile/my-bookings",
-        "/_client/profile/user-appointment",
+        "/_client/profile/user-appointments",
         "/_client/profile/user-info"
       ]
     },
@@ -502,8 +502,8 @@ export const routeTree = rootRoute
       "filePath": "_client/profile/my-bookings.tsx",
       "parent": "/_client"
     },
-    "/_client/profile/user-appointment": {
-      "filePath": "_client/profile/user-appointment.tsx",
+    "/_client/profile/user-appointments": {
+      "filePath": "_client/profile/user-appointments.tsx",
       "parent": "/_client"
     },
     "/_client/profile/user-info": {
