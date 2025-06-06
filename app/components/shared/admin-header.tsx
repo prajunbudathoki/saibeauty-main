@@ -1,47 +1,51 @@
-"use client"
+"use client";
 
-import { motion } from "motion/react"
-import { cn } from "@/lib/utils"
+import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
+import { useLocation, useRouterState } from "@tanstack/react-router";
+import { boolean } from "better-auth";
 
 interface BreadcrumbItem {
-  label: string
-  href?: string
+  label: string;
+  href?: string;
 }
 
 export function AdminHeader({ title }: { title: string }) {
-  const pathname = usePathname()
+  // const router = useRouterState();
+  const location = useLocation();
 
   // Generate breadcrumbs from pathname
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
-    const paths = pathname.split("/").filter(Boolean)
+    // const paths = router.location.pathname;
+    const paths = location.pathname.split("/").filter(Boolean);
 
     // Start with Admin
-    const breadcrumbs: BreadcrumbItem[] = [{ label: "Admin", href: "/admin" }]
+    const breadcrumbs: BreadcrumbItem[] = [{ label: "Admin", href: "/admin" }];
 
     // Build up the breadcrumbs
-    let currentPath = ""
+    let currentPath = "";
 
     for (let i = 1; i < paths.length; i++) {
-      currentPath += `/${paths[i]}`
+      currentPath += `/${paths[i]}`;
 
       // Skip adding breadcrumb for dynamic segments like [id]
       if (paths[i].startsWith("[") && paths[i].endsWith("]")) {
-        continue
+        continue;
       }
 
       // Capitalize and format the label
-      const label = paths[i].charAt(0).toUpperCase() + paths[i].slice(1)
+      const label = paths[i].charAt(0).toUpperCase() + paths[i].slice(1);
 
       breadcrumbs.push({
         label,
         href: `/admin${currentPath}`,
-      })
+      });
     }
 
-    return breadcrumbs
-  }
+    return breadcrumbs;
+  };
 
-  const breadcrumbs = generateBreadcrumbs()
+  const breadcrumbs = generateBreadcrumbs();
 
   return (
     <div className="border-b bg-card sticky top-0 z-10 shadow-sm">
@@ -55,11 +59,14 @@ export function AdminHeader({ title }: { title: string }) {
           <div className="flex items-center text-sm text-muted-foreground">
             {breadcrumbs.map((item, index) => (
               <div key={index} className="flex items-center">
-                {index > 0 && <span className="mx-2 text-muted-foreground/50">/</span>}
+                {index > 0 && (
+                  <span className="mx-2 text-muted-foreground/50">/</span>
+                )}
                 <span
                   className={cn(
                     "hover:text-primary transition-colors",
-                    index === breadcrumbs.length - 1 && "font-medium text-foreground",
+                    index === breadcrumbs.length - 1 &&
+                      "font-medium text-foreground"
                   )}
                 >
                   {item.label}
@@ -71,6 +78,5 @@ export function AdminHeader({ title }: { title: string }) {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }
-

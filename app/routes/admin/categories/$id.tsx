@@ -10,14 +10,14 @@ import { Plus } from "lucide-react";
 export const Route = createFileRoute("/admin/categories/$id")({
   loader: async ({ params }) => {
     const [services, categories] = await Promise.all([
-      getServicesByCategory(params.id),
+      getServicesByCategory({ data: params.id }),
       getCategories(),
     ]);
 
     const category = categories.find((category) => category.id === params.id);
 
     if (!category) {
-      throw notFound(); // 404 handling
+      throw notFound();
     }
 
     return { services, category, categories };
@@ -62,7 +62,15 @@ function ServicesCategoryPage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => (
-              <ServiceCard key={service.id} service={service} />
+              <ServiceCard
+                key={service.id}
+                service={{
+                  ...service,
+                  created_at: service.created_at instanceof Date
+                    ? service.created_at.toISOString()
+                    : service.created_at,
+                }}
+              />
             ))}
           </div>
         )}

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { BookingCTA } from "@/components/shared/booking-cta";
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
+import { AdminSidebar } from "@/components/shared/admin-sidebar";
 
 export const Route = createFileRoute("/_client")({
   component: RouteComponent,

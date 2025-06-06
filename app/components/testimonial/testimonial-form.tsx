@@ -61,7 +61,7 @@ export function TestimonialForm({
       if (onSuccess) {
         onSuccess();
       } else {
-        navigate({ to: "" });
+        navigate({ to: "/" });
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -142,7 +142,7 @@ export function TestimonialForm({
             if (onSuccess) {
               onSuccess();
             } else {
-              navigate({ to: "/admin/testimonials" });
+              navigate({ to: "/" });
             }
           }}
           disabled={loading}

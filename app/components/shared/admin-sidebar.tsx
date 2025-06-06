@@ -23,7 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 
 interface SidebarItem {
   title: string;
@@ -36,12 +36,12 @@ export function AdminSidebar() {
 
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-
+  const pathname = useLocation();
   useEffect(() => {
     const fetchSession = async () => {
       const { data } = await authClient.getSession();
       if (data?.session?.token) {
-        setRole(data?.user?.role ?? "moderator");
+        setRole(data?.user?.role ?? "user");
       }
     };
     fetchSession();
@@ -201,8 +201,9 @@ export function AdminSidebar() {
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-2">
             {sidebarItems.map((item) => {
-              // const isActive =
-              //   pathname === item.href || pathname.startsWith(`${item.href}/`);
+              const isActive =
+                pathname.pathname === item.href ||
+                pathname.pathname.startsWith(`${item.href}/`);
 
               return (
                 <li key={item.href}>
@@ -211,9 +212,9 @@ export function AdminSidebar() {
                       className={cn(
                         "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all",
                         "hover:bg-accent hover:text-accent-foreground",
-                        // isActive
-                        //   ? "bg-primary text-primary-foreground font-medium shadow-sm"
-                        //   : "text-foreground hover:translate-x-1",
+                        isActive
+                          ? "bg-primary text-primary-foreground font-medium shadow-sm"
+                          : "text-foreground hover:translate-x-1",
                         collapsed && "justify-center px-0"
                       )}
                     >

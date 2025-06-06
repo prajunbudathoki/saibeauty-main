@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-router";
 import appCss from "@/styles/app.css?url";
 import { Toaster } from "@/components/ui/sonner";
+import { AdminSidebar } from "@/components/shared/admin-sidebar";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -37,6 +38,7 @@ function RootComponent() {
   return (
     <RootDocument>
       <Toaster position="top-right" richColors />
+      <AdminSidebar />
       <Outlet />
     </RootDocument>
   );

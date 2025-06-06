@@ -18,10 +18,11 @@ export const TestimonialCarousel = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTestimonials = async (id: string) => {
+    const fetchTestimonials = async () => {
       try {
         setLoading(true);
-        await getTestimonialById({ data: id });
+        const data = await getTestimonials();
+        setTestimonials(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching testimonials:", error);
       } finally {
