@@ -23,6 +23,9 @@ import { Route as ClientServicesImport } from './routes/_client/services'
 import { Route as ClientGalleryImport } from './routes/_client/gallery'
 import { Route as ClientContactImport } from './routes/_client/contact'
 import { Route as ClientAboutImport } from './routes/_client/about'
+import { Route as AdminServicesIndexImport } from './routes/admin/services/index'
+import { Route as AdminCategoriesIndexImport } from './routes/admin/categories/index'
+import { Route as AdminCategoriesIdImport } from './routes/admin/categories/$id'
 import { Route as ClientProfileUserInfoImport } from './routes/_client/profile/user-info'
 import { Route as ClientProfileUserAppointmentsImport } from './routes/_client/profile/user-appointments'
 import { Route as ClientProfileMyBookingsImport } from './routes/_client/profile/my-bookings'
@@ -99,6 +102,24 @@ const ClientAboutRoute = ClientAboutImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => ClientRoute,
+} as any)
+
+const AdminServicesIndexRoute = AdminServicesIndexImport.update({
+  id: '/admin/services/',
+  path: '/admin/services/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminCategoriesIndexRoute = AdminCategoriesIndexImport.update({
+  id: '/admin/categories/',
+  path: '/admin/categories/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminCategoriesIdRoute = AdminCategoriesIdImport.update({
+  id: '/admin/categories/$id',
+  path: '/admin/categories/$id',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ClientProfileUserInfoRoute = ClientProfileUserInfoImport.update({
@@ -242,6 +263,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientProfileUserInfoImport
       parentRoute: typeof ClientImport
     }
+    '/admin/categories/$id': {
+      id: '/admin/categories/$id'
+      path: '/admin/categories/$id'
+      fullPath: '/admin/categories/$id'
+      preLoaderRoute: typeof AdminCategoriesIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/categories/': {
+      id: '/admin/categories/'
+      path: '/admin/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/services/': {
+      id: '/admin/services/'
+      path: '/admin/services'
+      fullPath: '/admin/services'
+      preLoaderRoute: typeof AdminServicesIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -309,6 +351,9 @@ export interface FileRoutesByFullPath {
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
   '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
+  '/admin/categories/$id': typeof AdminCategoriesIdRoute
+  '/admin/categories': typeof AdminCategoriesIndexRoute
+  '/admin/services': typeof AdminServicesIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -327,6 +372,9 @@ export interface FileRoutesByTo {
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
   '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
+  '/admin/categories/$id': typeof AdminCategoriesIdRoute
+  '/admin/categories': typeof AdminCategoriesIndexRoute
+  '/admin/services': typeof AdminServicesIndexRoute
 }
 
 export interface FileRoutesById {
@@ -347,6 +395,9 @@ export interface FileRoutesById {
   '/_client/profile/my-bookings': typeof ClientProfileMyBookingsRoute
   '/_client/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/_client/profile/user-info': typeof ClientProfileUserInfoRoute
+  '/admin/categories/$id': typeof AdminCategoriesIdRoute
+  '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/services/': typeof AdminServicesIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -368,6 +419,9 @@ export interface FileRouteTypes {
     | '/profile/my-bookings'
     | '/profile/user-appointments'
     | '/profile/user-info'
+    | '/admin/categories/$id'
+    | '/admin/categories'
+    | '/admin/services'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -385,6 +439,9 @@ export interface FileRouteTypes {
     | '/profile/my-bookings'
     | '/profile/user-appointments'
     | '/profile/user-info'
+    | '/admin/categories/$id'
+    | '/admin/categories'
+    | '/admin/services'
   id:
     | '__root__'
     | '/_client'
@@ -403,17 +460,26 @@ export interface FileRouteTypes {
     | '/_client/profile/my-bookings'
     | '/_client/profile/user-appointments'
     | '/_client/profile/user-info'
+    | '/admin/categories/$id'
+    | '/admin/categories/'
+    | '/admin/services/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   ClientRoute: typeof ClientRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  AdminCategoriesIdRoute: typeof AdminCategoriesIdRoute
+  AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
+  AdminServicesIndexRoute: typeof AdminServicesIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   ClientRoute: ClientRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  AdminCategoriesIdRoute: AdminCategoriesIdRoute,
+  AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
+  AdminServicesIndexRoute: AdminServicesIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -427,7 +493,10 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/_client",
-        "/auth"
+        "/auth",
+        "/admin/categories/$id",
+        "/admin/categories/",
+        "/admin/services/"
       ]
     },
     "/_client": {
@@ -509,6 +578,15 @@ export const routeTree = rootRoute
     "/_client/profile/user-info": {
       "filePath": "_client/profile/user-info.tsx",
       "parent": "/_client"
+    },
+    "/admin/categories/$id": {
+      "filePath": "admin/categories/$id.tsx"
+    },
+    "/admin/categories/": {
+      "filePath": "admin/categories/index.tsx"
+    },
+    "/admin/services/": {
+      "filePath": "admin/services/index.tsx"
     }
   }
 }

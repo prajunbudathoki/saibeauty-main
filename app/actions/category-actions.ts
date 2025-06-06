@@ -34,6 +34,10 @@ export const createCategory = createServerFn({
 })
   .validator((data: { name: string; description?: string }) => data)
   .handler(async ({ data }) => {
+    const { data: session, error } = await authClient.getSession();
+    if (session?.user.role !== "admin") {
+      throw new Error("Role doesnot have access");
+    }
     const { name, description } = data;
     await prisma.category.create({ data: { name, description, index: 0 } });
   });

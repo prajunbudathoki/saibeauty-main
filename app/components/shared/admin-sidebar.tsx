@@ -36,22 +36,21 @@ export function AdminSidebar() {
 
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
+
   useEffect(() => {
     const fetchSession = async () => {
       const { data } = await authClient.getSession();
-      if (data.session?.access_token) {
-        const role = getRole(data.session.access_token);
-        setRole(role);
+      if (data?.session?.token) {
+        setRole(data?.user?.role ?? "moderator");
       }
     };
     fetchSession();
-  }, [client]);
+  }, []);
 
   // Close mobile sidebar when path changes
   useEffect(() => {
     setMobileOpen(false);
-  }, [pathname]);
+  }, []);
 
   // Close mobile sidebar when screen size changes to desktop
   useEffect(() => {
@@ -177,7 +176,7 @@ export function AdminSidebar() {
           )}
         >
           {!collapsed && (
-            <Link to="/admin" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold">SB</span>
               </div>
@@ -202,8 +201,8 @@ export function AdminSidebar() {
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-2">
             {sidebarItems.map((item) => {
-              const isActive =
-                pathname === item.href || pathname.startsWith(`${item.href}/`);
+              // const isActive =
+              //   pathname === item.href || pathname.startsWith(`${item.href}/`);
 
               return (
                 <li key={item.href}>
@@ -212,9 +211,9 @@ export function AdminSidebar() {
                       className={cn(
                         "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all",
                         "hover:bg-accent hover:text-accent-foreground",
-                        isActive
-                          ? "bg-primary text-primary-foreground font-medium shadow-sm"
-                          : "text-foreground hover:translate-x-1",
+                        // isActive
+                        //   ? "bg-primary text-primary-foreground font-medium shadow-sm"
+                        //   : "text-foreground hover:translate-x-1",
                         collapsed && "justify-center px-0"
                       )}
                     >
