@@ -29,6 +29,15 @@ export const getCategoryById = createServerFn()
     });
   });
 
+export const createCategory = createServerFn({
+  method: "POST",
+})
+  .validator((data: { name: string; description?: string }) => data)
+  .handler(async ({ data }) => {
+    const { name, description } = data;
+    await prisma.category.create({ data: { name, description, index: 0 } });
+  });
+
 export const deleteCategory = createServerFn()
   .validator((id: string) => id)
   .handler(async ({ data }) => {
