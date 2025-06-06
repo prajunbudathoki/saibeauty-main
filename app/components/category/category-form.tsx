@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-// import { createCategory, updateCategory } from "@/actions/category-actions";
+import { createCategory } from "@/actions/category-actions";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -33,24 +33,32 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
       const formData = new FormData(e.currentTarget);
 
       // Add the image file if it exists
-      if (imageFile) {
-        formData.set("image", imageFile);
-      } else if (category?.image) {
-        // Keep the existing image if no new one is provided
-        formData.set("image", "");
-      }
+      // if (imageFile) {
+      //   formData.set("image", imageFile);
+      // } else if (category?.image) {
+      //   // Keep the existing image if no new one is provided
+      //   formData.set("image", "");
+      // }
 
-      //   if (isEditing) {
-      //     await updateCategory(category.id, formData);
-      //     toast.success("Category updated", {
-      //       description: "The category has been updated successfully.",
-      //     });
-      //   } else {
-      //     await createCategory(formData);
-      //     toast.success("Category created", {
-      //       description: "The category has been created successfully.",
-      //     });
-      //   }
+      const name = formData.get("name") as string;
+      const description = formData.get("description") as string;
+      const index = Number(formData.get("index"));
+      await createCategory({ data: { name, description, index } });
+      toast.success("Category created", {
+        description: "The category has been successfully created",
+      });
+
+      // if (isEditing) {
+      //   await updateCategory(category.id, formData);
+      //   toast.success("Category updated", {
+      //     description: "The category has been updated successfully.",
+      //   });
+      // } else {
+      //   await createCategory(formData);
+      //   toast.success("Category created", {
+      //     description: "The category has been created successfully.",
+      //   });
+      // }
 
       if (onSuccess) {
         onSuccess();
@@ -110,7 +118,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
             if (onSuccess) {
               onSuccess();
             } else {
-              navigate({to: "/"})
+              navigate({ to: "/" });
             }
           }}
           disabled={loading}

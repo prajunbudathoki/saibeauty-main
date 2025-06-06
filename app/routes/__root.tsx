@@ -38,7 +38,6 @@ function RootComponent() {
   return (
     <RootDocument>
       <Toaster position="top-right" richColors />
-      <AdminSidebar />
       <Outlet />
     </RootDocument>
   );

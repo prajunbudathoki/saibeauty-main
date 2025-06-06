@@ -33,7 +33,7 @@ export function CategoryCard({ category, serviceCount }: CategoryCardProps) {
     }
   };
 
-  const imageUrl = "https://picsum.photos/id/237/200/300";
+  const imageUrl = "";
 
   return (
     <motion.div
@@ -46,7 +46,7 @@ export function CategoryCard({ category, serviceCount }: CategoryCardProps) {
       <Card className="overflow-hidden h-full flex flex-col border border-border/50 hover:border-border hover:shadow-md transition-all duration-300">
         <div className="relative h-40 overflow-hidden group">
           <img
-            src={imageUrl || "/placeholder.svg"}
+            src={imageUrl}
             alt={category.name}
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />

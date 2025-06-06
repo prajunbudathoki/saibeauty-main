@@ -1,7 +1,5 @@
 import { authClient } from "@/lib/auth-client";
 import prisma from "@/lib/prisma";
-import { Category } from "@/lib/type";
-import { generateUniqueFileName } from "@/lib/utils";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getCategories = createServerFn({
@@ -32,14 +30,26 @@ export const getCategoryById = createServerFn()
 export const createCategory = createServerFn({
   method: "POST",
 })
-  .validator((data: { name: string; description?: string }) => data)
-  .handler(async ({ data }) => {
-    const { data: session, error } = await authClient.getSession();
-    if (session?.user.role !== "admin") {
-      throw new Error("Role doesnot have access");
+  .validator(
+    (data: { name: string; description?: string; index: number }) => data
+  )
+  .handler(async ({ data: { name, description, index } }) => {
+    // const { data: session, error } = await authClient.getSession();
+    // if (session?.user.role !== "admin") {
+    //   throw new Error("Role doesnot have access");
+    // }
+    try {
+      return await prisma.category.create({
+        data: {
+          name,
+          description,
+          index,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to create Category");
     }
-    const { name, description } = data;
-    await prisma.category.create({ data: { name, description, index: 0 } });
   });
 
 export const deleteCategory = createServerFn()
