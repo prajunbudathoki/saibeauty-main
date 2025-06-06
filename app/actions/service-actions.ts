@@ -55,32 +55,35 @@ export const createService = createServerFn({
       name: string;
       description?: string;
       duration?: number;
-      category_id: string;
-    }) => data
-  )
-  .handler(async ({ data }) => {
-    const { data: session, error } = await authClient.getSession();
-    if (session?.user.role !== "admin") {
-      throw new Error("Role doesnot have access");
-    }
-    const { name, description, duration, price, category_id } = data as {
-      name: string;
-      description?: string;
-      duration?: number;
       price: number;
       category_id: string;
-    };
-    await prisma.service.create({
-      data: {
-        name,
-        description,
-        duration,
-        index: 0,
-        price,
-        category_id,
-      },
-    });
-  });
+      index: number;
+    }) => data
+  )
+  .handler(
+    async ({
+      data: { name, description, price, index, duration, category_id },
+    }) => {
+      // const { data: session, error } = await authClient.getSession();
+      // if (session?.user.role !== "admin") {
+      //   throw new Error("Role doesnot have access");
+      // }
+      try {
+        return await prisma.service.create({
+          data: {
+            name,
+            description,
+            duration,
+            index,
+            price,
+            category_id,
+          },
+        });
+      } catch (error) {
+        throw new Error("Failed to create service");
+      }
+    }
+  );
 
 export const deleteService = createServerFn()
   .validator((id: string) => id)

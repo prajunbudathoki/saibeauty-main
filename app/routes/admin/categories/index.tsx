@@ -25,7 +25,7 @@ export const Route = createFileRoute("/admin/categories/")({
   },
 });
 
-async function RouteComponent() {
+function RouteComponent() {
   const categories = Route.useLoaderData();
 
   return (

@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { createCategory } from "@/actions/category-actions";
 import { toast } from "sonner";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 
 interface CategoryFormProps {
   category?: Category;
@@ -22,6 +22,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
+  const router = useRouter();
 
   const isEditing = !!category;
 
@@ -47,6 +48,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
       toast.success("Category created", {
         description: "The category has been successfully created",
       });
+      router.invalidate();
 
       // if (isEditing) {
       //   await updateCategory(category.id, formData);

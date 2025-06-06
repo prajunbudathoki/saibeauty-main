@@ -12,7 +12,7 @@ import { CategoryDialog } from "./category-dialog";
 import { Trash2, Edit, Scissors, Eye } from "lucide-react";
 import { deleteCategory } from "@/actions/category-actions";
 import { toast } from "sonner";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 
 interface CategoryCardProps {
   category: Category;
@@ -20,12 +20,14 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ category, serviceCount }: CategoryCardProps) {
+  const router = useRouter();
   const handleDelete = async (id: string) => {
     try {
       await deleteCategory({ data: id });
       toast.success("Category deleted successfully", {
         description: "The category has been deleted successfully.",
       });
+      router.invalidate();
     } catch (error) {
       toast.error("Error deleting category", {
         description: "Failed to delete the category.",

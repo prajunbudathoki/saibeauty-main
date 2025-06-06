@@ -20,7 +20,7 @@ export const Route = createFileRoute("/admin/services/")({
 
 function RouteComponent() {
   const { services, categories } = Route.useLoaderData();
-
+  
   return (
     <div>
       <AdminHeader title="Services" />

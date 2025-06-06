@@ -19,7 +19,7 @@ import {
 import { toast } from "sonner";
 import { createService } from "@/actions/service-actions";
 import { getCategories } from "@/actions/category-actions";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 
 interface ServiceFormProps {
   service?: Service;
@@ -37,6 +37,7 @@ export function ServiceForm({
   const [categories, setCategories] = useState<Category[]>([]);
 
   const navigate = useNavigate();
+  const router = useRouter();
 
   const isEditing = !!service;
 
@@ -80,6 +81,19 @@ export function ServiceForm({
         formData.set("image", "");
       }
 
+      const name = formData.get("name") as string;
+      const description = formData.get("description") as string;
+      const index = Number(formData.get("index"));
+      const duration = Number(formData.get("duration"));
+      const price = Number(formData.get("price"));
+      const category_id = (formData.get("category_id") as string) ?? "";
+      await createService({
+        data: { name, description, index, duration, price, category_id },
+      });
+      toast.success("Service created", {
+        description: "The service has been successfully created",
+      });
+      router.invalidate();
       //   if (isEditing) {
       //     await updateService(service.id, formData)
       //     toast.success("Service updated successfully")
