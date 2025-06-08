@@ -97,10 +97,11 @@ model Location {
   created_at          DateTime @default(now())
   updated_at          DateTime @updatedAt
 
-  services      LocationService[]
-  staff         Staff[]
-  appointments  Appointment[]
-  StaffSchedule StaffSchedule[]
+  services                 LocationService[]
+  staff                    Staff[]
+  appointments             Appointment[]
+  StaffSchedule            StaffSchedule[]
+  StaffSpecialAvailability StaffSpecialAvailability[]
 }
 
 model Category {
@@ -182,9 +183,10 @@ model Staff {
   instagram_url            String?
   twitter_url              String?
 
-  location      Location        @relation(fields: [location_id], references: [id])
-  appointments  Appointment[]
-  StaffSchedule StaffSchedule[]
+  location                 Location                   @relation(fields: [location_id], references: [id])
+  appointments             Appointment[]
+  StaffSchedule            StaffSchedule[]
+  StaffSpecialAvailability StaffSpecialAvailability[]
 }
 
 model Appointment {
@@ -234,6 +236,21 @@ model StaffSchedule {
 
   staff    Staff    @relation(fields: [staff_id], references: [id])
   location Location @relation(fields: [location_id], references: [id])
+}
+
+model StaffSpecialAvailability {
+  id           String   @id @default(uuid())
+  staff_id     String
+  location_id  String
+  date         DateTime
+  start_time   String?
+  end_time     String?
+  is_available Boolean
+  note         String?
+  month        Int?
+  year         Int?
+  staff        Staff    @relation(fields: [staff_id], references: [id])
+  location     Location @relation(fields: [location_id], references: [id])
 }
 
 enum AppointmentStatus {
