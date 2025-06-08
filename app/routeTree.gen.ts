@@ -33,6 +33,8 @@ import { Route as ClientProfileUserInfoImport } from './routes/_client/profile/u
 import { Route as ClientProfileUserAppointmentsImport } from './routes/_client/profile/user-appointments'
 import { Route as ClientProfileMyBookingsImport } from './routes/_client/profile/my-bookings'
 import { Route as ClientProfileBookingImport } from './routes/_client/profile/booking'
+import { Route as AdminLocationsIdServicesIndexImport } from './routes/admin/locations/$id/services/index'
+import { Route as AdminLocationsIdServicesSearchImport } from './routes/admin/locations/$id/services/search'
 
 // Create/Update Routes
 
@@ -167,6 +169,20 @@ const ClientProfileBookingRoute = ClientProfileBookingImport.update({
   path: '/profile/booking',
   getParentRoute: () => ClientRoute,
 } as any)
+
+const AdminLocationsIdServicesIndexRoute =
+  AdminLocationsIdServicesIndexImport.update({
+    id: '/admin/locations/$id/services/',
+    path: '/admin/locations/$id/services/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const AdminLocationsIdServicesSearchRoute =
+  AdminLocationsIdServicesSearchImport.update({
+    id: '/admin/locations/$id/services/search',
+    path: '/admin/locations/$id/services/search',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -326,6 +342,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminServicesIndexImport
       parentRoute: typeof rootRoute
     }
+    '/admin/locations/$id/services/search': {
+      id: '/admin/locations/$id/services/search'
+      path: '/admin/locations/$id/services/search'
+      fullPath: '/admin/locations/$id/services/search'
+      preLoaderRoute: typeof AdminLocationsIdServicesSearchImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/locations/$id/services/': {
+      id: '/admin/locations/$id/services/'
+      path: '/admin/locations/$id/services'
+      fullPath: '/admin/locations/$id/services'
+      preLoaderRoute: typeof AdminLocationsIdServicesIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -399,6 +429,8 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/employees': typeof AdminEmployeesIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
+  '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
+  '/admin/locations/$id/services': typeof AdminLocationsIdServicesIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -423,6 +455,8 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/employees': typeof AdminEmployeesIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
+  '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
+  '/admin/locations/$id/services': typeof AdminLocationsIdServicesIndexRoute
 }
 
 export interface FileRoutesById {
@@ -449,6 +483,8 @@ export interface FileRoutesById {
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/employees/': typeof AdminEmployeesIndexRoute
   '/admin/services/': typeof AdminServicesIndexRoute
+  '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
+  '/admin/locations/$id/services/': typeof AdminLocationsIdServicesIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -476,6 +512,8 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/employees'
     | '/admin/services'
+    | '/admin/locations/$id/services/search'
+    | '/admin/locations/$id/services'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -499,6 +537,8 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/employees'
     | '/admin/services'
+    | '/admin/locations/$id/services/search'
+    | '/admin/locations/$id/services'
   id:
     | '__root__'
     | '/_client'
@@ -523,6 +563,8 @@ export interface FileRouteTypes {
     | '/admin/categories/'
     | '/admin/employees/'
     | '/admin/services/'
+    | '/admin/locations/$id/services/search'
+    | '/admin/locations/$id/services/'
   fileRoutesById: FileRoutesById
 }
 
@@ -535,6 +577,8 @@ export interface RootRouteChildren {
   AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
   AdminEmployeesIndexRoute: typeof AdminEmployeesIndexRoute
   AdminServicesIndexRoute: typeof AdminServicesIndexRoute
+  AdminLocationsIdServicesSearchRoute: typeof AdminLocationsIdServicesSearchRoute
+  AdminLocationsIdServicesIndexRoute: typeof AdminLocationsIdServicesIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -546,6 +590,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
   AdminEmployeesIndexRoute: AdminEmployeesIndexRoute,
   AdminServicesIndexRoute: AdminServicesIndexRoute,
+  AdminLocationsIdServicesSearchRoute: AdminLocationsIdServicesSearchRoute,
+  AdminLocationsIdServicesIndexRoute: AdminLocationsIdServicesIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -565,7 +611,9 @@ export const routeTree = rootRoute
         "/admin/appointments/",
         "/admin/categories/",
         "/admin/employees/",
-        "/admin/services/"
+        "/admin/services/",
+        "/admin/locations/$id/services/search",
+        "/admin/locations/$id/services/"
       ]
     },
     "/_client": {
@@ -665,6 +713,12 @@ export const routeTree = rootRoute
     },
     "/admin/services/": {
       "filePath": "admin/services/index.tsx"
+    },
+    "/admin/locations/$id/services/search": {
+      "filePath": "admin/locations/$id/services/search.tsx"
+    },
+    "/admin/locations/$id/services/": {
+      "filePath": "admin/locations/$id/services/index.tsx"
     }
   }
 }
