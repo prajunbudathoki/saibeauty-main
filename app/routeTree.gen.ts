@@ -26,7 +26,9 @@ import { Route as ClientAboutImport } from './routes/_client/about'
 import { Route as AdminServicesIndexImport } from './routes/admin/services/index'
 import { Route as AdminEmployeesIndexImport } from './routes/admin/employees/index'
 import { Route as AdminCategoriesIndexImport } from './routes/admin/categories/index'
+import { Route as AdminAppointmentsIndexImport } from './routes/admin/appointments/index'
 import { Route as AdminCategoriesIdImport } from './routes/admin/categories/$id'
+import { Route as AdminAppointmentsIdImport } from './routes/admin/appointments/$id'
 import { Route as ClientProfileUserInfoImport } from './routes/_client/profile/user-info'
 import { Route as ClientProfileUserAppointmentsImport } from './routes/_client/profile/user-appointments'
 import { Route as ClientProfileMyBookingsImport } from './routes/_client/profile/my-bookings'
@@ -123,9 +125,21 @@ const AdminCategoriesIndexRoute = AdminCategoriesIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AdminAppointmentsIndexRoute = AdminAppointmentsIndexImport.update({
+  id: '/admin/appointments/',
+  path: '/admin/appointments/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AdminCategoriesIdRoute = AdminCategoriesIdImport.update({
   id: '/admin/categories/$id',
   path: '/admin/categories/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminAppointmentsIdRoute = AdminAppointmentsIdImport.update({
+  id: '/admin/appointments/$id',
+  path: '/admin/appointments/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -270,11 +284,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientProfileUserInfoImport
       parentRoute: typeof ClientImport
     }
+    '/admin/appointments/$id': {
+      id: '/admin/appointments/$id'
+      path: '/admin/appointments/$id'
+      fullPath: '/admin/appointments/$id'
+      preLoaderRoute: typeof AdminAppointmentsIdImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/categories/$id': {
       id: '/admin/categories/$id'
       path: '/admin/categories/$id'
       fullPath: '/admin/categories/$id'
       preLoaderRoute: typeof AdminCategoriesIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/appointments/': {
+      id: '/admin/appointments/'
+      path: '/admin/appointments'
+      fullPath: '/admin/appointments'
+      preLoaderRoute: typeof AdminAppointmentsIndexImport
       parentRoute: typeof rootRoute
     }
     '/admin/categories/': {
@@ -365,7 +393,9 @@ export interface FileRoutesByFullPath {
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
   '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
+  '/admin/appointments/$id': typeof AdminAppointmentsIdRoute
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
+  '/admin/appointments': typeof AdminAppointmentsIndexRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/employees': typeof AdminEmployeesIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
@@ -387,7 +417,9 @@ export interface FileRoutesByTo {
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
   '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
+  '/admin/appointments/$id': typeof AdminAppointmentsIdRoute
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
+  '/admin/appointments': typeof AdminAppointmentsIndexRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/employees': typeof AdminEmployeesIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
@@ -411,7 +443,9 @@ export interface FileRoutesById {
   '/_client/profile/my-bookings': typeof ClientProfileMyBookingsRoute
   '/_client/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/_client/profile/user-info': typeof ClientProfileUserInfoRoute
+  '/admin/appointments/$id': typeof AdminAppointmentsIdRoute
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
+  '/admin/appointments/': typeof AdminAppointmentsIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/employees/': typeof AdminEmployeesIndexRoute
   '/admin/services/': typeof AdminServicesIndexRoute
@@ -436,7 +470,9 @@ export interface FileRouteTypes {
     | '/profile/my-bookings'
     | '/profile/user-appointments'
     | '/profile/user-info'
+    | '/admin/appointments/$id'
     | '/admin/categories/$id'
+    | '/admin/appointments'
     | '/admin/categories'
     | '/admin/employees'
     | '/admin/services'
@@ -457,7 +493,9 @@ export interface FileRouteTypes {
     | '/profile/my-bookings'
     | '/profile/user-appointments'
     | '/profile/user-info'
+    | '/admin/appointments/$id'
     | '/admin/categories/$id'
+    | '/admin/appointments'
     | '/admin/categories'
     | '/admin/employees'
     | '/admin/services'
@@ -479,7 +517,9 @@ export interface FileRouteTypes {
     | '/_client/profile/my-bookings'
     | '/_client/profile/user-appointments'
     | '/_client/profile/user-info'
+    | '/admin/appointments/$id'
     | '/admin/categories/$id'
+    | '/admin/appointments/'
     | '/admin/categories/'
     | '/admin/employees/'
     | '/admin/services/'
@@ -489,7 +529,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   ClientRoute: typeof ClientRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  AdminAppointmentsIdRoute: typeof AdminAppointmentsIdRoute
   AdminCategoriesIdRoute: typeof AdminCategoriesIdRoute
+  AdminAppointmentsIndexRoute: typeof AdminAppointmentsIndexRoute
   AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
   AdminEmployeesIndexRoute: typeof AdminEmployeesIndexRoute
   AdminServicesIndexRoute: typeof AdminServicesIndexRoute
@@ -498,7 +540,9 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   ClientRoute: ClientRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  AdminAppointmentsIdRoute: AdminAppointmentsIdRoute,
   AdminCategoriesIdRoute: AdminCategoriesIdRoute,
+  AdminAppointmentsIndexRoute: AdminAppointmentsIndexRoute,
   AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
   AdminEmployeesIndexRoute: AdminEmployeesIndexRoute,
   AdminServicesIndexRoute: AdminServicesIndexRoute,
@@ -516,7 +560,9 @@ export const routeTree = rootRoute
       "children": [
         "/_client",
         "/auth",
+        "/admin/appointments/$id",
         "/admin/categories/$id",
+        "/admin/appointments/",
         "/admin/categories/",
         "/admin/employees/",
         "/admin/services/"
@@ -602,8 +648,14 @@ export const routeTree = rootRoute
       "filePath": "_client/profile/user-info.tsx",
       "parent": "/_client"
     },
+    "/admin/appointments/$id": {
+      "filePath": "admin/appointments/$id.tsx"
+    },
     "/admin/categories/$id": {
       "filePath": "admin/categories/$id.tsx"
+    },
+    "/admin/appointments/": {
+      "filePath": "admin/appointments/index.tsx"
     },
     "/admin/categories/": {
       "filePath": "admin/categories/index.tsx"
