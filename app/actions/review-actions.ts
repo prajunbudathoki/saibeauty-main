@@ -46,23 +46,31 @@ export const getStaffAverageRating = createServerFn({
 })
   .validator((d: { staffId: string }) => d)
   .handler(async ({ data: { staffId } }) => {
-    const ratings = await prisma.appointment.findMany({
-      where: { staff_id: staffId, status: "completed", NOT: { rating: null } },
-      select: {
-        rating: true,
-      },
-    });
-    if (!ratings.length) {
-      return { averageRating: null, totalReviews: null };
-    }
-    const totalRating = ratings.reduce(
-      (sum, appointment) => sum + (appointment.rating || 0),
-      0
-    );
-    const averageRating = totalRating / ratings.length;
+    try {
+      const ratings = await prisma.appointment.findMany({
+        where: {
+          staff_id: staffId,
+          status: "completed",
+          NOT: { rating: null },
+        },
+        select: {
+          rating: true,
+        },
+      });
+      if (!ratings.length) {
+        return { averageRating: null, totalReviews: null };
+      }
+      const totalRating = ratings.reduce(
+        (sum, appointment) => sum + (appointment.rating || 0),
+        0
+      );
+      const averageRating = totalRating / ratings.length;
 
-    return {
-      averageRating: Number.parseFloat(averageRating.toFixed(1)),
-      totalReviews: ratings.length,
-    };
+      return {
+        averageRating: Number.parseFloat(averageRating.toFixed(1)),
+        totalReviews: ratings.length,
+      };
+    } catch (error) {
+      throw new Error("An unexpected error occured");
+    }
   });
