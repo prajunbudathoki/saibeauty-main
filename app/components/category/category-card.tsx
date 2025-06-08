@@ -79,7 +79,7 @@ export function CategoryCard({ category, serviceCount }: CategoryCardProps) {
               className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
               asChild
             >
-              <Link to={"/admin/categories/" + category.id}>
+              <Link to={`/admin/categories/${category.id}`}>
                 <Eye className="h-4 w-4" />
               </Link>
             </Button>
@@ -100,7 +100,7 @@ export function CategoryCard({ category, serviceCount }: CategoryCardProps) {
 
             <ConfirmDialog
               title="Delete Category"
-              description={`Are you sure you want to delete this category? This will also delete all services in this category. This action cannot be undone.`}
+              description="Are you sure you want to delete this category? This will also delete all services in this category. This action cannot be undone."
               onConfirm={() => handleDelete(category.id)}
               trigger={
                 <Button
