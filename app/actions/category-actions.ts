@@ -20,7 +20,7 @@ export const getCategories = createServerFn({
 export const getCategoryById = createServerFn()
   .validator((id: string) => id)
   .handler(async ({ data }) => {
-    await prisma.category.findUnique({
+    return await prisma.category.findUnique({
       where: {
         id: data,
       },
