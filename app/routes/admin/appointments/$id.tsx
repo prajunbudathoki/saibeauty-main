@@ -8,11 +8,14 @@ import { ArrowLeft } from "lucide-react";
 export const Route = createFileRoute("/admin/appointments/$id")({
 	component: RouteComponent,
 	loader: async ({ params }) => {
-		getAppointmentById({ data: params.id });
+		return await getAppointmentById({ data: params.id });
 	},
 });
 
 function RouteComponent() {
+  const data = Route.useLoaderData()
+  const appointment = data?.appointment
+  const services = data?.services
 	 return (
       <div>
         <AdminHeader title="Appointment Details" />
