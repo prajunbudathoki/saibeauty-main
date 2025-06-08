@@ -89,6 +89,17 @@ export interface Staff {
   twitter_url: string | null;
 }
 
+export interface StaffSchedule {
+  id: string;
+  staff_id: string;
+  location_id: string;
+  date: string;
+  start_time: string;
+  day_of_week: number;
+  end_time: string;
+  is_available: boolean;
+}
+
 // New types for booking system
 export interface Appointment {
   id: string;

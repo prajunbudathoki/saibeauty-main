@@ -1,33 +1,29 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { format } from "date-fns"
-import { toast } from "sonner"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Textarea } from "@/components/ui/textarea"
-import { ConfirmDialog } from "@/components/shared/confirm-dialog"
-import { Trash2 } from "lucide-react"
+import { useState, useEffect } from "react";
+import { format } from "date-fns";
+import { toast } from "sonner";
 import {
-  type SpecialAvailability,
-  deleteSpecialAvailability,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { Trash2 } from "lucide-react";
+import {
+  getStaffSpecialAvailability,
+  deleteStaffSpecialAvailability,
   getSpecialAvailabilityForDate,
   upsertSpecialAvailability,
-} from "@/actions/staff-availability-actions"
-
-interface SpecialAvailabilityDialogProps {
-  open: boolean
-  onOpenChange: (refreshData?: boolean) => void
-  date: Date
-  staffId: string
-  locationId: string
-  hasRegularSchedule?: boolean
-}
+} from "@/actions/staff-availability-actions";
 
 export function SpecialAvailabilityDialog({
   open,
@@ -36,90 +32,92 @@ export function SpecialAvailabilityDialog({
   staffId,
   locationId,
   hasRegularSchedule = false,
-}: SpecialAvailabilityDialogProps) {
-  const [loading, setLoading] = useState(false)
-  const [isAvailable, setIsAvailable] = useState(true)
-  const [startTime, setStartTime] = useState("09:00")
-  const [endTime, setEndTime] = useState("17:00")
-  const [notes, setNotes] = useState("")
-  const [existingRecord, setExistingRecord] = useState<SpecialAvailability | null>(null)
+}) {
+  const [loading, setLoading] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [startTime, setStartTime] = useState("09:00");
+  const [endTime, setEndTime] = useState("17:00");
+  const [notes, setNotes] = useState("");
+  const [existingRecord, setExistingRecord] = useState(null);
 
-  const formattedDate = format(date, "yyyy-MM-dd")
-  const displayDate = format(date, "EEEE, MMMM d, yyyy")
+  const formattedDate = format(date, "yyyy-MM-dd");
+  const displayDate = format(date, "EEEE, MMMM d, yyyy");
 
   useEffect(() => {
     const fetchExistingAvailability = async () => {
       try {
-        const data = await getSpecialAvailabilityForDate(staffId, locationId, formattedDate)
+        const data = await getSpecialAvailabilityForDate({data: { staffId, locationId, date: formattedDate }});
         if (data) {
-          setExistingRecord(data)
-          setIsAvailable(data.is_available)
-          if (data.start_time) setStartTime(data.start_time)
-          if (data.end_time) setEndTime(data.end_time)
-          setNotes(data.notes || "")
+          setExistingRecord(data);
+          setIsAvailable(data.is_available);
+          if (data.start_time) setStartTime(data.start_time);
+          if (data.end_time) setEndTime(data.end_time);
+          setNotes(data.note || "");
         } else {
           // Reset form for new entry
-          setExistingRecord(null)
-          setIsAvailable(hasRegularSchedule) // Default to the regular schedule status
-          setStartTime("09:00")
-          setEndTime("17:00")
-          setNotes("")
+          setExistingRecord(null);
+          setIsAvailable(hasRegularSchedule); // Default to the regular schedule status
+          setStartTime("09:00");
+          setEndTime("17:00");
+          setNotes("");
         }
       } catch (error) {
-        console.error("Error fetching availability:", error)
-        toast.error("Failed to load availability data")
+        console.error("Error fetching availability:", error);
+        toast.error("Failed to load availability data");
       }
-    }
+    };
 
     if (open) {
-      fetchExistingAvailability()
+      fetchExistingAvailability();
     }
-  }, [open, staffId, locationId, formattedDate, hasRegularSchedule])
+  }, [open, staffId, locationId, formattedDate, hasRegularSchedule]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      const formData = new FormData()
-      formData.append("staff_id", staffId)
-      formData.append("location_id", locationId)
-      formData.append("date", formattedDate)
-      formData.append("is_available", isAvailable.toString())
+      const formData = new FormData();
+      formData.append("staff_id", staffId);
+      formData.append("location_id", locationId);
+      formData.append("date", formattedDate);
+      formData.append("is_available", isAvailable.toString());
 
       if (isAvailable) {
-        formData.append("start_time", startTime)
-        formData.append("end_time", endTime)
+        formData.append("start_time", startTime);
+        formData.append("end_time", endTime);
       } else {
-        formData.append("start_time", "")
-        formData.append("end_time", "")
+        formData.append("start_time", "");
+        formData.append("end_time", "");
       }
 
-      formData.append("notes", notes)
+      formData.append("notes", notes);
 
-      await upsertSpecialAvailability(formData)
-      toast.success("Availability updated successfully")
-      onOpenChange(true) // Close dialog and refresh data
+      await upsertSpecialAvailability({data: formData});
+      toast.success("Availability updated successfully");
+      onOpenChange(true); // Close dialog and refresh data
     } catch (error) {
-      console.error("Error saving availability:", error)
-      toast.error(error instanceof Error ? error.message : "Failed to save availability")
+      console.error("Error saving availability:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save availability"
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDelete = async () => {
-    if (!existingRecord) return
+    if (!existingRecord) return;
 
     try {
-      await deleteSpecialAvailability(existingRecord.id, staffId, locationId)
-      toast.success("Special availability deleted")
-      onOpenChange(true) // Close dialog and refresh data
+      await deleteStaffSpecialAvailability({data: { id: existingRecord.id, staffId, locationId }});
+      toast.success("Special availability deleted");
+      onOpenChange(true); // Close dialog and refresh data
     } catch (error) {
-      console.error("Error deleting availability:", error)
-      toast.error("Failed to delete availability")
+      console.error("Error deleting availability:", error);
+      toast.error("Failed to delete availability");
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={() => onOpenChange()}>
@@ -133,10 +131,16 @@ export function SpecialAvailabilityDialog({
             <div className="space-y-0.5">
               <Label htmlFor="is_available">Available on this day</Label>
               <div className="text-sm text-muted-foreground">
-                {isAvailable ? "Staff is available to work" : "Staff is not available to work"}
+                {isAvailable
+                  ? "Staff is available to work"
+                  : "Staff is not available to work"}
               </div>
             </div>
-            <Switch id="is_available" checked={isAvailable} onCheckedChange={setIsAvailable} />
+            <Switch
+              id="is_available"
+              checked={isAvailable}
+              onCheckedChange={setIsAvailable}
+            />
           </div>
 
           {isAvailable && (
@@ -183,7 +187,12 @@ export function SpecialAvailabilityDialog({
                   description="Are you sure you want to delete this special availability? This will revert to the regular schedule."
                   onConfirm={handleDelete}
                   trigger={
-                    <Button type="button" variant="outline" size="sm" className="text-destructive">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="text-destructive"
+                    >
                       <Trash2 className="h-4 w-4 mr-2" />
                       Delete
                     </Button>
@@ -192,7 +201,11 @@ export function SpecialAvailabilityDialog({
               )}
             </div>
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => onOpenChange()}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange()}
+              >
                 Cancel
               </Button>
               <Button type="submit" disabled={loading}>
@@ -203,6 +216,5 @@ export function SpecialAvailabilityDialog({
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-

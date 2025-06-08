@@ -1,4 +1,3 @@
-import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
