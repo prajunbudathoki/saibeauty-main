@@ -24,6 +24,7 @@ import { Route as ClientGalleryImport } from './routes/_client/gallery'
 import { Route as ClientContactImport } from './routes/_client/contact'
 import { Route as ClientAboutImport } from './routes/_client/about'
 import { Route as AdminServicesIndexImport } from './routes/admin/services/index'
+import { Route as AdminEmployeesIndexImport } from './routes/admin/employees/index'
 import { Route as AdminCategoriesIndexImport } from './routes/admin/categories/index'
 import { Route as AdminCategoriesIdImport } from './routes/admin/categories/$id'
 import { Route as ClientProfileUserInfoImport } from './routes/_client/profile/user-info'
@@ -107,6 +108,12 @@ const ClientAboutRoute = ClientAboutImport.update({
 const AdminServicesIndexRoute = AdminServicesIndexImport.update({
   id: '/admin/services/',
   path: '/admin/services/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminEmployeesIndexRoute = AdminEmployeesIndexImport.update({
+  id: '/admin/employees/',
+  path: '/admin/employees/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -277,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoriesIndexImport
       parentRoute: typeof rootRoute
     }
+    '/admin/employees/': {
+      id: '/admin/employees/'
+      path: '/admin/employees'
+      fullPath: '/admin/employees'
+      preLoaderRoute: typeof AdminEmployeesIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/services/': {
       id: '/admin/services/'
       path: '/admin/services'
@@ -353,6 +367,7 @@ export interface FileRoutesByFullPath {
   '/profile/user-info': typeof ClientProfileUserInfoRoute
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
+  '/admin/employees': typeof AdminEmployeesIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
 }
 
@@ -374,6 +389,7 @@ export interface FileRoutesByTo {
   '/profile/user-info': typeof ClientProfileUserInfoRoute
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
+  '/admin/employees': typeof AdminEmployeesIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
 }
 
@@ -397,6 +413,7 @@ export interface FileRoutesById {
   '/_client/profile/user-info': typeof ClientProfileUserInfoRoute
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/employees/': typeof AdminEmployeesIndexRoute
   '/admin/services/': typeof AdminServicesIndexRoute
 }
 
@@ -421,6 +438,7 @@ export interface FileRouteTypes {
     | '/profile/user-info'
     | '/admin/categories/$id'
     | '/admin/categories'
+    | '/admin/employees'
     | '/admin/services'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -441,6 +459,7 @@ export interface FileRouteTypes {
     | '/profile/user-info'
     | '/admin/categories/$id'
     | '/admin/categories'
+    | '/admin/employees'
     | '/admin/services'
   id:
     | '__root__'
@@ -462,6 +481,7 @@ export interface FileRouteTypes {
     | '/_client/profile/user-info'
     | '/admin/categories/$id'
     | '/admin/categories/'
+    | '/admin/employees/'
     | '/admin/services/'
   fileRoutesById: FileRoutesById
 }
@@ -471,6 +491,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   AdminCategoriesIdRoute: typeof AdminCategoriesIdRoute
   AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
+  AdminEmployeesIndexRoute: typeof AdminEmployeesIndexRoute
   AdminServicesIndexRoute: typeof AdminServicesIndexRoute
 }
 
@@ -479,6 +500,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   AdminCategoriesIdRoute: AdminCategoriesIdRoute,
   AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
+  AdminEmployeesIndexRoute: AdminEmployeesIndexRoute,
   AdminServicesIndexRoute: AdminServicesIndexRoute,
 }
 
@@ -496,6 +518,7 @@ export const routeTree = rootRoute
         "/auth",
         "/admin/categories/$id",
         "/admin/categories/",
+        "/admin/employees/",
         "/admin/services/"
       ]
     },
@@ -584,6 +607,9 @@ export const routeTree = rootRoute
     },
     "/admin/categories/": {
       "filePath": "admin/categories/index.tsx"
+    },
+    "/admin/employees/": {
+      "filePath": "admin/employees/index.tsx"
     },
     "/admin/services/": {
       "filePath": "admin/services/index.tsx"

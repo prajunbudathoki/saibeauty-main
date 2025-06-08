@@ -28,7 +28,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
     }
   };
 
-  const imageUrl = "https://picsum.photos/200/300?grayscale";
+  const imageUrl = "";
 
   return (
     <motion.div

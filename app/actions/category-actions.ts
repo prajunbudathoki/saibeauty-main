@@ -84,3 +84,17 @@ export const getCategoryServiceCount = createServerFn({
     });
     return category;
   });
+
+export const getCategoriesWithServiceCount = createServerFn().handler(
+  async () => {
+    return await prisma.category.findMany({
+      include: {
+        services: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+  }
+);
