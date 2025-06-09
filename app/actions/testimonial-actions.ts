@@ -6,11 +6,12 @@ export const getTestimonials = createServerFn({
   method: "GET",
 }).handler(async () => {
   try {
-    await prisma.testimonial.findMany({
+    const testimonials = await prisma.testimonial.findMany({
       orderBy: {
         created_at: "desc",
       },
     });
+    return testimonials;
   } catch (error) {
     throw new Error("Failed to load testimonials");
   }
@@ -38,16 +39,17 @@ export const createTestimonial = createServerFn({
     }) => d
   )
   .handler(async ({ data }) => {
-    const { data: session } = await authClient.getSession();
-    if (session?.user.role !== "admin") {
-      throw new Error("Role doesnot have access");
-    }
+    const { name, designation, rating, review } = data;
+    // const { data: session } = await authClient.getSession();
+    // if (session?.user.role !== "admin") {
+    //   throw new Error("Role doesnot have access");
+    // }
     const testimonial = await prisma.testimonial.create({
       data: {
-        name: data.name,
-        designation: data.designation,
-        rating: data.rating,
-        review: data.review,
+        name,
+        designation,
+        rating,
+        review,
       },
     });
     return testimonial;
@@ -56,8 +58,46 @@ export const createTestimonial = createServerFn({
 export const updateTestimonial = createServerFn({
   method: "POST",
 })
-  .validator((d: { id: string; name: string; designaton: string }) => d)
-  .handler(async ({ data }) => {});
+  .validator(
+    (d: {
+      id: string;
+      name: string;
+      designation?: string;
+      rating: number;
+      review: string;
+      image?: string | null;
+      newImageFileName?: string;
+      deleteOldImage?: boolean;
+    }) => d
+  )
+  .handler(async ({ data }) => {
+    const { id, name, designation, rating, review, image } = data;
+    // const { data: session } = await authClient.getSession();
+    // if (session?.user.role !== "admin") {
+    //   throw new Error("User is not an admin");
+    // }
+
+    if (!name || !review || Number.isNaN(rating) || rating < 1 || rating > 5) {
+      throw new Error("Required fields are missing or invalid");
+    }
+
+    try {
+      const updated = await prisma.testimonial.update({
+        where: { id },
+        data: {
+          name,
+          designation: designation || null,
+          rating,
+          review,
+          image: image ?? undefined,
+        },
+      });
+      return updated;
+    } catch (error) {
+      console.error("Error updating testimonial:", error);
+      throw new Error("Failed to update testimonial");
+    }
+  });
 
 export const deleteTestimonial = createServerFn()
   .validator((id: string) => id)

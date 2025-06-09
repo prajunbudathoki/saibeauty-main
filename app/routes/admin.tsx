@@ -7,7 +7,6 @@ export const Route = createFileRoute("/admin")({
 });
 
 function RouteComponent() {
-  console.log("Hello from layout page");
   return (
     <>
       <div className="flex min-h-screen">

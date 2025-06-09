@@ -17,7 +17,7 @@ export const Route = createFileRoute("/admin/testimonials/")({
 
 function RouteComponent() {
   const { testimonials } = Route.useLoaderData();
-    return (
+  return (
     <div>
       <AdminHeader title="Testimonials" />
 
@@ -39,7 +39,9 @@ function RouteComponent() {
         {testimonials.length === 0 ? (
           <div className="text-center py-12">
             <h3 className="text-lg font-medium">No testimonials yet</h3>
-            <p className="text-muted-foreground">Add your first testimonial to get started.</p>
+            <p className="text-muted-foreground">
+              Add your first testimonial to get started.
+            </p>
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -50,5 +52,5 @@ function RouteComponent() {
         )}
       </div>
     </div>
-  )
+  );
 }

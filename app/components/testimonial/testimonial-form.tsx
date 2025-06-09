@@ -20,15 +20,13 @@ import {
 } from "@/actions/testimonial-actions";
 import { useNavigate } from "@tanstack/react-router";
 
-interface TestimonialFormProps {
-  testimonial?: Testimonial;
-  onSuccess?: () => void;
-}
-
 export function TestimonialForm({
   testimonial,
   onSuccess,
-}: TestimonialFormProps) {
+}: {
+  testimonial?: Testimonial;
+  onSuccess?: () => void;
+}) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
@@ -38,7 +36,6 @@ export function TestimonialForm({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const formData = new FormData(e.currentTarget);
 
@@ -49,14 +46,19 @@ export function TestimonialForm({
         // Keep the existing image if no new one is provided
         formData.set("image", "");
       }
-
-      // if (isEditing) {
-      //   await updateTestimonial(testimonial.id, formData);
-      //   toast.success("Testimonial updated successfully");
-      // } else {
-      //   await createTestimonial(formData);
-      //   toast.success("Testimonial created successfully");
-      // }
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+      // converting the fiedls into object as formData was not converted by serverfn
+      const plainData = Object.fromEntries(formData.entries());
+      plainData.rating = Number(plainData.rating);
+      if (isEditing) {
+        await updateTestimonial({ data: testimonial.id });
+        toast.success("Testimonial updated successfully");
+      } else {
+        await createTestimonial({ data: plainData });
+        toast.success("Testimonial created successfully");
+      }
 
       if (onSuccess) {
         onSuccess();
@@ -127,10 +129,7 @@ export function TestimonialForm({
 
         <div className="space-y-2">
           <Label>Customer Photo</Label>
-          <ImageUpload
-            onChange={setImageFile}
-            value={"https://picsum.photos/seed/picsum/200/300"}
-          />
+          <ImageUpload onChange={setImageFile} value={null} />
         </div>
       </div>
 
