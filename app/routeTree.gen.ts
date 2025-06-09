@@ -8,21 +8,26 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
 import { Route as ClientImport } from './routes/_client'
+import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as ClientIndexImport } from './routes/_client/index'
 import { Route as AuthUpdatePasswordImport } from './routes/auth/update-password'
 import { Route as AuthSignupImport } from './routes/auth/signup'
 import { Route as AuthLoginImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordImport } from './routes/auth/forgot-password'
+import { Route as AdminLayoutImport } from './routes/admin/_layout'
 import { Route as ClientTeamImport } from './routes/_client/team'
 import { Route as ClientServicesImport } from './routes/_client/services'
 import { Route as ClientGalleryImport } from './routes/_client/gallery'
 import { Route as ClientContactImport } from './routes/_client/contact'
 import { Route as ClientAboutImport } from './routes/_client/about'
+import { Route as AdminTestimonialsIndexImport } from './routes/admin/testimonials/index'
 import { Route as AdminServicesIndexImport } from './routes/admin/services/index'
 import { Route as AdminLocationsIndexImport } from './routes/admin/locations/index'
 import { Route as AdminEmployeesIndexImport } from './routes/admin/employees/index'
@@ -40,7 +45,17 @@ import { Route as AdminLocationsIdServicesSearchImport } from './routes/admin/lo
 import { Route as AdminLocationsIdStaffsScheduleIndexImport } from './routes/admin/locations/$id/staffs/schedule/index'
 import { Route as AdminLocationsIdStaffsReviewsIndexImport } from './routes/admin/locations/$id/staffs/reviews/index'
 
+// Create Virtual Routes
+
+const AdminImport = createFileRoute('/admin')()
+
 // Create/Update Routes
+
+const AdminRoute = AdminImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthRoute = AuthImport.update({
   id: '/auth',
@@ -51,6 +66,12 @@ const AuthRoute = AuthImport.update({
 const ClientRoute = ClientImport.update({
   id: '/_client',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AdminIndexRoute = AdminIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const ClientIndexRoute = ClientIndexImport.update({
@@ -83,6 +104,11 @@ const AuthForgotPasswordRoute = AuthForgotPasswordImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
+const AdminLayoutRoute = AdminLayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const ClientTeamRoute = ClientTeamImport.update({
   id: '/team',
   path: '/team',
@@ -113,46 +139,52 @@ const ClientAboutRoute = ClientAboutImport.update({
   getParentRoute: () => ClientRoute,
 } as any)
 
+const AdminTestimonialsIndexRoute = AdminTestimonialsIndexImport.update({
+  id: '/testimonials/',
+  path: '/testimonials/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const AdminServicesIndexRoute = AdminServicesIndexImport.update({
-  id: '/admin/services/',
-  path: '/admin/services/',
-  getParentRoute: () => rootRoute,
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const AdminLocationsIndexRoute = AdminLocationsIndexImport.update({
-  id: '/admin/locations/',
-  path: '/admin/locations/',
-  getParentRoute: () => rootRoute,
+  id: '/locations/',
+  path: '/locations/',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const AdminEmployeesIndexRoute = AdminEmployeesIndexImport.update({
-  id: '/admin/employees/',
-  path: '/admin/employees/',
-  getParentRoute: () => rootRoute,
+  id: '/employees/',
+  path: '/employees/',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const AdminCategoriesIndexRoute = AdminCategoriesIndexImport.update({
-  id: '/admin/categories/',
-  path: '/admin/categories/',
-  getParentRoute: () => rootRoute,
+  id: '/categories/',
+  path: '/categories/',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const AdminAppointmentsIndexRoute = AdminAppointmentsIndexImport.update({
-  id: '/admin/appointments/',
-  path: '/admin/appointments/',
-  getParentRoute: () => rootRoute,
+  id: '/appointments/',
+  path: '/appointments/',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const AdminCategoriesIdRoute = AdminCategoriesIdImport.update({
-  id: '/admin/categories/$id',
-  path: '/admin/categories/$id',
-  getParentRoute: () => rootRoute,
+  id: '/categories/$id',
+  path: '/categories/$id',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const AdminAppointmentsIdRoute = AdminAppointmentsIdImport.update({
-  id: '/admin/appointments/$id',
-  path: '/admin/appointments/$id',
-  getParentRoute: () => rootRoute,
+  id: '/appointments/$id',
+  path: '/appointments/$id',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const ClientProfileUserInfoRoute = ClientProfileUserInfoImport.update({
@@ -182,37 +214,37 @@ const ClientProfileBookingRoute = ClientProfileBookingImport.update({
 
 const AdminLocationsIdStaffsIndexRoute =
   AdminLocationsIdStaffsIndexImport.update({
-    id: '/admin/locations/$id/staffs/',
-    path: '/admin/locations/$id/staffs/',
-    getParentRoute: () => rootRoute,
+    id: '/locations/$id/staffs/',
+    path: '/locations/$id/staffs/',
+    getParentRoute: () => AdminRoute,
   } as any)
 
 const AdminLocationsIdServicesIndexRoute =
   AdminLocationsIdServicesIndexImport.update({
-    id: '/admin/locations/$id/services/',
-    path: '/admin/locations/$id/services/',
-    getParentRoute: () => rootRoute,
+    id: '/locations/$id/services/',
+    path: '/locations/$id/services/',
+    getParentRoute: () => AdminRoute,
   } as any)
 
 const AdminLocationsIdServicesSearchRoute =
   AdminLocationsIdServicesSearchImport.update({
-    id: '/admin/locations/$id/services/search',
-    path: '/admin/locations/$id/services/search',
-    getParentRoute: () => rootRoute,
+    id: '/locations/$id/services/search',
+    path: '/locations/$id/services/search',
+    getParentRoute: () => AdminRoute,
   } as any)
 
 const AdminLocationsIdStaffsScheduleIndexRoute =
   AdminLocationsIdStaffsScheduleIndexImport.update({
-    id: '/admin/locations/$id/staffs/schedule/',
-    path: '/admin/locations/$id/staffs/schedule/',
-    getParentRoute: () => rootRoute,
+    id: '/locations/$id/staffs/schedule/',
+    path: '/locations/$id/staffs/schedule/',
+    getParentRoute: () => AdminRoute,
   } as any)
 
 const AdminLocationsIdStaffsReviewsIndexRoute =
   AdminLocationsIdStaffsReviewsIndexImport.update({
-    id: '/admin/locations/$id/staffs/reviews/',
-    path: '/admin/locations/$id/staffs/reviews/',
-    getParentRoute: () => rootRoute,
+    id: '/locations/$id/staffs/reviews/',
+    path: '/locations/$id/staffs/reviews/',
+    getParentRoute: () => AdminRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -268,6 +300,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientTeamImport
       parentRoute: typeof ClientImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/_layout': {
+      id: '/admin/_layout'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminLayoutImport
+      parentRoute: typeof AdminRoute
+    }
     '/auth/forgot-password': {
       id: '/auth/forgot-password'
       path: '/forgot-password'
@@ -303,6 +349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientIndexImport
       parentRoute: typeof ClientImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexImport
+      parentRoute: typeof AdminImport
+    }
     '/_client/profile/booking': {
       id: '/_client/profile/booking'
       path: '/profile/booking'
@@ -333,87 +386,94 @@ declare module '@tanstack/react-router' {
     }
     '/admin/appointments/$id': {
       id: '/admin/appointments/$id'
-      path: '/admin/appointments/$id'
+      path: '/appointments/$id'
       fullPath: '/admin/appointments/$id'
       preLoaderRoute: typeof AdminAppointmentsIdImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/categories/$id': {
       id: '/admin/categories/$id'
-      path: '/admin/categories/$id'
+      path: '/categories/$id'
       fullPath: '/admin/categories/$id'
       preLoaderRoute: typeof AdminCategoriesIdImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/appointments/': {
       id: '/admin/appointments/'
-      path: '/admin/appointments'
+      path: '/appointments'
       fullPath: '/admin/appointments'
       preLoaderRoute: typeof AdminAppointmentsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/categories/': {
       id: '/admin/categories/'
-      path: '/admin/categories'
+      path: '/categories'
       fullPath: '/admin/categories'
       preLoaderRoute: typeof AdminCategoriesIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/employees/': {
       id: '/admin/employees/'
-      path: '/admin/employees'
+      path: '/employees'
       fullPath: '/admin/employees'
       preLoaderRoute: typeof AdminEmployeesIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/locations/': {
       id: '/admin/locations/'
-      path: '/admin/locations'
+      path: '/locations'
       fullPath: '/admin/locations'
       preLoaderRoute: typeof AdminLocationsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/services/': {
       id: '/admin/services/'
-      path: '/admin/services'
+      path: '/services'
       fullPath: '/admin/services'
       preLoaderRoute: typeof AdminServicesIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
+    }
+    '/admin/testimonials/': {
+      id: '/admin/testimonials/'
+      path: '/testimonials'
+      fullPath: '/admin/testimonials'
+      preLoaderRoute: typeof AdminTestimonialsIndexImport
+      parentRoute: typeof AdminImport
     }
     '/admin/locations/$id/services/search': {
       id: '/admin/locations/$id/services/search'
-      path: '/admin/locations/$id/services/search'
+      path: '/locations/$id/services/search'
       fullPath: '/admin/locations/$id/services/search'
       preLoaderRoute: typeof AdminLocationsIdServicesSearchImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/locations/$id/services/': {
       id: '/admin/locations/$id/services/'
-      path: '/admin/locations/$id/services'
+      path: '/locations/$id/services'
       fullPath: '/admin/locations/$id/services'
       preLoaderRoute: typeof AdminLocationsIdServicesIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/locations/$id/staffs/': {
       id: '/admin/locations/$id/staffs/'
-      path: '/admin/locations/$id/staffs'
+      path: '/locations/$id/staffs'
       fullPath: '/admin/locations/$id/staffs'
       preLoaderRoute: typeof AdminLocationsIdStaffsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/locations/$id/staffs/reviews/': {
       id: '/admin/locations/$id/staffs/reviews/'
-      path: '/admin/locations/$id/staffs/reviews'
+      path: '/locations/$id/staffs/reviews'
       fullPath: '/admin/locations/$id/staffs/reviews'
       preLoaderRoute: typeof AdminLocationsIdStaffsReviewsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
     '/admin/locations/$id/staffs/schedule/': {
       id: '/admin/locations/$id/staffs/schedule/'
-      path: '/admin/locations/$id/staffs/schedule'
+      path: '/locations/$id/staffs/schedule'
       fullPath: '/admin/locations/$id/staffs/schedule'
       preLoaderRoute: typeof AdminLocationsIdStaffsScheduleIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
   }
 }
@@ -465,6 +525,46 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface AdminRouteChildren {
+  AdminLayoutRoute: typeof AdminLayoutRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminAppointmentsIdRoute: typeof AdminAppointmentsIdRoute
+  AdminCategoriesIdRoute: typeof AdminCategoriesIdRoute
+  AdminAppointmentsIndexRoute: typeof AdminAppointmentsIndexRoute
+  AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
+  AdminEmployeesIndexRoute: typeof AdminEmployeesIndexRoute
+  AdminLocationsIndexRoute: typeof AdminLocationsIndexRoute
+  AdminServicesIndexRoute: typeof AdminServicesIndexRoute
+  AdminTestimonialsIndexRoute: typeof AdminTestimonialsIndexRoute
+  AdminLocationsIdServicesSearchRoute: typeof AdminLocationsIdServicesSearchRoute
+  AdminLocationsIdServicesIndexRoute: typeof AdminLocationsIdServicesIndexRoute
+  AdminLocationsIdStaffsIndexRoute: typeof AdminLocationsIdStaffsIndexRoute
+  AdminLocationsIdStaffsReviewsIndexRoute: typeof AdminLocationsIdStaffsReviewsIndexRoute
+  AdminLocationsIdStaffsScheduleIndexRoute: typeof AdminLocationsIdStaffsScheduleIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminLayoutRoute: AdminLayoutRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminAppointmentsIdRoute: AdminAppointmentsIdRoute,
+  AdminCategoriesIdRoute: AdminCategoriesIdRoute,
+  AdminAppointmentsIndexRoute: AdminAppointmentsIndexRoute,
+  AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
+  AdminEmployeesIndexRoute: AdminEmployeesIndexRoute,
+  AdminLocationsIndexRoute: AdminLocationsIndexRoute,
+  AdminServicesIndexRoute: AdminServicesIndexRoute,
+  AdminTestimonialsIndexRoute: AdminTestimonialsIndexRoute,
+  AdminLocationsIdServicesSearchRoute: AdminLocationsIdServicesSearchRoute,
+  AdminLocationsIdServicesIndexRoute: AdminLocationsIdServicesIndexRoute,
+  AdminLocationsIdStaffsIndexRoute: AdminLocationsIdStaffsIndexRoute,
+  AdminLocationsIdStaffsReviewsIndexRoute:
+    AdminLocationsIdStaffsReviewsIndexRoute,
+  AdminLocationsIdStaffsScheduleIndexRoute:
+    AdminLocationsIdStaffsScheduleIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 export interface FileRoutesByFullPath {
   '': typeof ClientRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
@@ -473,11 +573,13 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof ClientGalleryRoute
   '/services': typeof ClientServicesRoute
   '/team': typeof ClientTeamRoute
+  '/admin': typeof AdminLayoutRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/': typeof ClientIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/profile/booking': typeof ClientProfileBookingRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
   '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
@@ -489,6 +591,7 @@ export interface FileRoutesByFullPath {
   '/admin/employees': typeof AdminEmployeesIndexRoute
   '/admin/locations': typeof AdminLocationsIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
+  '/admin/testimonials': typeof AdminTestimonialsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
   '/admin/locations/$id/services': typeof AdminLocationsIdServicesIndexRoute
   '/admin/locations/$id/staffs': typeof AdminLocationsIdStaffsIndexRoute
@@ -503,6 +606,7 @@ export interface FileRoutesByTo {
   '/gallery': typeof ClientGalleryRoute
   '/services': typeof ClientServicesRoute
   '/team': typeof ClientTeamRoute
+  '/admin': typeof AdminIndexRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -519,6 +623,7 @@ export interface FileRoutesByTo {
   '/admin/employees': typeof AdminEmployeesIndexRoute
   '/admin/locations': typeof AdminLocationsIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
+  '/admin/testimonials': typeof AdminTestimonialsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
   '/admin/locations/$id/services': typeof AdminLocationsIdServicesIndexRoute
   '/admin/locations/$id/staffs': typeof AdminLocationsIdStaffsIndexRoute
@@ -535,11 +640,14 @@ export interface FileRoutesById {
   '/_client/gallery': typeof ClientGalleryRoute
   '/_client/services': typeof ClientServicesRoute
   '/_client/team': typeof ClientTeamRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/_layout': typeof AdminLayoutRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/_client/': typeof ClientIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/_client/profile/booking': typeof ClientProfileBookingRoute
   '/_client/profile/my-bookings': typeof ClientProfileMyBookingsRoute
   '/_client/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
@@ -551,6 +659,7 @@ export interface FileRoutesById {
   '/admin/employees/': typeof AdminEmployeesIndexRoute
   '/admin/locations/': typeof AdminLocationsIndexRoute
   '/admin/services/': typeof AdminServicesIndexRoute
+  '/admin/testimonials/': typeof AdminTestimonialsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
   '/admin/locations/$id/services/': typeof AdminLocationsIdServicesIndexRoute
   '/admin/locations/$id/staffs/': typeof AdminLocationsIdStaffsIndexRoute
@@ -568,11 +677,13 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/services'
     | '/team'
+    | '/admin'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
     | '/auth/update-password'
     | '/'
+    | '/admin/'
     | '/profile/booking'
     | '/profile/my-bookings'
     | '/profile/user-appointments'
@@ -584,6 +695,7 @@ export interface FileRouteTypes {
     | '/admin/employees'
     | '/admin/locations'
     | '/admin/services'
+    | '/admin/testimonials'
     | '/admin/locations/$id/services/search'
     | '/admin/locations/$id/services'
     | '/admin/locations/$id/staffs'
@@ -597,6 +709,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/services'
     | '/team'
+    | '/admin'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -613,6 +726,7 @@ export interface FileRouteTypes {
     | '/admin/employees'
     | '/admin/locations'
     | '/admin/services'
+    | '/admin/testimonials'
     | '/admin/locations/$id/services/search'
     | '/admin/locations/$id/services'
     | '/admin/locations/$id/staffs'
@@ -627,11 +741,14 @@ export interface FileRouteTypes {
     | '/_client/gallery'
     | '/_client/services'
     | '/_client/team'
+    | '/admin'
+    | '/admin/_layout'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
     | '/auth/update-password'
     | '/_client/'
+    | '/admin/'
     | '/_client/profile/booking'
     | '/_client/profile/my-bookings'
     | '/_client/profile/user-appointments'
@@ -643,6 +760,7 @@ export interface FileRouteTypes {
     | '/admin/employees/'
     | '/admin/locations/'
     | '/admin/services/'
+    | '/admin/testimonials/'
     | '/admin/locations/$id/services/search'
     | '/admin/locations/$id/services/'
     | '/admin/locations/$id/staffs/'
@@ -654,37 +772,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   ClientRoute: typeof ClientRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
-  AdminAppointmentsIdRoute: typeof AdminAppointmentsIdRoute
-  AdminCategoriesIdRoute: typeof AdminCategoriesIdRoute
-  AdminAppointmentsIndexRoute: typeof AdminAppointmentsIndexRoute
-  AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
-  AdminEmployeesIndexRoute: typeof AdminEmployeesIndexRoute
-  AdminLocationsIndexRoute: typeof AdminLocationsIndexRoute
-  AdminServicesIndexRoute: typeof AdminServicesIndexRoute
-  AdminLocationsIdServicesSearchRoute: typeof AdminLocationsIdServicesSearchRoute
-  AdminLocationsIdServicesIndexRoute: typeof AdminLocationsIdServicesIndexRoute
-  AdminLocationsIdStaffsIndexRoute: typeof AdminLocationsIdStaffsIndexRoute
-  AdminLocationsIdStaffsReviewsIndexRoute: typeof AdminLocationsIdStaffsReviewsIndexRoute
-  AdminLocationsIdStaffsScheduleIndexRoute: typeof AdminLocationsIdStaffsScheduleIndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   ClientRoute: ClientRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
-  AdminAppointmentsIdRoute: AdminAppointmentsIdRoute,
-  AdminCategoriesIdRoute: AdminCategoriesIdRoute,
-  AdminAppointmentsIndexRoute: AdminAppointmentsIndexRoute,
-  AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
-  AdminEmployeesIndexRoute: AdminEmployeesIndexRoute,
-  AdminLocationsIndexRoute: AdminLocationsIndexRoute,
-  AdminServicesIndexRoute: AdminServicesIndexRoute,
-  AdminLocationsIdServicesSearchRoute: AdminLocationsIdServicesSearchRoute,
-  AdminLocationsIdServicesIndexRoute: AdminLocationsIdServicesIndexRoute,
-  AdminLocationsIdStaffsIndexRoute: AdminLocationsIdStaffsIndexRoute,
-  AdminLocationsIdStaffsReviewsIndexRoute:
-    AdminLocationsIdStaffsReviewsIndexRoute,
-  AdminLocationsIdStaffsScheduleIndexRoute:
-    AdminLocationsIdStaffsScheduleIndexRoute,
+  AdminRoute: AdminRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -699,18 +793,7 @@ export const routeTree = rootRoute
       "children": [
         "/_client",
         "/auth",
-        "/admin/appointments/$id",
-        "/admin/categories/$id",
-        "/admin/appointments/",
-        "/admin/categories/",
-        "/admin/employees/",
-        "/admin/locations/",
-        "/admin/services/",
-        "/admin/locations/$id/services/search",
-        "/admin/locations/$id/services/",
-        "/admin/locations/$id/staffs/",
-        "/admin/locations/$id/staffs/reviews/",
-        "/admin/locations/$id/staffs/schedule/"
+        "/admin"
       ]
     },
     "/_client": {
@@ -757,6 +840,30 @@ export const routeTree = rootRoute
       "filePath": "_client/team.tsx",
       "parent": "/_client"
     },
+    "/admin": {
+      "filePath": "admin",
+      "children": [
+        "/admin/_layout",
+        "/admin/",
+        "/admin/appointments/$id",
+        "/admin/categories/$id",
+        "/admin/appointments/",
+        "/admin/categories/",
+        "/admin/employees/",
+        "/admin/locations/",
+        "/admin/services/",
+        "/admin/testimonials/",
+        "/admin/locations/$id/services/search",
+        "/admin/locations/$id/services/",
+        "/admin/locations/$id/staffs/",
+        "/admin/locations/$id/staffs/reviews/",
+        "/admin/locations/$id/staffs/schedule/"
+      ]
+    },
+    "/admin/_layout": {
+      "filePath": "admin/_layout.tsx",
+      "parent": "/admin"
+    },
     "/auth/forgot-password": {
       "filePath": "auth/forgot-password.tsx",
       "parent": "/auth"
@@ -777,6 +884,10 @@ export const routeTree = rootRoute
       "filePath": "_client/index.tsx",
       "parent": "/_client"
     },
+    "/admin/": {
+      "filePath": "admin/index.tsx",
+      "parent": "/admin"
+    },
     "/_client/profile/booking": {
       "filePath": "_client/profile/booking.tsx",
       "parent": "/_client"
@@ -794,40 +905,56 @@ export const routeTree = rootRoute
       "parent": "/_client"
     },
     "/admin/appointments/$id": {
-      "filePath": "admin/appointments/$id.tsx"
+      "filePath": "admin/appointments/$id.tsx",
+      "parent": "/admin"
     },
     "/admin/categories/$id": {
-      "filePath": "admin/categories/$id.tsx"
+      "filePath": "admin/categories/$id.tsx",
+      "parent": "/admin"
     },
     "/admin/appointments/": {
-      "filePath": "admin/appointments/index.tsx"
+      "filePath": "admin/appointments/index.tsx",
+      "parent": "/admin"
     },
     "/admin/categories/": {
-      "filePath": "admin/categories/index.tsx"
+      "filePath": "admin/categories/index.tsx",
+      "parent": "/admin"
     },
     "/admin/employees/": {
-      "filePath": "admin/employees/index.tsx"
+      "filePath": "admin/employees/index.tsx",
+      "parent": "/admin"
     },
     "/admin/locations/": {
-      "filePath": "admin/locations/index.tsx"
+      "filePath": "admin/locations/index.tsx",
+      "parent": "/admin"
     },
     "/admin/services/": {
-      "filePath": "admin/services/index.tsx"
+      "filePath": "admin/services/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/testimonials/": {
+      "filePath": "admin/testimonials/index.tsx",
+      "parent": "/admin"
     },
     "/admin/locations/$id/services/search": {
-      "filePath": "admin/locations/$id/services/search.tsx"
+      "filePath": "admin/locations/$id/services/search.tsx",
+      "parent": "/admin"
     },
     "/admin/locations/$id/services/": {
-      "filePath": "admin/locations/$id/services/index.tsx"
+      "filePath": "admin/locations/$id/services/index.tsx",
+      "parent": "/admin"
     },
     "/admin/locations/$id/staffs/": {
-      "filePath": "admin/locations/$id/staffs/index.tsx"
+      "filePath": "admin/locations/$id/staffs/index.tsx",
+      "parent": "/admin"
     },
     "/admin/locations/$id/staffs/reviews/": {
-      "filePath": "admin/locations/$id/staffs/reviews/index.tsx"
+      "filePath": "admin/locations/$id/staffs/reviews/index.tsx",
+      "parent": "/admin"
     },
     "/admin/locations/$id/staffs/schedule/": {
-      "filePath": "admin/locations/$id/staffs/schedule/index.tsx"
+      "filePath": "admin/locations/$id/staffs/schedule/index.tsx",
+      "parent": "/admin"
     }
   }
 }

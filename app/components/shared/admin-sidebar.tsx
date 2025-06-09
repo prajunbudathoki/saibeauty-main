@@ -65,7 +65,7 @@ export function AdminSidebar() {
   }, []);
 
   const adminLinks: SidebarItem[] =
-    role == "admin"
+    role === "user"
       ? [
           {
             title: "Employees",
@@ -151,6 +151,14 @@ export function AdminSidebar() {
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setMobileOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setMobileOpen(false);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close sidebar overlay"
         />
       )}
 
