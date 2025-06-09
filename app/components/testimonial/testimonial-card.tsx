@@ -13,16 +13,15 @@ import { TestimonialDialog } from "./testimonial-dialog";
 import { Trash2, Edit, Star } from "lucide-react";
 import { deleteTestimonial } from "@/actions/testimonial-actions";
 import { toast } from "sonner";
+import { useRouter } from "@tanstack/react-router";
 
-interface TestimonialCardProps {
-  testimonial: Testimonial;
-}
-
-export function TestimonialCard({ testimonial }: TestimonialCardProps) {
-  const handleDelete = async (id: string) => {
+export function TestimonialCard({ testimonial }) {
+  const router = useRouter();
+  const handleDelete = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      await deleteTestimonial({ data: id });
+      await deleteTestimonial({ data: { id: testimonial.id } });
       toast.success("Testimonial deleted successfully");
+      router.invalidate();
     } catch (error) {
       toast.error("Failed to delete the testimonial");
     }

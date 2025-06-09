@@ -18,7 +18,7 @@ import {
   createTestimonial,
   updateTestimonial,
 } from "@/actions/testimonial-actions";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 
 export function TestimonialForm({
   testimonial,
@@ -30,7 +30,7 @@ export function TestimonialForm({
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
-
+  const router = useRouter();
   const isEditing = !!testimonial;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,18 +46,17 @@ export function TestimonialForm({
         // Keep the existing image if no new one is provided
         formData.set("image", "");
       }
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
-      // converting the fiedls into object as formData was not converted by serverfn
+      // converting the fields into object as formData was not converted by serverfn
       const plainData = Object.fromEntries(formData.entries());
       plainData.rating = Number(plainData.rating);
       if (isEditing) {
-        await updateTestimonial({ data: testimonial.id });
+        await updateTestimonial({ data: { ...plainData, id: testimonial.id } });
         toast.success("Testimonial updated successfully");
+        router.invalidate();
       } else {
         await createTestimonial({ data: plainData });
         toast.success("Testimonial created successfully");
+        router.invalidate();
       }
 
       if (onSuccess) {

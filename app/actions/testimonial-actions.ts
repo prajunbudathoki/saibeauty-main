@@ -77,9 +77,9 @@ export const updateTestimonial = createServerFn({
     //   throw new Error("User is not an admin");
     // }
 
-    if (!name || !review || Number.isNaN(rating) || rating < 1 || rating > 5) {
-      throw new Error("Required fields are missing or invalid");
-    }
+    // if (!name || !review || Number.isNaN(rating) || rating < 1 || rating > 5) {
+    //   throw new Error("Required fields are missing or invalid");
+    // }
 
     try {
       const updated = await prisma.testimonial.update({
@@ -89,29 +89,28 @@ export const updateTestimonial = createServerFn({
           designation: designation || null,
           rating,
           review,
-          image: image ?? undefined,
+          image: image || null,
         },
       });
       return updated;
     } catch (error) {
-      console.error("Error updating testimonial:", error);
+      console.log("Error updating testimonial:", error);
       throw new Error("Failed to update testimonial");
     }
   });
 
-export const deleteTestimonial = createServerFn()
-  .validator((id: string) => id)
-  .handler(async ({ data }) => {
-    try {
-      const { data: session } = await authClient.getSession();
-      if (session?.user.role !== "admin") {
-        throw new Error("Role doesnot have access");
-      }
-      await prisma.testimonial.delete({
-        where: { id: data },
-      });
-    } catch (error) {
-      console.log("Failed to delete", error);
-      throw new Error("Failed to delete testimonial");
-    }
-  });
+export const deleteTestimonial = createServerFn().handler(async ({ data }) => {
+  const { id } = data;
+  try {
+    // const { data: session } = await authClient.getSession();
+    // if (session?.user.role !== "admin") {
+    //   throw new Error("Role doesnot have access");
+    // }
+    return await prisma.testimonial.delete({
+      where: { id },
+    });
+  } catch (error) {
+    console.log("Failed to delete", error);
+    throw new Error("Failed to delete testimonial");
+  }
+});
