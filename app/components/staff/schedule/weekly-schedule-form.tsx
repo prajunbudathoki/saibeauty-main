@@ -1,27 +1,43 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { toast } from "sonner"
-import { createStaffSchedule } from "@/actions/staff-schedule-actions"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState } from "react";
+import { toast } from "sonner";
+import { createStaffSchedule } from "@/actions/staff-schedule-actions";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface WeeklyScheduleFormProps {
-  staffId: string
-  locationId: string
-  existingDays: number[]
+  staffId: string;
+  locationId: string;
+  existingDays: number[];
 }
 
-export function WeeklyScheduleForm({ staffId, locationId, existingDays }: WeeklyScheduleFormProps) {
-  const [loading, setLoading] = useState(false)
-  const [selectedDay, setSelectedDay] = useState<string>("")
-  const [startTime, setStartTime] = useState("10:00")
-  const [endTime, setEndTime] = useState("22:00")
+export function WeeklyScheduleForm({
+  staffId,
+  locationId,
+  existingDays,
+}: WeeklyScheduleFormProps) {
+  const [loading, setLoading] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<string>("");
+  const [startTime, setStartTime] = useState("10:00");
+  const [endTime, setEndTime] = useState("22:00");
 
   const days = [
     { value: "0", label: "Sunday" },
@@ -31,43 +47,47 @@ export function WeeklyScheduleForm({ staffId, locationId, existingDays }: Weekly
     { value: "4", label: "Thursday" },
     { value: "5", label: "Friday" },
     { value: "6", label: "Saturday" },
-  ]
+  ];
 
   // Filter out days that already have schedules
-  const availableDays = days.filter((day) => !existingDays.includes(Number.parseInt(day.value)))
+  const availableDays = days.filter(
+    (day) => !existingDays.includes(Number.parseInt(day.value))
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!selectedDay) {
-      toast.error("Please select a day")
-      return
+      toast.error("Please select a day");
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
-      const formData = new FormData()
-      formData.append("staff_id", staffId)
-      formData.append("location_id", locationId)
-      formData.append("day_of_week", selectedDay)
-      formData.append("start_time", startTime)
-      formData.append("end_time", endTime)
+      const formData = new FormData();
+      formData.append("staff_id", staffId);
+      formData.append("location_id", locationId);
+      formData.append("day_of_week", selectedDay);
+      formData.append("start_time", startTime);
+      formData.append("end_time", endTime);
 
-      await createStaffSchedule(formData)
-      toast.success("Schedule created successfully")
+      await createStaffSchedule({ data: formData });
+      toast.success("Schedule created successfully");
 
       // Reset form
-      setSelectedDay("")
-      setStartTime("10:00")
-      setEndTime("22:00")
+      setSelectedDay("");
+      setStartTime("10:00");
+      setEndTime("22:00");
     } catch (error) {
-      console.error("Error creating schedule:", error)
-      toast.error(error instanceof Error ? error.message : "Failed to create schedule")
+      console.error("Error creating schedule:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create schedule"
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Card>
@@ -111,17 +131,25 @@ export function WeeklyScheduleForm({ staffId, locationId, existingDays }: Weekly
             </div>
             <div className="space-y-2">
               <Label htmlFor="end_time">End Time</Label>
-              <Input id="end_time" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
+              <Input
+                id="end_time"
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                required
+              />
             </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" disabled={loading || availableDays.length === 0}>
+          <Button
+            type="submit"
+            disabled={loading || availableDays.length === 0}
+          >
             {loading ? "Adding..." : "Add Schedule"}
           </Button>
         </CardFooter>
       </form>
     </Card>
-  )
+  );
 }
-

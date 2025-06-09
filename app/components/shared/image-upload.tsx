@@ -47,6 +47,7 @@ export function ImageUpload({ onChange, value, className }: ImageUploadProps) {
 
   return (
     <div className={cn("flex flex-col items-center gap-4", className)}>
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <div
         className={cn(
           "relative flex items-center justify-center w-full h-40 border-2 border-dashed rounded-lg",

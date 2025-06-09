@@ -1,7 +1,4 @@
-"use client";
-
 import type React from "react";
-
 import { useState, useEffect } from "react";
 import type { Service, Category } from "@/lib/type";
 import { ImageUpload } from "@/components/shared/image-upload";
@@ -21,12 +18,7 @@ import { createService } from "@/actions/service-actions";
 import { getCategories } from "@/actions/category-actions";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 
-
-export function ServiceForm({
-  service,
-  onSuccess,
-  categoryId,
-}) {
+export function ServiceForm({ service, onSuccess, categoryId }) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -187,14 +179,7 @@ export function ServiceForm({
 
         <div className="space-y-2">
           <Label>Service Image</Label>
-          <ImageUpload
-            onChange={setImageFile}
-            value={
-              service?.image
-                ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/saibeauty/${service.image}`
-                : null
-            }
-          />
+          <ImageUpload onChange={setImageFile} value={null} />
         </div>
       </div>
 

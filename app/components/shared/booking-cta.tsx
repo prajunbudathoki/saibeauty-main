@@ -1,9 +1,7 @@
-"use client"
-
-import { motion } from "motion/react"
-import { Button } from "@/components/ui/button"
-import { Calendar, ArrowRight } from "lucide-react"
-import { Link } from "@tanstack/react-router"
+import { motion } from "motion/react";
+import { Button } from "@/components/ui/button";
+import { Calendar, ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function BookingCTA() {
   return (
@@ -21,13 +19,19 @@ export function BookingCTA() {
               <div className="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-4">
                 Ready to Feel Beautiful?
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Book Your Appointment Today</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Book Your Appointment Today
+              </h2>
               <p className="text-muted-foreground mb-8 max-w-md">
-                Schedule your visit with our expert stylists and experience premium beauty services tailored just for
-                you.
+                Schedule your visit with our expert stylists and experience
+                premium beauty services tailored just for you.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-primary hover:bg-primary/90"
+                >
                   <Link to="/profile/booking" className="flex items-center">
                     <Calendar className="mr-2 h-5 w-5" />
                     Book Appointment
@@ -42,13 +46,12 @@ export function BookingCTA() {
               </div>
             </div>
             <div className="relative h-64 md:h-full bg-primary/20">
-              <div className="absolute inset-0 bg-[url('/12.webp?height=600&width=800')] bg-cover bg-center opacity-80"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent md:bg-gradient-to-l"></div>
+              <div className="absolute inset-0 bg-[url('/12.webp?height=600&width=800')] bg-cover bg-center opacity-80" />
+              <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent md:bg-gradient-to-l" />
             </div>
           </div>
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
-

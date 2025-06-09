@@ -13,12 +13,7 @@ import { createCategory } from "@/actions/category-actions";
 import { toast } from "sonner";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 
-interface CategoryFormProps {
-  category?: Category;
-  onSuccess?: () => void;
-}
-
-export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
+export function CategoryForm({ category, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();

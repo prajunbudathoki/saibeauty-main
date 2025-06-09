@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getLocationServices } from "@/actions/location-service-actions";
 import { ClientServiceCard } from "@/components/services/client-service-card";
-import type { Location, LocationService } from "@/lib/type";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "motion/react";
 import {
@@ -16,17 +15,11 @@ import {
 import { formatPrice } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
-interface ServicesTabsProps {
-  locations: Location[];
-}
-
-export function ServicesTabs({ locations }: ServicesTabsProps) {
+export function ServicesTabs({ locations }) {
   const [activeLocation, setActiveLocation] = useState<string>(
     locations[0]?.id || ""
   );
-  const [servicesByLocation, setServicesByLocation] = useState<
-    Record<string, LocationService[]>
-  >({});
+  const [servicesByLocation, setServicesByLocation] = useState({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [categories, setCategories] = useState<Record<string, string[]>>({});
 
@@ -52,12 +45,10 @@ export function ServicesTabs({ locations }: ServicesTabsProps) {
     try {
       setLoading((prev) => ({ ...prev, [locationId]: true }));
       const services = await getLocationServices({ data: locationId });
-      const normalizedServices: LocationService[] = services.map(
-        (service: any) => ({
-          ...service,
-          duration: service.duration ?? service.service?.duration ?? "",
-        })
-      );
+      const normalizedServices = services.map((service: any) => ({
+        ...service,
+        duration: service.duration ?? service.service?.duration ?? "",
+      }));
       setServicesByLocation((prev) => ({
         ...prev,
         [locationId]: normalizedServices,

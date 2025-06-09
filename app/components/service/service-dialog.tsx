@@ -1,5 +1,4 @@
 import type React from "react";
-
 import { useState } from "react";
 import type { Service } from "@/lib/type";
 import {
@@ -11,19 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { ServiceForm } from "./service-form";
 
-interface ServiceDialogProps {
-  service?: Service;
-  trigger: React.ReactNode;
-  title: string;
-  categoryId?: string;
-}
-
-export function ServiceDialog({
-  service,
-  trigger,
-  title,
-  categoryId,
-}: ServiceDialogProps) {
+export function ServiceDialog({ service, trigger, title, categoryId }) {
   const [open, setOpen] = useState(false);
 
   return (

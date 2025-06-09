@@ -12,12 +12,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 
-interface GalleryFormProps {
-  galleryItem?: GalleryItem;
-  onSuccess?: () => void;
-}
-
-export function GalleryForm({ galleryItem, onSuccess }: GalleryFormProps) {
+export function GalleryForm({ galleryItem, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();

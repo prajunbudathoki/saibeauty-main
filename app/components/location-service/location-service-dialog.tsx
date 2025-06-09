@@ -1,20 +1,8 @@
-import type React from "react"
-
-import { useState } from "react"
-import type { Category, LocationService } from "@/lib/type"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useState } from "react"
 import { LocationServiceForm } from "./location-service-form"
 
-
-interface LocationServiceDialogProps {
-  locationId: string
-  locationService?: LocationService
-  trigger: React.ReactNode
-  title: string
-  categories?: Category[]
-}
-
-export function LocationServiceDialog({ locationId,categories, locationService, trigger, title }: LocationServiceDialogProps) {
+export function LocationServiceDialog({ locationId,categories, locationService, trigger, title }) {
   const [open, setOpen] = useState(false)
 
   return (

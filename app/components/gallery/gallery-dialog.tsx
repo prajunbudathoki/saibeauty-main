@@ -13,17 +13,11 @@ import {
 } from "@/components/ui/dialog";
 import { GalleryForm } from "./gallery-form";
 
-interface GalleryDialogProps {
-  galleryItem?: GalleryItem;
-  trigger: React.ReactNode;
-  title: string;
-}
-
 export function GalleryDialog({
   galleryItem,
   trigger,
   title,
-}: GalleryDialogProps) {
+}) {
   const [open, setOpen] = useState(false);
 
   return (

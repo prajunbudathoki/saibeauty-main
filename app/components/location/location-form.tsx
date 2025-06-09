@@ -1,15 +1,14 @@
-import type React from "react";
-import { useState } from "react";
-import type { Location } from "@/lib/type";
+import { createLocation, updateLocation } from "@/actions/location-actions";
 import { ImageUpload } from "@/components/shared/image-upload";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createLocation, updateLocation } from "@/actions/location-actions";
-import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 import { useNavigate, useRouter } from "@tanstack/react-router";
+import type React from "react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export function LocationForm({ location, onSuccess }) {
   const [loading, setLoading] = useState(false);

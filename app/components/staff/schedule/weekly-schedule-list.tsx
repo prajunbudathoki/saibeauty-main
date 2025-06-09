@@ -1,69 +1,68 @@
-"use client"
+import { useState } from "react";
+import { toast } from "sonner";
+import {
+  deleteStaffSchedule,
+  updateStaffSchedule,
+} from "@/actions/staff-schedule-actions";
+import { getDayName } from "@/lib/date-utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { Clock, Trash2, Save, Edit, X } from "lucide-react";
 
-import { useState } from "react"
-import { toast } from "sonner"
-import { type StaffSchedule, deleteStaffSchedule, updateStaffSchedule } from "@/actions/staff-schedule-actions"
-import { getDayName } from "@/lib/date-utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { ConfirmDialog } from "@/components/shared/confirm-dialog"
-import { Clock, Trash2, Save, Edit, X } from "lucide-react"
-
-interface WeeklyScheduleListProps {
-  schedules: StaffSchedule[]
-  staffId: string
-  locationId: string
-}
-
-export function WeeklyScheduleList({ schedules, staffId, locationId }: WeeklyScheduleListProps) {
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [startTime, setStartTime] = useState<string>("")
-  const [endTime, setEndTime] = useState<string>("")
-  const [loading, setLoading] = useState(false)
+export function WeeklyScheduleList({ schedules, staffId, locationId }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [startTime, setStartTime] = useState<string>("");
+  const [endTime, setEndTime] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   // Sort schedules by day of week
-  const sortedSchedules = [...schedules].sort((a, b) => a.day_of_week - b.day_of_week)
+  const sortedSchedules = [...schedules].sort(
+    (a, b) => a.day_of_week - b.day_of_week
+  );
 
-  const handleEdit = (schedule: StaffSchedule) => {
-    setEditingId(schedule.id)
-    setStartTime(schedule.start_time)
-    setEndTime(schedule.end_time)
-  }
+  const handleEdit = (schedule) => {
+    setEditingId(schedule.id);
+    setStartTime(schedule.start_time);
+    setEndTime(schedule.end_time);
+  };
 
   const handleCancelEdit = () => {
-    setEditingId(null)
-  }
+    setEditingId(null);
+  };
 
   const handleSave = async (scheduleId: string) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const formData = new FormData()
-      formData.append("staff_id", staffId)
-      formData.append("location_id", locationId)
-      formData.append("start_time", startTime)
-      formData.append("end_time", endTime)
+      const formData = new FormData();
+      formData.append("staff_id", staffId);
+      formData.append("location_id", locationId);
+      formData.append("start_time", startTime);
+      formData.append("end_time", endTime);
 
-      await updateStaffSchedule(scheduleId, formData)
-      toast.success("Schedule updated successfully")
-      setEditingId(null)
+      await updateStaffSchedule({ data: scheduleId });
+      toast.success("Schedule updated successfully");
+      setEditingId(null);
     } catch (error) {
-      console.error("Error updating schedule:", error)
-      toast.error(error instanceof Error ? error.message : "Failed to update schedule")
+      console.error("Error updating schedule:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update schedule"
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDelete = async (scheduleId: string) => {
     try {
-      await deleteStaffSchedule(scheduleId, staffId, locationId)
-      toast.success("Schedule deleted successfully")
+      await deleteStaffSchedule({ data: scheduleId });
+      toast.success("Schedule deleted successfully");
     } catch (error) {
-      console.error("Error deleting schedule:", error)
-      toast.error("Failed to delete schedule")
+      console.error("Error deleting schedule:", error);
+      toast.error("Failed to delete schedule");
     }
-  }
+  };
 
   if (schedules.length === 0) {
     return (
@@ -77,7 +76,7 @@ export function WeeklyScheduleList({ schedules, staffId, locationId }: WeeklySch
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -97,7 +96,9 @@ export function WeeklyScheduleList({ schedules, staffId, locationId }: WeeklySch
                   <Clock className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-medium">{getDayName(schedule.day_of_week)}</h3>
+                  <h3 className="font-medium">
+                    {getDayName(schedule.day_of_week)}
+                  </h3>
                   {editingId === schedule.id ? (
                     <div className="flex items-center gap-2 mt-1">
                       <Input
@@ -145,17 +146,28 @@ export function WeeklyScheduleList({ schedules, staffId, locationId }: WeeklySch
                     </Button>
                   </>
                 ) : (
-                  <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => handleEdit(schedule)}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => handleEdit(schedule)}
+                  >
                     <Edit className="h-4 w-4" />
                   </Button>
                 )}
 
                 <ConfirmDialog
                   title="Delete Schedule"
-                  description={`Are you sure you want to delete the schedule for ${getDayName(schedule.day_of_week)}?`}
+                  description={`Are you sure you want to delete the schedule for ${getDayName(
+                    schedule.day_of_week
+                  )}?`}
                   onConfirm={() => handleDelete(schedule.id)}
                   trigger={
-                    <Button variant="outline" size="icon" className="h-8 w-8 text-destructive">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 text-destructive"
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   }
@@ -166,6 +178,5 @@ export function WeeklyScheduleList({ schedules, staffId, locationId }: WeeklySch
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-

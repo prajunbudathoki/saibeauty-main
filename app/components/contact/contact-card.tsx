@@ -9,11 +9,8 @@ import { Trash2, ChevronDown, ChevronUp, Mail, Phone } from "lucide-react"
 import { deleteContact } from "@/actions/contact-actions"
 import { toast } from "sonner"
 
-interface ContactCardProps {
-  contact: Contact
-}
 
-export function ContactCard({ contact }: ContactCardProps) {
+export function ContactCard({ contact }) {
   const [expanded, setExpanded] = useState(false)
 
   const handleDelete = async () => {

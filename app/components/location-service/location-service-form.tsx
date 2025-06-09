@@ -1,23 +1,22 @@
-import type React from "react";
-import { useState, useEffect } from "react";
-import type { Category, LocationService } from "@/lib/type";
+import {
+	addServiceToLocation,
+	getAvailableServices,
+	updateLocationService,
+} from "@/actions/location-service-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
-import {
-  addServiceToLocation,
-  updateLocationService,
-  getAvailableServices,
-} from "@/actions/location-service-actions";
 import { formatPrice } from "@/lib/utils";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function LocationServiceForm({
   locationId,

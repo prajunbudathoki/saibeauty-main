@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import { formatPrice } from "@/lib/utils";
-import type { Service } from "@/lib/type";
 import {
   Card,
   CardContent,
@@ -73,13 +72,13 @@ export function ServiceCard({ service }) {
             <ServiceDialog
               service={service}
               title="Edit Service"
+              categoryId={service.categoryId}
               trigger={
                 <Button variant="ghost" size="icon" className="h-8 w-8">
                   <Edit className="h-4 w-4" />
                 </Button>
               }
             />
-
             <ConfirmDialog
               title="Delete Service"
               description="Are you sure you want to delete this service? This action cannot be undone."

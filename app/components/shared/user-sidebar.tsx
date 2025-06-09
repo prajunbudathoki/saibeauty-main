@@ -60,6 +60,7 @@ export function UserSidebar() {
         onClick={toggleMobileSidebar}
       >
         <span className="sr-only">Open sidebar</span>
+        {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
         <svg
           className="h-6 w-6"
           fill="none"
@@ -77,7 +78,8 @@ export function UserSidebar() {
 
       {/* Mobile Sidebar Overlay */}
       {mobileOpen && (
-        <div
+        // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+<div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
           style={{ top: "64px" }}
           onClick={() => setMobileOpen(false)}

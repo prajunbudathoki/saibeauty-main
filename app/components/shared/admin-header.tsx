@@ -2,22 +2,18 @@ import { cn } from "@/lib/utils";
 import { useLocation } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
-interface BreadcrumbItem {
-  label: string;
-  href?: string;
-}
 
 export function AdminHeader({ title }: { title: string }) {
   // const router = useRouterState();
   const location = useLocation();
 
   // Generate breadcrumbs from pathname
-  const generateBreadcrumbs = (): BreadcrumbItem[] => {
+  const generateBreadcrumbs = () => {
     // const paths = router.location.pathname;
     const paths = location.pathname.split("/").filter(Boolean);
 
     // Start with Admin
-    const breadcrumbs: BreadcrumbItem[] = [{ label: "Admin", href: "/admin" }];
+    const breadcrumbs = [{ label: "Admin", href: "/admin" }];
 
     // Build up the breadcrumbs
     let currentPath = "";

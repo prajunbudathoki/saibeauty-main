@@ -1,6 +1,3 @@
-import type React from "react";
-import { useState } from "react";
-import type { Location } from "@/lib/type";
 import {
   Dialog,
   DialogContent,
@@ -8,6 +5,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useState } from "react";
 import { LocationForm } from "./location-form";
 
 export function LocationDialog({ location, trigger, title }) {

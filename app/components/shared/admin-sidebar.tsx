@@ -1,7 +1,4 @@
-"use client";
-
 import type React from "react";
-
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import {
@@ -17,7 +14,6 @@ import {
   Menu,
   LogOut,
   Calendar,
-  Settings,
   User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";

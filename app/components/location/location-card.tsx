@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import { formatTime } from "@/lib/utils";
-import type { Location } from "@/lib/type";
 import {
   Card,
   CardContent,

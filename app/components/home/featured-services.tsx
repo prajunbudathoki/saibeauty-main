@@ -1,13 +1,8 @@
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
-import { Service } from "@/lib/type";
 import { Link } from "@tanstack/react-router";
 
-interface FeaturedServicesProps {
-  services: Service[];
-}
-
-export function FeaturedServices({ services }: FeaturedServicesProps) {
+export function FeaturedServices({ services }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {services.map((service, index) => (

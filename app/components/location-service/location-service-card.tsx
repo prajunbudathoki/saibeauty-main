@@ -9,15 +9,7 @@ import { Trash2, Edit, Clock, Tag } from "lucide-react";
 import { removeServiceFromLocation } from "@/actions/location-service-actions";
 import { toast } from "sonner";
 
-interface LocationServiceCardProps {
-  locationService: LocationService;
-  locationId: string;
-}
-
-export function LocationServiceCard({
-  locationService,
-  locationId,
-}: LocationServiceCardProps) {
+export function LocationServiceCard({ locationService, locationId }) {
   const handleDelete = async () => {
     try {
       await removeServiceFromLocation({ data: locationService.id });
@@ -30,7 +22,7 @@ export function LocationServiceCard({
   const service = locationService.service;
   if (!service) return null;
 
-  const imageUrl = "";
+  const imageUrl = null;
 
   const price =
     locationService.price !== null ? locationService.price : service.price;
@@ -76,6 +68,7 @@ export function LocationServiceCard({
             <div className="flex gap-2">
               <LocationServiceDialog
                 locationId={locationId}
+                categories={service.category ? [service.category] : []}
                 locationService={locationService}
                 title="Update Service Price"
                 trigger={
@@ -84,7 +77,6 @@ export function LocationServiceCard({
                   </Button>
                 }
               />
-
               <ConfirmDialog
                 title="Remove Service"
                 description="Are you sure you want to remove this service from this location? This action cannot be undone."
