@@ -34,8 +34,11 @@ import { Route as ClientProfileUserInfoImport } from './routes/_client/profile/u
 import { Route as ClientProfileUserAppointmentsImport } from './routes/_client/profile/user-appointments'
 import { Route as ClientProfileMyBookingsImport } from './routes/_client/profile/my-bookings'
 import { Route as ClientProfileBookingImport } from './routes/_client/profile/booking'
+import { Route as AdminLocationsIdStaffsIndexImport } from './routes/admin/locations/$id/staffs/index'
 import { Route as AdminLocationsIdServicesIndexImport } from './routes/admin/locations/$id/services/index'
 import { Route as AdminLocationsIdServicesSearchImport } from './routes/admin/locations/$id/services/search'
+import { Route as AdminLocationsIdStaffsScheduleIndexImport } from './routes/admin/locations/$id/staffs/schedule/index'
+import { Route as AdminLocationsIdStaffsReviewsIndexImport } from './routes/admin/locations/$id/staffs/reviews/index'
 
 // Create/Update Routes
 
@@ -177,6 +180,13 @@ const ClientProfileBookingRoute = ClientProfileBookingImport.update({
   getParentRoute: () => ClientRoute,
 } as any)
 
+const AdminLocationsIdStaffsIndexRoute =
+  AdminLocationsIdStaffsIndexImport.update({
+    id: '/admin/locations/$id/staffs/',
+    path: '/admin/locations/$id/staffs/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
 const AdminLocationsIdServicesIndexRoute =
   AdminLocationsIdServicesIndexImport.update({
     id: '/admin/locations/$id/services/',
@@ -188,6 +198,20 @@ const AdminLocationsIdServicesSearchRoute =
   AdminLocationsIdServicesSearchImport.update({
     id: '/admin/locations/$id/services/search',
     path: '/admin/locations/$id/services/search',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const AdminLocationsIdStaffsScheduleIndexRoute =
+  AdminLocationsIdStaffsScheduleIndexImport.update({
+    id: '/admin/locations/$id/staffs/schedule/',
+    path: '/admin/locations/$id/staffs/schedule/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const AdminLocationsIdStaffsReviewsIndexRoute =
+  AdminLocationsIdStaffsReviewsIndexImport.update({
+    id: '/admin/locations/$id/staffs/reviews/',
+    path: '/admin/locations/$id/staffs/reviews/',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -370,6 +394,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLocationsIdServicesIndexImport
       parentRoute: typeof rootRoute
     }
+    '/admin/locations/$id/staffs/': {
+      id: '/admin/locations/$id/staffs/'
+      path: '/admin/locations/$id/staffs'
+      fullPath: '/admin/locations/$id/staffs'
+      preLoaderRoute: typeof AdminLocationsIdStaffsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/locations/$id/staffs/reviews/': {
+      id: '/admin/locations/$id/staffs/reviews/'
+      path: '/admin/locations/$id/staffs/reviews'
+      fullPath: '/admin/locations/$id/staffs/reviews'
+      preLoaderRoute: typeof AdminLocationsIdStaffsReviewsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/locations/$id/staffs/schedule/': {
+      id: '/admin/locations/$id/staffs/schedule/'
+      path: '/admin/locations/$id/staffs/schedule'
+      fullPath: '/admin/locations/$id/staffs/schedule'
+      preLoaderRoute: typeof AdminLocationsIdStaffsScheduleIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -446,6 +491,9 @@ export interface FileRoutesByFullPath {
   '/admin/services': typeof AdminServicesIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
   '/admin/locations/$id/services': typeof AdminLocationsIdServicesIndexRoute
+  '/admin/locations/$id/staffs': typeof AdminLocationsIdStaffsIndexRoute
+  '/admin/locations/$id/staffs/reviews': typeof AdminLocationsIdStaffsReviewsIndexRoute
+  '/admin/locations/$id/staffs/schedule': typeof AdminLocationsIdStaffsScheduleIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -473,6 +521,9 @@ export interface FileRoutesByTo {
   '/admin/services': typeof AdminServicesIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
   '/admin/locations/$id/services': typeof AdminLocationsIdServicesIndexRoute
+  '/admin/locations/$id/staffs': typeof AdminLocationsIdStaffsIndexRoute
+  '/admin/locations/$id/staffs/reviews': typeof AdminLocationsIdStaffsReviewsIndexRoute
+  '/admin/locations/$id/staffs/schedule': typeof AdminLocationsIdStaffsScheduleIndexRoute
 }
 
 export interface FileRoutesById {
@@ -502,6 +553,9 @@ export interface FileRoutesById {
   '/admin/services/': typeof AdminServicesIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
   '/admin/locations/$id/services/': typeof AdminLocationsIdServicesIndexRoute
+  '/admin/locations/$id/staffs/': typeof AdminLocationsIdStaffsIndexRoute
+  '/admin/locations/$id/staffs/reviews/': typeof AdminLocationsIdStaffsReviewsIndexRoute
+  '/admin/locations/$id/staffs/schedule/': typeof AdminLocationsIdStaffsScheduleIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -532,6 +586,9 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/locations/$id/services/search'
     | '/admin/locations/$id/services'
+    | '/admin/locations/$id/staffs'
+    | '/admin/locations/$id/staffs/reviews'
+    | '/admin/locations/$id/staffs/schedule'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -558,6 +615,9 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/locations/$id/services/search'
     | '/admin/locations/$id/services'
+    | '/admin/locations/$id/staffs'
+    | '/admin/locations/$id/staffs/reviews'
+    | '/admin/locations/$id/staffs/schedule'
   id:
     | '__root__'
     | '/_client'
@@ -585,6 +645,9 @@ export interface FileRouteTypes {
     | '/admin/services/'
     | '/admin/locations/$id/services/search'
     | '/admin/locations/$id/services/'
+    | '/admin/locations/$id/staffs/'
+    | '/admin/locations/$id/staffs/reviews/'
+    | '/admin/locations/$id/staffs/schedule/'
   fileRoutesById: FileRoutesById
 }
 
@@ -600,6 +663,9 @@ export interface RootRouteChildren {
   AdminServicesIndexRoute: typeof AdminServicesIndexRoute
   AdminLocationsIdServicesSearchRoute: typeof AdminLocationsIdServicesSearchRoute
   AdminLocationsIdServicesIndexRoute: typeof AdminLocationsIdServicesIndexRoute
+  AdminLocationsIdStaffsIndexRoute: typeof AdminLocationsIdStaffsIndexRoute
+  AdminLocationsIdStaffsReviewsIndexRoute: typeof AdminLocationsIdStaffsReviewsIndexRoute
+  AdminLocationsIdStaffsScheduleIndexRoute: typeof AdminLocationsIdStaffsScheduleIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -614,6 +680,11 @@ const rootRouteChildren: RootRouteChildren = {
   AdminServicesIndexRoute: AdminServicesIndexRoute,
   AdminLocationsIdServicesSearchRoute: AdminLocationsIdServicesSearchRoute,
   AdminLocationsIdServicesIndexRoute: AdminLocationsIdServicesIndexRoute,
+  AdminLocationsIdStaffsIndexRoute: AdminLocationsIdStaffsIndexRoute,
+  AdminLocationsIdStaffsReviewsIndexRoute:
+    AdminLocationsIdStaffsReviewsIndexRoute,
+  AdminLocationsIdStaffsScheduleIndexRoute:
+    AdminLocationsIdStaffsScheduleIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -636,7 +707,10 @@ export const routeTree = rootRoute
         "/admin/locations/",
         "/admin/services/",
         "/admin/locations/$id/services/search",
-        "/admin/locations/$id/services/"
+        "/admin/locations/$id/services/",
+        "/admin/locations/$id/staffs/",
+        "/admin/locations/$id/staffs/reviews/",
+        "/admin/locations/$id/staffs/schedule/"
       ]
     },
     "/_client": {
@@ -745,6 +819,15 @@ export const routeTree = rootRoute
     },
     "/admin/locations/$id/services/": {
       "filePath": "admin/locations/$id/services/index.tsx"
+    },
+    "/admin/locations/$id/staffs/": {
+      "filePath": "admin/locations/$id/staffs/index.tsx"
+    },
+    "/admin/locations/$id/staffs/reviews/": {
+      "filePath": "admin/locations/$id/staffs/reviews/index.tsx"
+    },
+    "/admin/locations/$id/staffs/schedule/": {
+      "filePath": "admin/locations/$id/staffs/schedule/index.tsx"
     }
   }
 }

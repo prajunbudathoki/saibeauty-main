@@ -4,15 +4,15 @@ import { createServerFn } from "@tanstack/react-start";
 export const getStaffSchedules = createServerFn({
   method: "GET",
 })
-  .validator((staffId: string) => staffId)
-  .handler(async ({ data: staffId }) => {
+  .validator((input: { staffId: string; locationId: string }) => input)
+  .handler(async ({ data: { staffId, locationId } }) => {
     try {
       const schedules = await prisma.staffSchedule.findMany({
-        where: { staff_id: staffId },
-        orderBy: [{ start_time: "asc" }],
-        include: {
-          staff: true,
+        where: {
+          staff_id: staffId,
+          location_id: locationId,
         },
+        orderBy: [{ day_of_week: "asc" }],
       });
       return schedules;
     } catch (error) {
