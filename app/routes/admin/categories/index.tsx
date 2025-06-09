@@ -25,6 +25,7 @@ function RouteComponent() {
 					<h2 className="text-lg font-medium">All Categories</h2>
 					<CategoryDialog
 						title="Add Category"
+						category={null}
 						trigger={
 							<Button>
 								<Plus className="h-4 w-4 mr-2" />

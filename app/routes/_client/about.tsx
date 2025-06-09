@@ -204,7 +204,7 @@ function RouteComponent() {
             }}
             className="relative w-full  rounded-2xl overflow-hidden shadow-2x bg-contain bg-[url('/teamcropped.png')] "
             variants={scaleIn}
-          ></motion.div>
+          />
         </div>
       </motion.section>
 
@@ -221,7 +221,7 @@ function RouteComponent() {
               <h2 className="salon-subheading text-foreground mb-6">
                 Our Story
               </h2>
-              <div className="salon-divider"></div>
+              <div className="salon-divider" />
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <motion.p
                   variants={itemVariants}
@@ -302,10 +302,7 @@ function RouteComponent() {
           >
             Meet Our Founder
           </motion.h2>
-          <motion.div
-            className="salon-divider"
-            variants={itemVariants}
-          ></motion.div>
+          <motion.div className="salon-divider" variants={itemVariants} />
           <motion.div
             className="bg-card rounded-2xl p-8 md:p-12 border border-border"
             variants={scaleIn}
@@ -363,10 +360,7 @@ function RouteComponent() {
             >
               Our Specialties
             </motion.h2>
-            <motion.div
-              className="salon-divider"
-              variants={itemVariants}
-            ></motion.div>
+            <motion.div className="salon-divider" variants={itemVariants} />
             <motion.p
               className="text-lg text-muted-foreground max-w-2xl mx-auto"
               variants={itemVariants}
@@ -385,8 +379,8 @@ function RouteComponent() {
             viewport={{ once: true, amount: 0.1 }}
             variants={staggerContainer}
           >
-            {services.map((service, index) => (
-              <motion.div key={index} variants={itemVariants}>
+            {services.map((service) => (
+              <motion.div key={service.title} variants={itemVariants}>
                 <Card className="salon-card group hover:shadow-xl transition-all duration-300 bg-card h-full">
                   <CardContent className="p-8">
                     <div className="flex items-start gap-4 mb-6">
@@ -414,14 +408,14 @@ function RouteComponent() {
                       <ul className="space-y-2">
                         {service.features.map((feature, featureIndex) => (
                           <motion.li
-                            key={featureIndex}
+                            key={feature}
                             className="flex items-center gap-3 text-muted-foreground"
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: featureIndex * 0.1 }}
                           >
-                            <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+                            <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0" />
                             <span className="text-sm">{feature}</span>
                           </motion.li>
                         ))}
@@ -450,16 +444,13 @@ function RouteComponent() {
           >
             Our Locations
           </motion.h2>
-          <motion.div
-            className="salon-divider"
-            variants={itemVariants}
-          ></motion.div>
+          <motion.div className="salon-divider" variants={itemVariants} />
           <motion.div
             className="grid md:grid-cols-2 gap-8"
             variants={staggerContainer}
           >
             {branches.map((branch, index) => (
-              <motion.div key={index} variants={itemVariants}>
+              <motion.div key={branch.location} variants={itemVariants}>
                 <Card className="salon-card overflow-hidden group">
                   <motion.div
                     className="relative h-48"
@@ -467,7 +458,7 @@ function RouteComponent() {
                     transition={{ duration: 0.3 }}
                   >
                     <img
-                      src={`/placeholder.svg?height=192&width=400`}
+                      src={"/placeholder.svg?height=192&width=400"}
                       alt={`${branch.location} branch`}
                       className="object-cover transition-transform duration-300 group-hover:scale-110"
                     />

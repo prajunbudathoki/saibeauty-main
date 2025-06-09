@@ -44,7 +44,7 @@ function RouteComponent({
               {service.category.name}
             </div>
           )} */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent h-16"></div>
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent h-16" />
         </div>
         <CardHeader className="pb-2 pt-4">
           <div className="flex justify-between items-start">

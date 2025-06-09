@@ -14,7 +14,6 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
 import { Route as AdminImport } from './routes/admin'
 import { Route as ClientImport } from './routes/_client'
-import { Route as AdminImport } from './routes/_admin'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as ClientIndexImport } from './routes/_client/index'
 import { Route as AuthUpdatePasswordImport } from './routes/auth/update-password'
@@ -61,11 +60,6 @@ const AdminRoute = AdminImport.update({
 
 const ClientRoute = ClientImport.update({
   id: '/_client',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AdminRoute = AdminImport.update({
-  id: '/_admin',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -252,13 +246,6 @@ const AdminLocationsIdStaffsReviewsIndexRoute =
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_admin': {
-      id: '/_admin'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AdminImport
-      parentRoute: typeof rootRoute
-    }
     '/_client': {
       id: '/_client'
       path: ''
@@ -608,7 +595,6 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '': typeof AdminRoute
   '/auth': typeof AuthRouteWithChildren
   '/about': typeof ClientAboutRoute
   '/contact': typeof ClientContactRoute
@@ -642,7 +628,6 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_admin': typeof AdminRoute
   '/_client': typeof ClientRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
@@ -713,7 +698,6 @@ export interface FileRouteTypes {
     | '/admin/locations/$id/staffs/schedule'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | ''
     | '/auth'
     | '/about'
     | '/contact'
@@ -745,7 +729,6 @@ export interface FileRouteTypes {
     | '/admin/locations/$id/staffs/schedule'
   id:
     | '__root__'
-    | '/_admin'
     | '/_client'
     | '/admin'
     | '/auth'
@@ -782,14 +765,12 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  AdminRoute: typeof AdminRoute
   ClientRoute: typeof ClientRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AdminRoute: AdminRoute,
   ClientRoute: ClientRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
@@ -805,14 +786,10 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_admin",
         "/_client",
         "/admin",
         "/auth"
       ]
-    },
-    "/_admin": {
-      "filePath": "_admin.tsx"
     },
     "/_client": {
       "filePath": "_client.tsx",

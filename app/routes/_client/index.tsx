@@ -54,11 +54,12 @@ function RouteComponent() {
             viewBox="0 0 1440 120"
             className="w-full h-auto"
           >
+            <title>as</title>
             <path
               fill="hsl(var(--background))"
               fillOpacity="1"
               d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"
-            ></path>
+            />
           </svg>
         </div>
       </section>
@@ -177,8 +178,8 @@ function RouteComponent() {
                   className="w-full h-auto object-cover"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-primary/10 rounded-full z-0"></div>
-              <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary/10 rounded-full z-0"></div>
+              <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-primary/10 rounded-full z-0" />
+              <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary/10 rounded-full z-0" />
             </div>
           </div>
         </div>
@@ -251,7 +252,8 @@ function RouteComponent() {
                       strokeLinejoin="round"
                       className="text-primary"
                     >
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                      <title>divider</title>
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                     </svg>
                   </div>
                   <div>
@@ -274,8 +276,9 @@ function RouteComponent() {
                       strokeLinejoin="round"
                       className="text-primary"
                     >
-                      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                      <title>asd</title>
+                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                     </svg>
                   </div>
                   <div>

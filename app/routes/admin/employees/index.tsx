@@ -10,7 +10,7 @@ async function Page() {
         Employee Management
       </h1>
       <AddEmployee />
-      {/* <EmployeeTable employees={employees} /> */}
+      <EmployeeTable employees={employees} />
     </div>
   );
 }

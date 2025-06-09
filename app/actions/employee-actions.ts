@@ -25,15 +25,12 @@ export const addEmployee = createServerFn({
   method: "POST",
 })
   .validator((d: { name: string; email: string; phone: string }) => d)
-  .handler(async ({ data: { name, email, phone } }) => {
-    const { data: session, error } = await authClient.getSession();
-    if (session?.user.role !== "admin") {
-      throw new Error("Role doesnot have access");
-    }
-    if (error) {
-      console.log("Failed to add employee", error);
-      throw new Error("Failed to add employee");
-    }
+  .handler(async ({ data }) => {
+    const { name, email, phone } = data;
+    // const { data: session, error } = await authClient.getSession();
+    // if (session?.user.role !== "admin") {
+    //   throw new Error("Role doesnot have access");
+    // }
     const employee = await prisma.user.create({
       data: {
         name,

@@ -13,7 +13,6 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-import { Mail } from "lucide-react";
 
 export const Route = createFileRoute("/auth/login")({
   component: RouteComponent,

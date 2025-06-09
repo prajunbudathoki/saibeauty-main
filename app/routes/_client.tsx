@@ -1,4 +1,5 @@
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
+import { BookingCTA } from "@/components/shared/booking-cta";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
@@ -146,7 +147,7 @@ function RouteComponent() {
 
       <main className="flex-1">{/* <Outlet /> */}</main>
 
-      {/* <BookingCTA /> */}
+      <BookingCTA />
 
       {/* <footer className="bg-muted py-12 border-t">
         <div className="container grid gap-8 md:grid-cols-3">
