@@ -88,15 +88,19 @@ export const createService = createServerFn({
 export const deleteService = createServerFn()
   .validator((id: string) => id)
   .handler(async ({ data }) => {
-    const { data: session, error } = await authClient.getSession();
-    if (session?.user.role !== "admin") {
-      throw new Error("Role doesnot have access");
+    const { id } = data;
+    try {
+      // const { data: session, error } = await authClient.getSession();
+      // if (session?.user.role !== "admin") {
+      //   throw new Error("Role doesnot have access");
+      // }
+
+      return await prisma.service.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw new Error("Failed to delete service");
     }
-    if (error) {
-      console.log("Error occured while deleting", error);
-      throw new Error("Failed to delete the Service");
-    }
-    await prisma.service.delete({
-      where: { id: data },
-    });
   });

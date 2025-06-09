@@ -21,17 +21,12 @@ import { createService } from "@/actions/service-actions";
 import { getCategories } from "@/actions/category-actions";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 
-interface ServiceFormProps {
-  service?: Service;
-  onSuccess?: () => void;
-  categoryId?: string;
-}
 
 export function ServiceForm({
   service,
   onSuccess,
   categoryId,
-}: ServiceFormProps) {
+}) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);

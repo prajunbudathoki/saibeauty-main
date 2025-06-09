@@ -13,16 +13,15 @@ import { ServiceDialog } from "./service-dialog";
 import { Trash2, Edit, Clock, Tag } from "lucide-react";
 import { deleteService } from "@/actions/service-actions";
 import { toast } from "sonner";
+import { useRouter } from "@tanstack/react-router";
 
-interface ServiceCardProps {
-  service: Service;
-}
-
-export function ServiceCard({ service }: ServiceCardProps) {
+export function ServiceCard({ service }) {
+  const router = useRouter();
   const handleDelete = async () => {
     try {
-      await deleteService({ data: service.id });
+      await deleteService({ data: { id: service.id } });
       toast.success("Service deleted successfully");
+      router.invalidate();
     } catch (error) {
       toast.error("Failed to delete the service");
     }
