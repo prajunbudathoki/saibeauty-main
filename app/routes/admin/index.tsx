@@ -1,3 +1,4 @@
+import { getAdminDashboardData } from "@/actions/admin-appointment-actions";
 import { AdminHeader } from "@/components/shared/admin-header";
 import { DashboardStats } from "@/components/shared/dashboard-stats";
 import {
@@ -23,46 +24,9 @@ import { Suspense } from "react";
 export const Route = createFileRoute("/admin/")({
   component: RouteComponent,
   loader: async () => {
-    // const [
-    //   locationCount,
-    //   categoryCount,
-    //   serviceCount,
-    //   testimonialCount,
-    //   contactCount,
-    //   appointmentStats,
-    //   recentLocations,
-    //   recentServices,
-    //   recentTestimonials,
-    //   recentContacts,
-    // ] = await Promise.all([
-    //   prisma.location.count() || 0,
-    //   prisma.category.count() || 0,
-    //   prisma.service.count() || 0,
-    //   prisma.testimonial.count() || 0,
-    //   prisma.contact.count() || 0,
-    //   getAppointmentStats(),
-    //   prisma.location.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
-    //   prisma.service.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
-    //   prisma.testimonial.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
-    //   prisma.contact.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
-    // ]);
-    return {
-      dashstats: {
-        locationCount: 0,
-        categoryCount: 0,
-        serviceCount: 0,
-        testimonialCount: 0,
-        contactCount: 0,
-        appointmentStats: 0,
-      },
-      dashrecents: {
-        recentLocations: 0,
-        recentContacts: 0,
-        recentServices: 0,
-        recentTestimonials: 0,
-      },
-    };
+    return await getAdminDashboardData()
   },
+
 });
 
 function RouteComponent() {

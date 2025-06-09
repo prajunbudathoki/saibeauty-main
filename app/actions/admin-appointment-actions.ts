@@ -278,3 +278,52 @@ export const getAppointmentStats = createServerFn({
     throw new Error("Failed to fetch appointment stats");
   }
 });
+
+export const getAdminDashboardData = createServerFn({
+  method: "GET",
+}).handler(async () => {
+  try {
+    const [
+      locationCount,
+      categoryCount,
+      serviceCount,
+      testimonialCount,
+      contactCount,
+      appointmentStats,
+      recentLocations,
+      recentContacts,
+      recentServices,
+      recentTestimonials,
+    ] = await Promise.all([
+      prisma.location.count(),
+      prisma.category.count(),
+      prisma.service.count(),
+      prisma.testimonial.count(),
+      prisma.contact.count(),
+      getAppointmentStats(),
+      prisma.location.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
+      prisma.contact.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
+      prisma.service.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
+      prisma.testimonial.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
+    ]);
+
+    return {
+      dashstats: {
+        locationCount,
+        categoryCount,
+        serviceCount,
+        testimonialCount,
+        contactCount,
+        appointmentStats,
+      },
+      dashrecents: {
+        recentLocations,
+        recentContacts,
+        recentServices,
+        recentTestimonials,
+      },
+    };
+  } catch (error) {
+    throw new Error("Failed to fetch dashboard data");
+  }
+});
