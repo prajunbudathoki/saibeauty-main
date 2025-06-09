@@ -35,7 +35,7 @@ export function CategoryCard({ category, serviceCount }: CategoryCardProps) {
     }
   };
 
-  const imageUrl = "";
+  const imageUrl = null;
 
   return (
     <motion.div

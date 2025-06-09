@@ -28,7 +28,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
     }
   };
 
-  const imageUrl = "";
+  const imageUrl = null;
 
   return (
     <motion.div

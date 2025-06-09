@@ -33,9 +33,9 @@ export function LocationForm({ location, onSuccess }: LocationFormProps) {
       // Add the image file if it exists
       if (imageFile) {
         formData.set("image", imageFile);
-      } else if (location?.image) {
-        // Keep the existing image if no new one is provided
-        formData.set("image", "");
+        // } else if (location?.image) {
+        //   // Keep the existing image if no new one is provided
+        //   formData.set("image", "");
       }
 
       if (isEditing) {
@@ -175,14 +175,7 @@ export function LocationForm({ location, onSuccess }: LocationFormProps) {
 
         <div className="space-y-2">
           <Label>Location Image</Label>
-          <ImageUpload
-            onChange={setImageFile}
-            value={
-              location?.image
-                ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/saibeauty/${location.image}`
-                : null
-            }
-          />
+          <ImageUpload onChange={setImageFile} value={null} />
         </div>
       </div>
 

@@ -16,7 +16,7 @@ export function ClientServiceCard({
 	const { service } = locationService;
 	if (!service) return null;
 
-	const imageUrl = "";
+	const imageUrl = null;
 
 	const price =
 		locationService.price !== null ? locationService.price : service.price;

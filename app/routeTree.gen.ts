@@ -8,12 +8,11 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
+import { Route as AdminImport } from './routes/admin'
 import { Route as ClientImport } from './routes/_client'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as ClientIndexImport } from './routes/_client/index'
@@ -21,7 +20,6 @@ import { Route as AuthUpdatePasswordImport } from './routes/auth/update-password
 import { Route as AuthSignupImport } from './routes/auth/signup'
 import { Route as AuthLoginImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordImport } from './routes/auth/forgot-password'
-import { Route as AdminLayoutImport } from './routes/admin/_layout'
 import { Route as ClientTeamImport } from './routes/_client/team'
 import { Route as ClientServicesImport } from './routes/_client/services'
 import { Route as ClientGalleryImport } from './routes/_client/gallery'
@@ -45,21 +43,17 @@ import { Route as AdminLocationsIdServicesSearchImport } from './routes/admin/lo
 import { Route as AdminLocationsIdStaffsScheduleIndexImport } from './routes/admin/locations/$id/staffs/schedule/index'
 import { Route as AdminLocationsIdStaffsReviewsIndexImport } from './routes/admin/locations/$id/staffs/reviews/index'
 
-// Create Virtual Routes
-
-const AdminImport = createFileRoute('/admin')()
-
 // Create/Update Routes
-
-const AdminRoute = AdminImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const AuthRoute = AuthImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminRoute = AdminImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -102,11 +96,6 @@ const AuthForgotPasswordRoute = AuthForgotPasswordImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
   getParentRoute: () => AuthRoute,
-} as any)
-
-const AdminLayoutRoute = AdminLayoutImport.update({
-  id: '/_layout',
-  getParentRoute: () => AdminRoute,
 } as any)
 
 const ClientTeamRoute = ClientTeamImport.update({
@@ -258,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientImport
       parentRoute: typeof rootRoute
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminImport
+      parentRoute: typeof rootRoute
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -299,20 +295,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/team'
       preLoaderRoute: typeof ClientTeamImport
       parentRoute: typeof ClientImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/_layout': {
-      id: '/admin/_layout'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminLayoutImport
-      parentRoute: typeof AdminRoute
     }
     '/auth/forgot-password': {
       id: '/auth/forgot-password'
@@ -509,24 +491,7 @@ const ClientRouteChildren: ClientRouteChildren = {
 const ClientRouteWithChildren =
   ClientRoute._addFileChildren(ClientRouteChildren)
 
-interface AuthRouteChildren {
-  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthSignupRoute: typeof AuthSignupRoute
-  AuthUpdatePasswordRoute: typeof AuthUpdatePasswordRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
-  AuthLoginRoute: AuthLoginRoute,
-  AuthSignupRoute: AuthSignupRoute,
-  AuthUpdatePasswordRoute: AuthUpdatePasswordRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
-
 interface AdminRouteChildren {
-  AdminLayoutRoute: typeof AdminLayoutRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminAppointmentsIdRoute: typeof AdminAppointmentsIdRoute
   AdminCategoriesIdRoute: typeof AdminCategoriesIdRoute
@@ -544,7 +509,6 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminLayoutRoute: AdminLayoutRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminAppointmentsIdRoute: AdminAppointmentsIdRoute,
   AdminCategoriesIdRoute: AdminCategoriesIdRoute,
@@ -565,15 +529,31 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AuthRouteChildren {
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+  AuthUpdatePasswordRoute: typeof AuthUpdatePasswordRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthSignupRoute: AuthSignupRoute,
+  AuthUpdatePasswordRoute: AuthUpdatePasswordRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 export interface FileRoutesByFullPath {
   '': typeof ClientRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/about': typeof ClientAboutRoute
   '/contact': typeof ClientContactRoute
   '/gallery': typeof ClientGalleryRoute
   '/services': typeof ClientServicesRoute
   '/team': typeof ClientTeamRoute
-  '/admin': typeof AdminLayoutRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -606,12 +586,12 @@ export interface FileRoutesByTo {
   '/gallery': typeof ClientGalleryRoute
   '/services': typeof ClientServicesRoute
   '/team': typeof ClientTeamRoute
-  '/admin': typeof AdminIndexRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/': typeof ClientIndexRoute
+  '/admin': typeof AdminIndexRoute
   '/profile/booking': typeof ClientProfileBookingRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsRoute
   '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
@@ -634,14 +614,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_client': typeof ClientRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/_client/about': typeof ClientAboutRoute
   '/_client/contact': typeof ClientContactRoute
   '/_client/gallery': typeof ClientGalleryRoute
   '/_client/services': typeof ClientServicesRoute
   '/_client/team': typeof ClientTeamRoute
-  '/admin': typeof AdminRouteWithChildren
-  '/admin/_layout': typeof AdminLayoutRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -671,13 +650,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
+    | '/admin'
     | '/auth'
     | '/about'
     | '/contact'
     | '/gallery'
     | '/services'
     | '/team'
-    | '/admin'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -709,12 +688,12 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/services'
     | '/team'
-    | '/admin'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
     | '/auth/update-password'
     | '/'
+    | '/admin'
     | '/profile/booking'
     | '/profile/my-bookings'
     | '/profile/user-appointments'
@@ -735,14 +714,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_client'
+    | '/admin'
     | '/auth'
     | '/_client/about'
     | '/_client/contact'
     | '/_client/gallery'
     | '/_client/services'
     | '/_client/team'
-    | '/admin'
-    | '/admin/_layout'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -771,14 +749,14 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   ClientRoute: typeof ClientRouteWithChildren
-  AuthRoute: typeof AuthRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   ClientRoute: ClientRouteWithChildren,
-  AuthRoute: AuthRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
+  AuthRoute: AuthRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -792,8 +770,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/_client",
-        "/auth",
-        "/admin"
+        "/admin",
+        "/auth"
       ]
     },
     "/_client": {
@@ -809,6 +787,25 @@ export const routeTree = rootRoute
         "/_client/profile/my-bookings",
         "/_client/profile/user-appointments",
         "/_client/profile/user-info"
+      ]
+    },
+    "/admin": {
+      "filePath": "admin.tsx",
+      "children": [
+        "/admin/",
+        "/admin/appointments/$id",
+        "/admin/categories/$id",
+        "/admin/appointments/",
+        "/admin/categories/",
+        "/admin/employees/",
+        "/admin/locations/",
+        "/admin/services/",
+        "/admin/testimonials/",
+        "/admin/locations/$id/services/search",
+        "/admin/locations/$id/services/",
+        "/admin/locations/$id/staffs/",
+        "/admin/locations/$id/staffs/reviews/",
+        "/admin/locations/$id/staffs/schedule/"
       ]
     },
     "/auth": {
@@ -839,30 +836,6 @@ export const routeTree = rootRoute
     "/_client/team": {
       "filePath": "_client/team.tsx",
       "parent": "/_client"
-    },
-    "/admin": {
-      "filePath": "admin",
-      "children": [
-        "/admin/_layout",
-        "/admin/",
-        "/admin/appointments/$id",
-        "/admin/categories/$id",
-        "/admin/appointments/",
-        "/admin/categories/",
-        "/admin/employees/",
-        "/admin/locations/",
-        "/admin/services/",
-        "/admin/testimonials/",
-        "/admin/locations/$id/services/search",
-        "/admin/locations/$id/services/",
-        "/admin/locations/$id/staffs/",
-        "/admin/locations/$id/staffs/reviews/",
-        "/admin/locations/$id/staffs/schedule/"
-      ]
-    },
-    "/admin/_layout": {
-      "filePath": "admin/_layout.tsx",
-      "parent": "/admin"
     },
     "/auth/forgot-password": {
       "filePath": "auth/forgot-password.tsx",

@@ -1,9 +1,6 @@
-"use client";
-
-import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import { useLocation, useRouterState } from "@tanstack/react-router";
-import { boolean } from "better-auth";
+import { useLocation } from "@tanstack/react-router";
+import { motion } from "motion/react";
 
 interface BreadcrumbItem {
   label: string;
@@ -52,13 +49,18 @@ export function AdminHeader({ title }: { title: string }) {
       <div className="container py-4">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            transition: {
+              duration: 0.3,
+            },
+          }}
           className="flex flex-col gap-1"
         >
           <div className="flex items-center text-sm text-muted-foreground">
             {breadcrumbs.map((item, index) => (
-              <div key={index} className="flex items-center">
+              <div key={item.label} className="flex items-center">
                 {index > 0 && (
                   <span className="mx-2 text-muted-foreground/50">/</span>
                 )}

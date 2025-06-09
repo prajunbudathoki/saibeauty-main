@@ -1,12 +1,9 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import type React from "react";
-import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
-import { BookingCTA } from "@/components/shared/booking-cta";
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
-import { AdminSidebar } from "@/components/shared/admin-sidebar";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
+import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/_client")({
   component: RouteComponent,
@@ -147,9 +144,7 @@ function RouteComponent() {
         </div>
       </header>
 
-      <main className="flex-1">
-        <Outlet />
-      </main>
+      <main className="flex-1">{/* <Outlet /> */}</main>
 
       {/* <BookingCTA /> */}
 
