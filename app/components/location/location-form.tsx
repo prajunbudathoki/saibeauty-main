@@ -9,18 +9,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { createLocation, updateLocation } from "@/actions/location-actions";
 import { toast } from "sonner";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 
-interface LocationFormProps {
-  location?: Location;
-  onSuccess?: () => void;
-}
-
-export function LocationForm({ location, onSuccess }: LocationFormProps) {
+export function LocationForm({ location, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
-
+  const router = useRouter();
   const isEditing = !!location;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,17 +32,20 @@ export function LocationForm({ location, onSuccess }: LocationFormProps) {
         //   // Keep the existing image if no new one is provided
         //   formData.set("image", "");
       }
+      const plainData = Object.fromEntries(formData.entries());
 
       if (isEditing) {
-        await updateLocation({ data: location.id });
-        toast("Location updated", {
+        await updateLocation({ data: { ...plainData, id: location.id } });
+        toast.success("Location updated", {
           description: "The location has been updated successfully.",
         });
+        router.invalidate();
       } else {
-        await createLocation({ data: formData });
+        await createLocation({ data: plainData });
         toast.success("Location created", {
           description: "The location has been created successfully.",
         });
+        router.invalidate();
       }
 
       if (onSuccess) {

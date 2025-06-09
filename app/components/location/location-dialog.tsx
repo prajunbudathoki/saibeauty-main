@@ -1,17 +1,17 @@
-import type React from "react"
-import { useState } from "react"
-import type { Location } from "@/lib/type"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { LocationForm } from "./location-form"
+import type React from "react";
+import { useState } from "react";
+import type { Location } from "@/lib/type";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { LocationForm } from "./location-form";
 
-interface LocationDialogProps {
-  location?: Location
-  trigger: React.ReactNode
-  title: string
-}
-
-export function LocationDialog({ location, trigger, title }: LocationDialogProps) {
-  const [open, setOpen] = useState(false)
+export function LocationDialog({ location, trigger, title }) {
+  const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -23,5 +23,5 @@ export function LocationDialog({ location, trigger, title }: LocationDialogProps
         <LocationForm location={location} onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
-  )
+  );
 }

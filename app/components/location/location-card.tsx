@@ -23,11 +23,7 @@ import { deleteLocation } from "@/actions/location-actions";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
 
-interface LocationCardProps {
-  location: Location;
-}
-
-export function LocationCard({ location }: LocationCardProps) {
+export function LocationCard({ location }) {
   const handleDelete = async () => {
     try {
       await deleteLocation({ data: location.id });
@@ -37,7 +33,7 @@ export function LocationCard({ location }: LocationCardProps) {
     }
   };
 
-  const imageUrl = "";
+  const imageUrl = null;
 
   return (
     <motion.div

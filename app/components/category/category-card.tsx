@@ -14,16 +14,11 @@ import { deleteCategory } from "@/actions/category-actions";
 import { toast } from "sonner";
 import { Link, useRouter } from "@tanstack/react-router";
 
-interface CategoryCardProps {
-  category: Category;
-  serviceCount: number;
-}
-
-export function CategoryCard({ category, serviceCount }: CategoryCardProps) {
+export function CategoryCard({ category, serviceCount }) {
   const router = useRouter();
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      await deleteCategory({ data: id });
+      await deleteCategory({ data: { id: category.id } });
       toast.success("Category deleted successfully", {
         description: "The category has been deleted successfully.",
       });

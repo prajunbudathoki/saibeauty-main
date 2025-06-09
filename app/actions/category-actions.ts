@@ -54,6 +54,7 @@ export const createCategory = createServerFn({
 export const deleteCategory = createServerFn()
   .validator((id: string) => id)
   .handler(async ({ data }) => {
+    const { id } = data;
     // const { data: session, error } = await authClient.getSession();
     // if (session?.user.role !== "admin") {
     //   throw new Error("Role doesnot have access");
@@ -64,7 +65,9 @@ export const deleteCategory = createServerFn()
     // }
     try {
       await prisma.category.delete({
-        where: { id: data },
+        where: {
+          id,
+        },
       });
     } catch (error) {
       throw new Error("Failed to delete Category");

@@ -6,11 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { formatTime } from "@/lib/utils";
 import { motion } from "motion/react";
 
-interface LocationContactCardProps {
-  location: Location;
-}
-
-export function LocationContactCard({ location }: LocationContactCardProps) {
+export function LocationContactCard({ location }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

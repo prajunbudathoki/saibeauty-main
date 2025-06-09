@@ -30,7 +30,7 @@ export const createLocation = createServerFn({
   method: "POST",
 })
   .validator((form: Record<string, any>) => form)
-  .handler(async ({ data: formData }) => {
+  .handler(async ({ data}) => {
     const {
       name,
       address,
@@ -43,7 +43,7 @@ export const createLocation = createServerFn({
       is_open_on_weekends,
       google_maps_url,
       image,
-    } = formData;
+    } = data
 
     if (
       !name ||
