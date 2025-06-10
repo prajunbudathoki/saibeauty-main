@@ -72,10 +72,17 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
       const description = formData.get("description") as string;
       const index = Number(formData.get("index"));
       const duration = Number(formData.get("duration"));
+
       const price = Number(formData.get("price"));
       const category_id = (formData.get("category_id") as string) ?? "";
       await createService({
-        data: { name, description, index, duration, price, category_id },
+        data: {
+          name,
+          description,
+          index,
+          price,
+          category_id,
+        },
       });
       toast.success("Service created", {
         description: "The service has been successfully created",

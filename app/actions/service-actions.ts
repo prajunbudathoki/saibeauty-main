@@ -62,7 +62,14 @@ export const createService = createServerFn({
   )
   .handler(
     async ({
-      data: { name, description, price, index, duration, category_id },
+      data: {
+        name,
+        description,
+        price,
+        index,
+        duration,
+        category_id,
+      },
     }) => {
       // const { data: session, error } = await authClient.getSession();
       // if (session?.user.role !== "admin") {
