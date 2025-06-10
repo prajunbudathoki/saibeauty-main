@@ -18,7 +18,7 @@ export function ServiceCard({ service }) {
   const router = useRouter();
   const handleDelete = async () => {
     try {
-      await deleteService({ data: { id: service.id } });
+      await deleteService(service.id);
       toast.success("Service deleted successfully");
       router.invalidate();
     } catch (error) {
@@ -26,7 +26,7 @@ export function ServiceCard({ service }) {
     }
   };
 
-  const imageUrl = null;
+  const imageUrl = undefined;
 
   return (
     <motion.div

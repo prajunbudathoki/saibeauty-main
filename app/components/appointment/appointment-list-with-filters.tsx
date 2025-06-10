@@ -119,7 +119,7 @@ export function AppointmentListWithFilters({ locations }) {
       };
 
       const data = await getAppointments({ data: filters });
-      setAppointments(data);
+      setAppointments(data ?? []);
     } catch (error) {
       console.error("Error fetching appointments:", error);
     } finally {
@@ -364,7 +364,7 @@ export function AppointmentListWithFilters({ locations }) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
-                          <Link to={`/admin/appointments/${appointment.id}`}>
+                          <Link to="/admin/appointments/$id" params={{ id: appointment.id }}>
                             <Eye className="h-4 w-4 mr-2" />
                             View Details
                           </Link>

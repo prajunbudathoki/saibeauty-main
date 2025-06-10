@@ -53,11 +53,10 @@ function RouteComponent() {
       toast.error(error.code || "Failed to update profile");
       setIsLoading(false);
       return;
-    } else {
-      toast.success("Profile updated successfully");
-      setNewPassword("");
-      setConfirmPassword("");
     }
+    toast.success("Profile updated successfully");
+    setNewPassword("");
+    setConfirmPassword("");
     setIsLoading(false);
   }
 
@@ -135,6 +134,7 @@ function RouteComponent() {
                             strokeWidth={2}
                             viewBox="0 0 24 24"
                           >
+                            <title>as</title>
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -152,6 +152,7 @@ function RouteComponent() {
                             strokeWidth={2}
                             viewBox="0 0 24 24"
                           >
+                            <title>as</title>
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"

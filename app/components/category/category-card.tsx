@@ -18,7 +18,7 @@ export function CategoryCard({ category, serviceCount }) {
   const router = useRouter();
   const handleDelete = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      await deleteCategory({ data: { id: category.id } });
+      await deleteCategory(category.id);
       toast.success("Category deleted successfully", {
         description: "The category has been deleted successfully.",
       });
@@ -43,7 +43,7 @@ export function CategoryCard({ category, serviceCount }) {
       <Card className="overflow-hidden h-full flex flex-col border border-border/50 hover:border-border hover:shadow-md transition-all duration-300">
         <div className="relative h-40 overflow-hidden group">
           <img
-            src={imageUrl}
+            src={undefined}
             alt={category.name}
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
@@ -74,7 +74,7 @@ export function CategoryCard({ category, serviceCount }) {
               className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
               asChild
             >
-              <Link to={`/admin/categories/${category.id}`}>
+              <Link to="/admin/categories/$id" params={{ id: category.id }}>
                 <Eye className="h-4 w-4" />
               </Link>
             </Button>

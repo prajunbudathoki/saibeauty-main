@@ -86,7 +86,10 @@ export function LocationCard({ location }) {
               size="sm"
               className="hover:bg-primary/10 hover:text-primary"
             >
-              <Link href={`/admin/locations/${location.id}/services`}>
+              <Link
+                to="/admin/locations/$id/services"
+                params={{ id: location.id }}
+              >
                 <Scissors className="h-4 w-4 mr-1" />
                 Services
               </Link>
@@ -98,7 +101,10 @@ export function LocationCard({ location }) {
               size="sm"
               className="hover:bg-primary/10 hover:text-primary"
             >
-              <Link href={`/admin/locations/${location.id}/staffs`}>
+              <Link
+                to="/admin/locations/$id/staffs/schedule"
+                params={{ id: location.id }}
+              >
                 <Users className="h-4 w-4 mr-1" />
                 Staff
               </Link>

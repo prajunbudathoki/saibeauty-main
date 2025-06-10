@@ -34,7 +34,7 @@ export function LocationForm({ location, onSuccess }) {
       const plainData = Object.fromEntries(formData.entries());
 
       if (isEditing) {
-        await updateLocation({ data: { ...plainData, id: location.id } });
+        await updateLocation({ data: { id: location.id, form: plainData } });
         toast.success("Location updated", {
           description: "The location has been updated successfully.",
         });
