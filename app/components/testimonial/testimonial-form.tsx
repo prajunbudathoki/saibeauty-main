@@ -47,14 +47,14 @@ export function TestimonialForm({
         formData.set("image", "");
       }
       // converting the fields into object as formData was not converted by serverfn
-      const plainData = Object.fromEntries(formData.entries());
-      plainData.rating = Number(plainData.rating);
+      // const plainData = Object.fromEntries(formData.entries());
+      // plainData.rating = Number(plainData.rating);
       if (isEditing) {
-        await updateTestimonial({ data: { ...plainData, id: testimonial.id } });
+        await updateTestimonial({ data: { id: testimonial.id, formData } });
         toast.success("Testimonial updated successfully");
         router.invalidate();
       } else {
-        await createTestimonial({ data: plainData });
+        await createTestimonial({ data: { formData } });
         toast.success("Testimonial created successfully");
         router.invalidate();
       }

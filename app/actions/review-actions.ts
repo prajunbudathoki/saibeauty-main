@@ -44,8 +44,8 @@ export const getStaffReviews = createServerFn({
 export const getStaffAverageRating = createServerFn({
   method: "GET",
 })
-  .validator((d: { staffId: string }) => d)
-  .handler(async ({ data: { staffId } }) => {
+  .validator((staffId:string) => staffId)
+  .handler(async ({ data: staffId }) => {
     try {
       const ratings = await prisma.appointment.findMany({
         where: {

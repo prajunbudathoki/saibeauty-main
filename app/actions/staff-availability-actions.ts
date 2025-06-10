@@ -4,24 +4,17 @@ import { createServerFn } from "@tanstack/react-start";
 export const getStaffSpecialAvailability = createServerFn({
   method: "GET",
 })
-  .validator(
-    (staffId: string, locationId: string, month: number, year: number) => ({
-      staffId,
-      locationId,
-      month,
-      year,
-    })
-  )
-  .handler(async ({ data: { staffId, locationId, month, year } }) => {
+.validator((data: { staffId: string; locationId: string; month: number; year: number }) => data)
+  .handler(async ({ data }) => {
     try {
       const specialAvailability =
         await prisma.staffSpecialAvailability.findMany({
           where: {
-            staff_id: staffId,
-            location_id: locationId,
+            staff_id: data.staffId,
+            location_id: data.locationId,
             date: {
-              gte: new Date(year, month - 1, 1).toISOString().split("T")[0],
-              lt: new Date(year, month, 1).toISOString().split("T")[0],
+              gte: new Date(data.year, data.month - 1, 1).toISOString().split("T")[0],
+              lt: new Date(data.year, data.month, 1).toISOString().split("T")[0],
             },
           },
           orderBy: [{ date: "asc" }],
@@ -36,16 +29,16 @@ export const getSpecialAvailabilityForDate = createServerFn({
   method: "GET",
 })
   .validator(
-    (input: { staffId: string; locationId: string; date: string }) => input
+    (data: { staffId: string; locationId: string; date: string }) => data
   )
-  .handler(async ({ data: { staffId, locationId, date } }) => {
+  .handler(async ({ data }) => {
     try {
       const specialAvailability =
         await prisma.staffSpecialAvailability.findFirst({
           where: {
-            staff_id: staffId,
-            location_id: locationId,
-            date: new Date(date),
+            staff_id: data.staffId,
+            location_id: data.locationId,
+            date: new Date(data.date),
           },
         });
       return specialAvailability;
@@ -79,7 +72,7 @@ export const upsertSpecialAvailability = createServerFn({
       },
     });
 
-    let result;
+    let result: any;
 
     if (existingRecord) {
       result = await prisma.staffSpecialAvailability.update({

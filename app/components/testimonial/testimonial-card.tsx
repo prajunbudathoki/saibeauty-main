@@ -19,7 +19,7 @@ export function TestimonialCard({ testimonial }) {
   const router = useRouter();
   const handleDelete = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      await deleteTestimonial({ data: { id: testimonial.id } });
+      await deleteTestimonial({data: testimonial.id});
       toast.success("Testimonial deleted successfully");
       router.invalidate();
     } catch (error) {

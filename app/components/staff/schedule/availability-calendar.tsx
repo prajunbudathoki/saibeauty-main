@@ -18,7 +18,6 @@ import { SpecialAvailabilityDialog } from "./special-availability-dialog";
 import { toast } from "sonner";
 import { getStaffSpecialAvailability } from "@/actions/staff-availability-actions";
 
-// Update the function signature to accept weeklySchedules
 export function AvailabilityCalendar({ staffId, locationId, weeklySchedules }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [specialAvailability, setSpecialAvailability] = useState([]);
@@ -28,13 +27,16 @@ export function AvailabilityCalendar({ staffId, locationId, weeklySchedules }) {
 
   const month = currentDate.getMonth() + 1;
   const year = currentDate.getFullYear();
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
+  const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
   useEffect(() => {
     const fetchAvailability = async () => {
       setLoading(true);
       try {
         const res = await getStaffSpecialAvailability({
-          data: { staffId, locationId, month, year },
+          data: { staffId, locationId, year, month },
         });
         setSpecialAvailability(res);
       } catch (error) {
@@ -61,40 +63,31 @@ export function AvailabilityCalendar({ staffId, locationId, weeklySchedules }) {
     setDialogOpen(true);
   };
 
-  const handleDialogClose = (refreshData = false) => {
+  const handleDialogClose = async (refreshData = false) => {
     setDialogOpen(false);
     setSelectedDate(null);
-
     if (refreshData) {
-      // Refresh data after changes
-      getStaffSpecialAvailability({
-        data: { staffId, locationId, month, year },
-      })
-        .then((data) => setSpecialAvailability(data))
-        .catch((error) => {
-          console.error("Error refreshing special availability:", error);
-          toast.error("Failed to refresh special availability");
+      try {
+        const res = await getStaffSpecialAvailability({
+          data: { staffId, locationId, year, month },
         });
+        setSpecialAvailability(res);
+      } catch (error) {
+        console.error("Error refreshing special availability:", error);
+        toast.error("Failed to refresh special availability");
+      }
     }
   };
 
-  // Generate days for the current month
-  const monthStart = startOfMonth(currentDate);
-  const monthEnd = endOfMonth(currentDate);
-  const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
-
-  // Get day names for the header
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  // Function to get availability for a specific date
   const getAvailabilityForDate = (date: Date) => {
     const dateString = format(date, "yyyy-MM-dd");
     return specialAvailability.find((a) => a.date === dateString);
   };
 
-  // Function to check if a day has a regular weekly schedule
   const hasWeeklySchedule = (date: Date) => {
-    const dayOfWeek = getDay(date); // 0 = Sunday, 1 = Monday, etc.
+    const dayOfWeek = getDay(date); // 0 = Sunday, etc.
     return weeklySchedules.some(
       (schedule) => schedule.day_of_week === dayOfWeek
     );
@@ -114,6 +107,7 @@ export function AvailabilityCalendar({ staffId, locationId, weeklySchedules }) {
           </Button>
         </div>
       </CardHeader>
+
       <CardContent>
         {loading ? (
           <div className="flex justify-center py-8">
@@ -128,17 +122,16 @@ export function AvailabilityCalendar({ staffId, locationId, weeklySchedules }) {
                 </div>
               ))}
             </div>
+
             <div className="grid grid-cols-7 gap-1">
-              {/* Render empty cells for days before the start of the month */}
-              {Array.from({ length: getDay(monthStart) }).map((index) => (
+              {Array.from({ length: getDay(monthStart) }).map((_, index) => (
                 <div key={`empty-${index}`} className="aspect-square p-1" />
               ))}
-              {/* Render the actual days of the month */}
+
               {days.map((day) => {
                 const availability = getAvailabilityForDate(day);
                 const hasRegularSchedule = hasWeeklySchedule(day);
 
-                // Determine the availability status
                 const isAvailable =
                   availability?.is_available ?? hasRegularSchedule;
                 const isUnavailable =
@@ -167,8 +160,6 @@ export function AvailabilityCalendar({ staffId, locationId, weeklySchedules }) {
                       >
                         {format(day, "d")}
                       </span>
-
-                      {/* Show indicator for special availability or regular schedule */}
                       <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2">
                         {availability ? (
                           <div

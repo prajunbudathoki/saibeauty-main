@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar, Star } from "lucide-react";
 import { motion } from "motion/react";
+
 export const Route = createFileRoute("/_client/about")({
   component: RouteComponent,
 });

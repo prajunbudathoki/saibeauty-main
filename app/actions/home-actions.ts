@@ -9,7 +9,7 @@ export const getFeaturedCategories = createServerFn({
     try {
       const categories = await prisma.category.findMany({
         orderBy: { name: "asc" },
-        take: limit,
+        // take: limit,
         include: {
           services: true,
         },
@@ -28,7 +28,7 @@ export const getFeaturedServices = createServerFn({
     try {
       const services = await prisma.service.findMany({
         orderBy: { name: "asc" },
-        take: limit,
+        // take: limit,
       });
       return services;
     } catch (error) {

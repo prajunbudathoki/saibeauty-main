@@ -42,12 +42,17 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
     async function loadRating() {
       try {
         const result = await getStaffAverageRating({ data: staff.id });
-        if (!result) {
+        if (result) {
           setAverageRating(result.averageRating);
-          setTotalReviews(result.totalReviews);
+          setTotalReviews(result.totalReviews || 0);
+        } else {
+          setAverageRating(null);
+          setTotalReviews(0);
         }
       } catch (error) {
         console.error("Error loading staff rating:", error);
+        setAverageRating(null);
+        setTotalReviews(0);
       }
     }
 

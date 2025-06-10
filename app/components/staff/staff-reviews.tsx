@@ -26,7 +26,7 @@ export function StaffReviews({ staffId }: StaffReviewsProps) {
       setLoading(true);
       try {
         const [reviewsResult, ratingResult] = await Promise.all([
-          getStaffReviews({ data: staffId }),
+          getStaffReviews({ data: { staffId } }),
           getStaffAverageRating({ data: staffId }),
         ]);
 

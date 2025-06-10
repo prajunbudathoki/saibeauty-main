@@ -105,8 +105,8 @@ export const createStaff = createServerFn({
 export const updateStaff = createServerFn({
   method: "POST",
 })
-  .validator((input: { id: string; form: Record<string, any> }) => input)
-  .handler(async ({ data: { id, form } }) => {
+  .validator((input: { staffId: string; form: Record<string, any> }) => input)
+  .handler(async ({ data: { staffId, form } }) => {
     const {
       location_id,
       name,
@@ -126,7 +126,7 @@ export const updateStaff = createServerFn({
 
     try {
       const staff = await prisma.staff.update({
-        where: { id },
+        where: { id: staffId },
         data: {
           location_id,
           name,
@@ -151,16 +151,16 @@ export const updateStaff = createServerFn({
 export const deleteStaff = createServerFn({
   method: "POST",
 })
-  .validator((input: { id: string; locationId: string }) => input)
-  .handler(async ({ data: { id } }) => {
+  .validator((staffId:string) => staffId)
+  .handler(async ({ data:staffId }) => {
     try {
       await prisma.staff.findUnique({
-        where: { id },
+        where: { id: staffId },
         select: { image: true },
       });
 
       await prisma.staff.delete({
-        where: { id },
+        where: { id: staffId },
       });
 
       return;

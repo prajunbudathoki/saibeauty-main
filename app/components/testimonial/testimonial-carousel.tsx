@@ -22,7 +22,17 @@ export const TestimonialCarousel = () => {
       try {
         setLoading(true);
         const data = await getTestimonials();
-        setTestimonials(Array.isArray(data) ? data : []);
+        setTestimonials(
+          Array.isArray(data)
+            ? data.map((t) => ({
+                ...t,
+                created_at:
+                  typeof t.created_at === "string"
+                    ? t.created_at
+                    : t.created_at?.toISOString?.() ?? "",
+              }))
+            : []
+        );
       } catch (error) {
         console.error("Error fetching testimonials:", error);
       } finally {
@@ -58,7 +68,7 @@ export const TestimonialCarousel = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
       </div>
     );
   }
@@ -148,16 +158,17 @@ export const TestimonialCarousel = () => {
           </Button>
 
           <div className="flex items-center gap-2 px-4">
-            {testimonials.map((_, index) => (
+            {testimonials.map((testimonial) => (
               <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
+              type="button"
+                key={testimonial.id}
+                onClick={() => setCurrentIndex(testimonials.indexOf(testimonial))}
                 className={`h-2.5 w-2.5 rounded-full transition-all ${
-                  index === currentIndex
+                  currentIndex === testimonials.indexOf(testimonial)
                     ? "bg-primary scale-125"
                     : "bg-muted-foreground/30"
                 }`}
-                aria-label={`Go to testimonial ${index + 1}`}
+                aria-label={`Go to testimonial ${testimonial.id + 1}`}
               />
             ))}
           </div>

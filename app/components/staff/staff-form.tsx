@@ -47,7 +47,7 @@ export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
       }
 
       if (isEditing) {
-        await updateStaff({ data: staff.id });
+        await updateStaff({ data: { staffId: staff.id, form: formData } });
         toast.success("Staff member updated successfully");
       } else {
         await createStaff({ data: formData });
