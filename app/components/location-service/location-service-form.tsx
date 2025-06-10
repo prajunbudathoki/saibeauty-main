@@ -1,19 +1,20 @@
 import {
-	addServiceToLocation,
-	getAvailableServices,
-	updateLocationService,
+  addServiceToLocation,
+  getAvailableServices,
+  updateLocationService,
 } from "@/actions/location-service-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { formatPrice } from "@/lib/utils";
+import { useRouter } from "@tanstack/react-router";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -31,7 +32,7 @@ export function LocationServiceForm({
       (category) => category.id === locationService?.service?.category_id
     )?.id || null
   );
-
+  const router = useRouter();
   const isEditing = !!locationService;
 
   useEffect(() => {
@@ -61,9 +62,11 @@ export function LocationServiceForm({
       if (isEditing) {
         await updateLocationService({ data: locationService.id });
         toast.success("Service price updated successfully");
+        router.invalidate();
       } else {
-        await addServiceToLocation({ data: formData });
+        await addServiceToLocation({ data: { formData } });
         toast.success("Service added to location successfully");
+        router.invalidate();
       }
 
       if (onSuccess) {

@@ -88,7 +88,6 @@ export const createService = createServerFn({
 export const deleteService = createServerFn()
   .validator((id: string) => id)
   .handler(async ({ data }) => {
-    const { id } = data;
     try {
       // const { data: session, error } = await authClient.getSession();
       // if (session?.user.role !== "admin") {
@@ -97,7 +96,7 @@ export const deleteService = createServerFn()
 
       return await prisma.service.delete({
         where: {
-          id,
+          id: data,
         },
       });
     } catch (error) {

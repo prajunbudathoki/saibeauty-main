@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 export function FeaturedServices({ services }) {
+  const imageUrl = undefined;
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {services.map((service, index) => (
@@ -17,13 +18,13 @@ export function FeaturedServices({ services }) {
           <div className="relative h-48 overflow-hidden">
             {service.image ? (
               <img
-                src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/saibeauty/${service.image}`}
-                alt={service.name}
+                src={imageUrl}
+                alt="hello"
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
               />
             ) : (
               <img
-                src="/placeholder.svg?height=400&width=600"
+                src={imageUrl}
                 alt={service.name}
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
               />

@@ -9,9 +9,14 @@ import { Suspense } from "react";
 
 export const Route = createFileRoute("/_client/")({
   component: RouteComponent,
+  loader: async () => {
+    const services = await fetch("/api/services").then((res) => res.json());
+    return { services };
+  },
 });
 
 function RouteComponent() {
+  const services = Route.useLoaderData();
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -79,7 +84,7 @@ function RouteComponent() {
           </div>
 
           <Suspense fallback={<ServicesSkeleton />}>
-            {/* <FeaturedServices /> */}
+            <FeaturedServices services={services} />
           </Suspense>
 
           <div className="text-center mt-12">

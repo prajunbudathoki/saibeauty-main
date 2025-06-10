@@ -30,18 +30,16 @@ export const getLocationServices = createServerFn({
 export const addServiceToLocation = createServerFn({
   method: "POST",
 })
-  .validator((form: Record<string, any>) => form)
-  .handler(async ({ data: form }) => {
-    const { location_id, service_id, price } = form;
-
-    if (!location_id || !service_id) {
-      throw new Error("Location ID and Service ID are required");
-    }
+  .validator((d: { formData: FormData }) => d)
+  .handler(async ({ data }) => {
+    // if (!location_id || !service_id) {
+    //   throw new Error("Location ID and Service ID are required");
+    // }
 
     const existingService = await prisma.locationService.findFirst({
       where: {
-        location_id,
-        service_id,
+        location_id: data.formData.get("location_id") as string,
+        service_id: data.formData.get("service_id") as string,
       },
     });
 
@@ -52,9 +50,11 @@ export const addServiceToLocation = createServerFn({
     try {
       const locationService = await prisma.locationService.create({
         data: {
-          location_id,
-          service_id,
-          price: price !== undefined && price !== null ? Number(price) : null,
+          location_id: data.formData.get("location_id") as string,
+          service_id: data.formData.get("service_id") as string,
+          price: data.formData.get("price")
+            ? Number(data.formData.get("price"))
+            : null,
         },
         include: {
           service: {

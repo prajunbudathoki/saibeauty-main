@@ -145,11 +145,13 @@ function RouteComponent() {
         </div>
       </header>
 
-      <main className="flex-1">{/* <Outlet /> */}</main>
+      <main className="flex-1">
+        <Outlet />
+      </main>
 
       <BookingCTA />
 
-      {/* <footer className="bg-muted py-12 border-t">
+      <footer className="bg-muted py-12 border-t">
         <div className="container grid gap-8 md:grid-cols-3">
           <div>
             <h3 className="text-lg font-semibold mb-4">Sai Beauty</h3>
@@ -217,6 +219,7 @@ function RouteComponent() {
             <div className="flex space-x-4 mt-4">
               <a
                 target="_blank"
+                rel="noreferrer"
                 href="https://www.facebook.com/saibeautydxb/"
                 className="text-foreground hover:text-primary transition-colors"
               >
@@ -232,11 +235,13 @@ function RouteComponent() {
                   strokeLinejoin="round"
                   className="lucide lucide-facebook"
                 >
+                  <title>as</title>
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                 </svg>
               </a>
               <a
                 target="_blank"
+                rel="noreferrer"
                 href="https://www.instagram.com/saibeautysalon.ae"
                 className="text-foreground hover:text-primary transition-colors"
               >
@@ -252,12 +257,12 @@ function RouteComponent() {
                   strokeLinejoin="round"
                   className="lucide lucide-instagram"
                 >
+                  <title>as</title>
                   <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                   <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                 </svg>
               </a>
-              
             </div>
           </div>
         </div>
@@ -265,7 +270,7 @@ function RouteComponent() {
         <div className="container mt-8 pt-8 border-t border-muted-foreground/20 text-center text-sm text-muted-foreground">
           © {new Date().getFullYear()} Sai Beauty. All rights reserved.
         </div>
-      </footer> */}
+      </footer>
     </div>
   );
 }
