@@ -13,20 +13,34 @@ import { Trash2, Edit, Clock, Tag } from "lucide-react";
 import { deleteService } from "@/actions/service-actions";
 import { toast } from "sonner";
 import { useRouter } from "@tanstack/react-router";
+import { Category, Service } from "@/generated/prisma";
 
-export function ServiceCard({ service }) {
+function getCdnUrl(path: string | undefined | null) {
+  if (!path || path == "") {
+    return undefined;
+  }
+  if (path.startsWith("http")) {
+    return path;
+  }
+
+  return `https://cdn.saibeauty.ae/${path}`;
+}
+
+export function ServiceCard({
+  service,
+}: {
+  service: Service & { category: Category };
+}) {
   const router = useRouter();
   const handleDelete = async () => {
     try {
-      await deleteService(service.id);
+      await deleteService({ data: service.id });
       toast.success("Service deleted successfully");
       router.invalidate();
     } catch (error) {
       toast.error("Failed to delete the service");
     }
   };
-
-  const imageUrl = undefined;
 
   return (
     <motion.div
@@ -35,9 +49,15 @@ export function ServiceCard({ service }) {
       transition={{ duration: 0.3 }}
     >
       <Card className="overflow-hidden h-full flex flex-col">
-        <div className="relative h-40">
-          <img src={imageUrl} alt={service.name} className="object-cover" />
-        </div>
+        <div
+          style={{
+            background: "url('" + getCdnUrl(service.image) + "')",
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          }}
+          className={` h-40 w-full`}
+        ></div>
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
             <h3 className="font-bold text-lg">{service.name}</h3>
@@ -56,7 +76,7 @@ export function ServiceCard({ service }) {
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 text-sm">
               <Tag className="h-4 w-4 text-muted-foreground" />
-              <span>{service.category?.name}</span>
+              <span>{service?.category?.name}</span>
             </div>
 
             {service.duration && (
@@ -72,7 +92,7 @@ export function ServiceCard({ service }) {
             <ServiceDialog
               service={service}
               title="Edit Service"
-              categoryId={service.categoryId}
+              categoryId={service.category_id}
               trigger={
                 <Button variant="ghost" size="icon" className="h-8 w-8">
                   <Edit className="h-4 w-4" />

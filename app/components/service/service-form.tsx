@@ -62,13 +62,14 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
 
       // Add the image file if it exists
       if (imageFile) {
+        console.log("image added");
         formData.set("image", imageFile);
       } else if (service?.image) {
         // Keep the existing image if no new one is provided
         formData.set("image", "");
       }
-      await createService({ data: { formData } });
-      console.log({data: { formData }});
+      await createService({ data: formData });
+      console.log({ data: { formData } });
       toast.success("Service created", {
         description: "The service has been successfully created",
       });
@@ -92,7 +93,12 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="name">Name *</Label>
-          <Input id="name" name="name" defaultValue={service?.name} required />
+          <Input
+            id="name"
+            name="name"
+            defaultValue={service?.name || "abc"}
+            required
+          />
         </div>
 
         <div className="space-y-2">
@@ -101,7 +107,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
             id="index"
             name="index"
             type="number"
-            defaultValue={service?.index || 0}
+            defaultValue={service?.index || 1}
             required
           />
         </div>
@@ -136,7 +142,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
               type="number"
               step="0.01"
               min="0"
-              defaultValue={service?.price}
+              defaultValue={service?.price || 20}
               required
             />
           </div>
@@ -147,7 +153,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
               name="duration"
               type="number"
               min="0"
-              defaultValue={service?.duration || ""}
+              defaultValue={service?.duration || 20}
             />
           </div>
         </div>
@@ -158,7 +164,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
             id="description"
             name="description"
             rows={3}
-            defaultValue={service?.description || ""}
+            defaultValue={service?.description || "asd"}
           />
         </div>
 

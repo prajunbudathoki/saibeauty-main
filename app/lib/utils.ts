@@ -50,3 +50,14 @@ export function formatCurrency(amount: number | null | undefined): string {
     maximumFractionDigits: 2,
   }).format(amount);
 }
+
+export function getCdnUrl(path: string | undefined | null) {
+  if (!path || path == "") {
+    return undefined;
+  }
+  if (path.startsWith("http")) {
+    return path;
+  }
+
+  return `https://cdn.saibeauty.ae/${path}`;
+}

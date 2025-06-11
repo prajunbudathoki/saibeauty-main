@@ -92,3 +92,21 @@ export const getAvailableStaff = createServerFn({
 //       throw new Error("Failed to create appointment");
 //     }
 //   });
+
+
+export const cancelBooking = createServerFn({
+  method: "POST",
+})
+.validator((bookingId: string) => bookingId)
+.handler(async ({ data: bookingId }) => {
+  try {
+    const booking = await prisma.appointment.update({
+      where: { id: bookingId },
+      data: { status: "cancelled" },
+    });
+    return booking;
+  } catch (error) {
+    throw new Error("Failed to cancel booking");
+  }
+}
+);

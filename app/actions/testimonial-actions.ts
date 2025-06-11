@@ -1,6 +1,7 @@
-import { authClient } from "@/lib/auth-client";
 import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
+import { zfd } from "zod-form-data";
+import { uploadFileToS3 } from "./storage.action";
 
 export const getTestimonials = createServerFn({
   method: "GET",
@@ -27,33 +28,55 @@ export const getTestimonialById = createServerFn()
     });
   });
 
+const createTestimonialSchema = zfd.formData({
+  name: zfd.text(),
+  designation: zfd.text(),
+  rating: zfd.numeric(),
+  review: zfd.text(),
+  image: zfd.file(),
+});
+
 export const createTestimonial = createServerFn({
   method: "POST",
 })
-  .validator((d: { formData: FormData }) => d)
+  .validator((d: FormData) => createTestimonialSchema.parse(d))
   .handler(async ({ data }) => {
-    const { formData } = data;
+    const { name, designation, rating, review, image } = data;
     // const { data: session } = await authClient.getSession();
     // if (session?.user.role !== "admin") {
     //   throw new Error("Role doesnot have access");
     // }
-    const testimonial = await prisma.testimonial.create({
-      data: {
-        name: formData.get("name") as string,
-        designation: formData.get("designation") as string,
-        rating: Number(formData.get("rating")),
-        review: formData.get("review") as string,
-      },
-    });
-    return testimonial;
+    try {
+      const path = await uploadFileToS3(image, "testimonial");
+      return await prisma.testimonial.create({
+        data: {
+          name,
+          designation,
+          rating,
+          review,
+          image: path,
+        },
+      });
+    } catch (error) {
+      console.log("Error creating testimonial:", error);
+      throw new Error("Failed to create testimonial");
+    }
   });
+
+const updateTestimonialSchema = zfd.formData({
+  id: zfd.numeric(),
+  name: zfd.text(),
+  designation: zfd.text().optional(),
+  rating: zfd.numeric(),
+  review: zfd.text(),
+});
 
 export const updateTestimonial = createServerFn({
   method: "POST",
 })
-  .validator((d: { id: string; formData: FormData }) => d)
+  .validator((d: FormData) => updateTestimonialSchema.parse(d))
   .handler(async ({ data }) => {
-    const { id, formData } = data;
+    const { name, id, rating, review, designation } = data;
     // const { data: session } = await authClient.getSession();
     // if (session?.user.role !== "admin") {
     //   throw new Error("User is not an admin");
@@ -65,12 +88,14 @@ export const updateTestimonial = createServerFn({
 
     try {
       const updated = await prisma.testimonial.update({
-        where: { id },
+        where: {
+          id,
+        },
         data: {
-          name: formData.get("name") as string,
-          designation: formData.get("designation") as string,
-          rating: Number(formData.get("rating")),
-          review: formData.get("review") as string,
+          name,
+          designation,
+          rating,
+          review,
         },
       });
       return updated;

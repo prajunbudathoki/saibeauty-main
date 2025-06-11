@@ -1,10 +1,7 @@
 import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
-import { file, zfd } from "zod-form-data";
-import { writeFileSync } from "node:fs";
-import { randomUUID } from "node:crypto";
-import { uploadS3 } from "@/lib/upload";
-import { json } from "node:stream/consumers";
+import { zfd } from "zod-form-data";
+import { uploadFileToS3 } from "./storage.action";
 
 export const getServices = createServerFn({
   method: "GET",
@@ -64,39 +61,13 @@ const createServiceSchema = zfd.formData({
 export const createService = createServerFn({
   method: "POST",
 })
-  .validator((d: { formData: FormData }) => d)
+  .validator((d: FormData) => createServiceSchema.parse(d))
   .handler(async ({ data }) => {
-    // console.log("sdsd");
-    const { formData } = data;
-    const category_id = formData.get("category_id") as string;
-    const image = formData.get("image") as File;
-    if (!image) {
-      throw new Error("No image file provided");
-    }
-    const index = Number(formData.get("index"));
-    // console.log("Image file",image.type);
-    const name = formData.get("name") as string;
-    const price = Number(formData.get("price"));
-    const description = formData.get("description") as string;
-    const duration = Number(formData.get("duration"));
-
-    const bytes = await image.bytes();
-    const buffer = Buffer.from(bytes);
-    const extension = image.type.split(".").pop();
-    const fileName = `${randomUUID()}.${extension}`;
-    const imageKey = `services/${fileName}`;
-
-    // const bytes = await image.bytes();
-    // writeFileSync("aaa.png", bytes);
+    const { category_id, image, index, name, price, description, duration } =
+      data;
 
     try {
-      await uploadS3(
-        buffer,
-        process.env.BUCKET_NAME || "",
-        imageKey,
-        image.type
-      );
-      console.log("Image uploaded successfully");
+      const path = await uploadFileToS3(image, "service");
       return await prisma.service.create({
         data: {
           name,
@@ -105,7 +76,7 @@ export const createService = createServerFn({
           index,
           price,
           category_id,
-          image: imageKey,
+          image: path,
         },
       });
     } catch (error) {
