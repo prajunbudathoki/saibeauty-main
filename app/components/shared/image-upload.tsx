@@ -50,7 +50,7 @@ export function ImageUpload({ onChange, value, className }: ImageUploadProps) {
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <div
         className={cn(
-          "relative flex items-center justify-center w-full h-40 border-2 border-dashed rounded-lg",
+          "relative flex items-center justify-center w-full h-40 border-2 border-dashed rounded-lg overflow-hidden",
           "bg-muted/50 hover:bg-muted/70 transition-colors cursor-pointer",
           preview ? "border-primary" : "border-muted-foreground/25"
         )}
@@ -61,7 +61,7 @@ export function ImageUpload({ onChange, value, className }: ImageUploadProps) {
             <img
               src={preview || "/placeholder.svg"}
               alt="Preview"
-              className="object-cover rounded-lg"
+              className="rounded-lg w-full "
             />
             <Button
               type="button"

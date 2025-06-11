@@ -37,7 +37,7 @@ function RouteComponent() {
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               Our Services
             </h1>
-            <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
+            <div className="w-20 h-1 bg-primary mx-auto mb-6"/>
             <p className="text-xl text-muted-foreground">
               Discover our comprehensive range of beauty services available at
               our locations. Each service is performed by our skilled
@@ -52,13 +52,13 @@ function RouteComponent() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="absolute top-20 left-[10%] w-16 h-16 rounded-full bg-primary/10 z-0"
-        ></motion.div>
+        />
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
           className="absolute bottom-20 right-[10%] w-24 h-24 rounded-full bg-primary/10 z-0"
-        ></motion.div>
+        />
       </div>
 
       {/* Features Section */}

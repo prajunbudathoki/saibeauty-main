@@ -67,34 +67,11 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
         // Keep the existing image if no new one is provided
         formData.set("image", "");
       }
-
-      const name = formData.get("name") as string;
-      const description = formData.get("description") as string;
-      const index = Number(formData.get("index"));
-      const duration = Number(formData.get("duration"));
-
-      const price = Number(formData.get("price"));
-      const category_id = (formData.get("category_id") as string) ?? "";
-      await createService({
-        data: {
-          name,
-          description,
-          index,
-          price,
-          category_id,
-        },
-      });
+      await createService({ data: { formData } });
       toast.success("Service created", {
         description: "The service has been successfully created",
       });
       router.invalidate();
-      //   if (isEditing) {
-      //     await updateService(service.id, formData)
-      //     toast.success("Service updated successfully")
-      //   } else {
-      //     await createService(formData)
-      //     toast.success("Service created successfully")
-      //   }
 
       if (onSuccess) {
         onSuccess();

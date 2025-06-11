@@ -1,3 +1,4 @@
+import { getServices } from "@/actions/service-actions";
 import { FeaturedServices } from "@/components/home/featured-services";
 import { ServicesSkeleton } from "@/components/home/services-skeleton";
 import { TestimonialCarousel } from "@/components/testimonial/testimonial-carousel";
@@ -10,8 +11,8 @@ import { Suspense } from "react";
 export const Route = createFileRoute("/_client/")({
   component: RouteComponent,
   loader: async () => {
-    const services = await fetch("/api/services").then((res) => res.json());
-    return { services };
+    const services = getServices();
+    return services;
   },
 });
 

@@ -16,7 +16,7 @@ export function ServiceDialog({ service, trigger, title, categoryId }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px] overflow-y-scroll">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>

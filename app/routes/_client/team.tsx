@@ -19,9 +19,9 @@ function RouteComponent() {
     <div>
       {/* Hero Section */}
       <div className="relative bg-gradient-to-b from-primary/5 via-primary/10 to-background py-16 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-10 pattern-dots pattern-primary pattern-bg-white pattern-size-4"></div>
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/10 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 w-1/3 h-full bg-gradient-to-t from-primary/10 to-transparent"></div>
+        <div className="absolute inset-0 z-0 opacity-10 pattern-dots pattern-primary pattern-bg-white pattern-size-4" />
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/10 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-1/3 h-full bg-gradient-to-t from-primary/10 to-transparent" />
 
         <div className="container relative z-10">
           <motion.div
@@ -36,7 +36,7 @@ function RouteComponent() {
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               Our Team
             </h1>
-            <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
+            <div className="w-20 h-1 bg-primary mx-auto mb-6" />
             <p className="text-xl text-muted-foreground">
               Meet our talented team of beauty professionals dedicated to
               providing you with exceptional service and care. Each member
@@ -52,13 +52,13 @@ function RouteComponent() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="absolute top-20 left-[10%] w-16 h-16 rounded-full bg-primary/10 z-0"
-        ></motion.div>
+        />
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
           className="absolute bottom-20 right-[10%] w-24 h-24 rounded-full bg-primary/10 z-0"
-        ></motion.div>
+        />
       </div>
 
       {/* Team Values Section */}
