@@ -9,15 +9,12 @@ import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { GalleryDialog } from "./gallery-dialog";
 import { Trash2, Edit, Eye } from "lucide-react";
 import { toast } from "sonner";
+import { deleteGalleryItem } from "@/actions/gallery-actions";
 
-interface GalleryCardProps {
-  galleryItem: GalleryItem;
-}
-
-export function GalleryCard({ galleryItem }: GalleryCardProps) {
+export function GalleryCard({ galleryItem }) {
   const handleDelete = async () => {
     try {
-      await deleteGalleryItem(galleryItem.id);
+      await deleteGalleryItem({ data: galleryItem.id });
       toast.success("Gallery item deleted successfully");
     } catch (error) {
       toast.error("Failed to delete the gallery item");

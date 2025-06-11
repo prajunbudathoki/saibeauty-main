@@ -9,6 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
+import {
+  createGalleryItem,
+  updateGalleryItem,
+} from "@/actions/gallery-actions";
 
 export function GalleryForm({ galleryItem, onSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -32,16 +36,16 @@ export function GalleryForm({ galleryItem, onSuccess }) {
         formData.set("image", "");
       }
 
-      //   if (isEditing) {
-      //     await updateGalleryItem(galleryItem.id, formData)
-      //     toast.success("Gallery item updated successfully")
-      //   } else {
-      //     if (!imageFile) {
-      //       throw new Error("Image is required")
-      //     }
-      //     await createGalleryItem(formData)
-      //     toast.success("Gallery item created successfully")
-      //   }
+      if (isEditing) {
+        await updateGalleryItem({ data: { id: galleryItem.id, formData } });
+        toast.success("Gallery item updated successfully");
+      } else {
+        if (!imageFile) {
+          throw new Error("Image is required");
+        }
+        await createGalleryItem({ data: { formData } });
+        toast.success("Gallery item created successfully");
+      }
 
       if (onSuccess) {
         onSuccess();
