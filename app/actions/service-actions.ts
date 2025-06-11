@@ -70,6 +70,9 @@ export const createService = createServerFn({
     const { formData } = data;
     const category_id = formData.get("category_id") as string;
     const image = formData.get("image") as File;
+    if (!image) {
+      throw new Error("No image file provided");
+    }
     const index = Number(formData.get("index"));
     // console.log("Image file",image.type);
     const name = formData.get("name") as string;
@@ -77,9 +80,9 @@ export const createService = createServerFn({
     const description = formData.get("description") as string;
     const duration = Number(formData.get("duration"));
 
-    const fileBuffer = await image.arrayBuffer();
-    const buffer = Buffer.from(fileBuffer);
-    const extension = image.name.split(".").pop();
+    const bytes = await image.bytes();
+    const buffer = Buffer.from(bytes);
+    const extension = image.type.split(".").pop();
     const fileName = `${randomUUID()}.${extension}`;
     const imageKey = `services/${fileName}`;
 

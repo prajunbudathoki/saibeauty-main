@@ -18,7 +18,7 @@ export async function uploadS3(
   const cmd = new PutObjectCommand({
     Bucket: bucket,
     Key: key,
-    Body: Buffer.from(file),
+    Body: file,
     ContentType: contentType,
   });
 

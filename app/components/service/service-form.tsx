@@ -68,6 +68,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
         formData.set("image", "");
       }
       await createService({ data: { formData } });
+      console.log({data: { formData }});
       toast.success("Service created", {
         description: "The service has been successfully created",
       });
@@ -163,7 +164,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
 
         <div className="space-y-2">
           <Label>Service Image</Label>
-          <ImageUpload onChange={setImageFile} value={null} />
+          <ImageUpload onChange={setImageFile} value={service?.image} />
         </div>
       </div>
 
