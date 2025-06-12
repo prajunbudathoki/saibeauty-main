@@ -20,13 +20,7 @@ import {
 } from "@/actions/testimonial-actions";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 
-export function TestimonialForm({
-  testimonial,
-  onSuccess,
-}: {
-  testimonial?: Testimonial;
-  onSuccess?: () => void;
-}) {
+export function TestimonialForm({ testimonial, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
@@ -50,6 +44,7 @@ export function TestimonialForm({
       // const plainData = Object.fromEntries(formData.entries());
       // plainData.rating = Number(plainData.rating);
       if (isEditing) {
+        formData.append("id", testimonial.id);
         await updateTestimonial({ data: formData });
         toast.success("Testimonial updated successfully");
         router.invalidate();
