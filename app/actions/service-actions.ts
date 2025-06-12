@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
 import { zfd } from "zod-form-data";
 import { uploadFileToS3 } from "./storage.action";
+import { z } from "zod";
 
 export const getServices = createServerFn({
   method: "GET",
@@ -55,7 +56,7 @@ const createServiceSchema = zfd.formData({
   price: zfd.numeric(),
   category_id: zfd.text(),
   index: zfd.numeric(),
-  image: zfd.file(),
+  image: zfd.file(z.instanceof(File).optional()),
 });
 
 export const createService = createServerFn({
@@ -67,7 +68,10 @@ export const createService = createServerFn({
       data;
 
     try {
-      const path = await uploadFileToS3(image, "service");
+      let path: string | undefined;
+      if (image) {
+        path = await uploadFileToS3(image, "service");
+      }
       return await prisma.service.create({
         data: {
           name,
@@ -81,6 +85,48 @@ export const createService = createServerFn({
       });
     } catch (error) {
       throw new Error("Failed to create service");
+    }
+  });
+
+const updateServiceSchema = zfd.formData({
+  id: zfd.text(),
+  name: zfd.text(),
+  description: zfd.text().optional(),
+  duration: zfd.numeric().optional(),
+  price: zfd.numeric(),
+  category_id: zfd.text().optional(),
+  index: zfd.numeric(),
+  image: zfd.file(z.instanceof(File).optional()),
+});
+
+export const updateService = createServerFn({
+  method: "POST",
+})
+  .validator((d: FormData) => updateServiceSchema.parse(d))
+  .handler(async ({ data }) => {
+    const { id, image, index, name, price, description, duration } = data;
+    if (!name || !description) {
+      throw new Error("Required fields are missing");
+    }
+    try {
+      let path: string | undefined;
+      if (image) {
+        path = await uploadFileToS3(image, "service");
+      }
+      const updateService = await prisma.service.update({
+        where: { id },
+        data: {
+          image: path,
+          index,
+          name,
+          price,
+          description,
+          duration,
+        },
+      });
+      return updateService;
+    } catch (error) {
+      throw new Error("Failed to update service");
     }
   });
 

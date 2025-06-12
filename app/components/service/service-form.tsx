@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { createService } from "@/actions/service-actions";
+import { createService, updateService } from "@/actions/service-actions";
 import { getCategories } from "@/actions/category-actions";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 
@@ -56,9 +56,9 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
 
     try {
       const formData = new FormData(e.currentTarget);
-      if (categoryId && !isEditing) {
-        formData.set("category_id", categoryId);
-      }
+      // if (categoryId && !isEditing) {
+      //   formData.set("category_id", categoryId);
+      // }
 
       // Add the image file if it exists
       if (imageFile) {
@@ -67,11 +67,19 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
         // Keep the existing image if no new one is provided
         formData.set("image", "");
       }
-      await createService({ data: formData });
+
+      if (isEditing) {
+        formData.append("id", service.id);
+        await updateService({ data: formData });
+        toast.success("Service updated successfully");
+      } else {
+        await createService({ data: formData });
+        toast.success("Service created", {
+          description: "The service has been successfully created",
+        });
+      }
       console.log({ data: { formData } });
-      toast.success("Service created", {
-        description: "The service has been successfully created",
-      });
+
       router.invalidate();
 
       if (onSuccess) {

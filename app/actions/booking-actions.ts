@@ -184,6 +184,8 @@ export const getAvailableTimeSlots = createServerFn({
     
   });
 
+// export const getBookingByEmail
+
 export const cancelBooking = createServerFn({
   method: "POST",
 })
