@@ -1,15 +1,11 @@
-"use client";
-
 import type React from "react";
-
 import { useState } from "react";
-import type { Category } from "@/lib/type";
 import { ImageUpload } from "@/components/shared/image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { createCategory } from "@/actions/category-actions";
+import { createCategory, updateCategory } from "@/actions/category-actions";
 import { toast } from "sonner";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 
@@ -29,33 +25,26 @@ export function CategoryForm({ category, onSuccess }) {
       const formData = new FormData(e.currentTarget);
 
       // Add the image file if it exists
-      // if (imageFile) {
-      //   formData.set("image", imageFile);
-      // } else if (category?.image) {
-      //   // Keep the existing image if no new one is provided
-      //   formData.set("image", "");
-      // }
-
-      const name = formData.get("name") as string;
-      const description = formData.get("description") as string;
-      const index = Number(formData.get("index"));
-      await createCategory({ data: { name, description, index } });
-      toast.success("Category created", {
-        description: "The category has been successfully created",
-      });
-      router.invalidate();
-
-      // if (isEditing) {
-      //   await updateCategory(category.id, formData);
-      //   toast.success("Category updated", {
-      //     description: "The category has been updated successfully.",
-      //   });
-      // } else {
-      //   await createCategory(formData);
-      //   toast.success("Category created", {
-      //     description: "The category has been created successfully.",
-      //   });
-      // }
+      if (imageFile) {
+        formData.set("image", imageFile);
+      } else if (category?.image) {
+        // Keep the existing image if no new one is provided
+        formData.set("image", "");
+      }
+      if (isEditing) {
+        formData.append("id", category.id);
+        await updateCategory({ data: formData });
+        toast.success("Category updated", {
+          description: "The category has been successfully updated",
+        });
+        router.invalidate();
+      } else {
+        await createCategory({ data: formData });
+        toast.success("Category created", {
+          description: "The category has been successfully created",
+        });
+        router.invalidate();
+      }
 
       if (onSuccess) {
         onSuccess();
@@ -100,10 +89,7 @@ export function CategoryForm({ category, onSuccess }) {
 
         <div className="space-y-2">
           <Label>Category Image</Label>
-          <ImageUpload
-            onChange={setImageFile}
-            value={"https://picsum.photos/id/237/200/300"}
-          />
+          <ImageUpload onChange={setImageFile} value={category.image} />
         </div>
       </div>
 

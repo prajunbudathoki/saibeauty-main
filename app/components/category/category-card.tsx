@@ -13,6 +13,7 @@ import { Trash2, Edit, Scissors, Eye } from "lucide-react";
 import { deleteCategory } from "@/actions/category-actions";
 import { toast } from "sonner";
 import { Link, useRouter } from "@tanstack/react-router";
+import { getCdnUrl } from "@/lib/utils";
 
 export function CategoryCard({ category, serviceCount }) {
   const router = useRouter();
@@ -30,8 +31,6 @@ export function CategoryCard({ category, serviceCount }) {
     }
   };
 
-  const imageUrl = null;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -41,12 +40,15 @@ export function CategoryCard({ category, serviceCount }) {
       className="h-full"
     >
       <Card className="overflow-hidden h-full flex flex-col border border-border/50 hover:border-border hover:shadow-md transition-all duration-300">
-        <div className="relative h-40 overflow-hidden group">
-          <img
-            src={undefined}
-            alt={category.name}
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
-          />
+        <div
+          className="relative h-40 overflow-hidden group"
+          style={{
+            background: `url('${getCdnUrl(category.image)}')`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          }}
+        >
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
         <CardHeader className="pb-2">
