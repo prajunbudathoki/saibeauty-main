@@ -50,11 +50,11 @@ export function TestimonialForm({
       // const plainData = Object.fromEntries(formData.entries());
       // plainData.rating = Number(plainData.rating);
       if (isEditing) {
-        await updateTestimonial({ data: { id: testimonial.id, formData } });
+        await updateTestimonial({ data: formData });
         toast.success("Testimonial updated successfully");
         router.invalidate();
       } else {
-        await createTestimonial({ data: { formData } });
+        await createTestimonial({ data: formData });
         toast.success("Testimonial created successfully");
         router.invalidate();
       }

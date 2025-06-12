@@ -47,7 +47,7 @@ export const createTestimonial = createServerFn({
     //   throw new Error("Role doesnot have access");
     // }
     try {
-      const path = await uploadFileToS3(image, "testimonial");
+      const path = await uploadFileToS3(image, "testimonials");
       return await prisma.testimonial.create({
         data: {
           name,
@@ -64,7 +64,7 @@ export const createTestimonial = createServerFn({
   });
 
 const updateTestimonialSchema = zfd.formData({
-  id: zfd.numeric(),
+  id: zfd.text(),
   name: zfd.text(),
   designation: zfd.text().optional(),
   rating: zfd.numeric(),
