@@ -52,7 +52,7 @@ export function formatCurrency(amount: number | null | undefined): string {
 }
 
 export function getCdnUrl(path: string | undefined | null) {
-  if (!path || path == "") {
+  if (!path || path === "") {
     return undefined;
   }
   if (path.startsWith("http")) {

@@ -55,7 +55,9 @@ export function TestimonialForm({
         router.invalidate();
       } else {
         await createTestimonial({ data: formData });
-        toast.success("Testimonial created successfully");
+        toast.success("Testimonial created", {
+          description: "Testimonial has been created successfully",
+        });
         router.invalidate();
       }
 

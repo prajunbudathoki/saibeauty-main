@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { formatTime } from "@/lib/utils";
+import { formatTime, getCdnUrl } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -21,8 +21,9 @@ import {
 import { deleteLocation } from "@/actions/location-actions";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
+import type { Location } from "@/generated/prisma";
 
-export function LocationCard({ location }) {
+export function LocationCard({ location }: { location: Location }) {
   const handleDelete = async () => {
     try {
       await deleteLocation({ data: location.id });
@@ -31,8 +32,6 @@ export function LocationCard({ location }) {
       toast.error("Failed to delete the location");
     }
   };
-
-  const imageUrl = null;
 
   return (
     <motion.div
@@ -43,12 +42,15 @@ export function LocationCard({ location }) {
       className="h-full"
     >
       <Card className="overflow-hidden h-full flex flex-col border border-border/50 hover:border-border hover:shadow-md transition-all duration-300">
-        <div className="relative h-48 overflow-hidden group">
-          <img
-            src={imageUrl || "/placeholder.svg"}
-            alt={location.name}
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
-          />
+        <div
+          className="relative h-48 overflow-hidden group"
+          style={{
+            background: `url('${getCdnUrl(location.image)}')`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          }}
+        >
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
         <CardHeader className="pb-2">

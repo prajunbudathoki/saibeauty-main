@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, getCdnUrl } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -13,18 +13,8 @@ import { Trash2, Edit, Clock, Tag } from "lucide-react";
 import { deleteService } from "@/actions/service-actions";
 import { toast } from "sonner";
 import { useRouter } from "@tanstack/react-router";
-import { Category, Service } from "@/generated/prisma";
+import type { Category, Service } from "@/generated/prisma";
 
-function getCdnUrl(path: string | undefined | null) {
-  if (!path || path == "") {
-    return undefined;
-  }
-  if (path.startsWith("http")) {
-    return path;
-  }
-
-  return `https://cdn.saibeauty.ae/${path}`;
-}
 
 export function ServiceCard({
   service,
@@ -51,13 +41,13 @@ export function ServiceCard({
       <Card className="overflow-hidden h-full flex flex-col">
         <div
           style={{
-            background: "url('" + getCdnUrl(service.image) + "')",
+            background: `url('${getCdnUrl(service.image)}')`,
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
           }}
-          className={` h-40 w-full`}
-        ></div>
+          className={"h-40 w-full"}
+        />
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
             <h3 className="font-bold text-lg">{service.name}</h3>

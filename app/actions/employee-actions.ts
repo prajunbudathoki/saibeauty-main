@@ -1,6 +1,7 @@
 import { authClient } from "@/lib/auth-client";
 import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
+import { zfd } from "zod-form-data";
 
 export const getEmployees = createServerFn({
   method: "GET",
@@ -21,10 +22,16 @@ export const getEmployees = createServerFn({
   return employees;
 });
 
+const createAddEmployeeSchema = zfd.formData({
+  name: zfd.text(),
+  email: zfd.text(),
+  phone: zfd.text(),
+});
+
 export const addEmployee = createServerFn({
   method: "POST",
 })
-  .validator((d: { name: string; email: string; phone: string }) => d)
+  .validator((d: FormData) => createAddEmployeeSchema.parse(d))
   .handler(async ({ data }) => {
     const { name, email, phone } = data;
     // const { data: session, error } = await authClient.getSession();

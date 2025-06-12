@@ -26,21 +26,23 @@ export function LocationForm({ location, onSuccess }) {
 
       // Add the image file if it exists
       if (imageFile) {
+        console.log("image added");
         formData.set("image", imageFile);
-        // } else if (location?.image) {
-        //   // Keep the existing image if no new one is provided
-        //   formData.set("image", "");
+      } else if (location?.image) {
+        // Keep the existing image if no new one is provided
+        formData.set("image", "");
       }
-      const plainData = Object.fromEntries(formData.entries());
+      // const plainData = Object.fromEntries(formData.entries());
 
       if (isEditing) {
-        await updateLocation({ data: { id: location.id, form: plainData } });
+        formData.append("id", location.id);
+        await updateLocation({ data: formData });
         toast.success("Location updated", {
           description: "The location has been updated successfully.",
         });
         router.invalidate();
       } else {
-        await createLocation({ data: plainData });
+        await createLocation({ data: formData });
         toast.success("Location created", {
           description: "The location has been created successfully.",
         });
@@ -172,7 +174,7 @@ export function LocationForm({ location, onSuccess }) {
 
         <div className="space-y-2">
           <Label>Location Image</Label>
-          <ImageUpload onChange={setImageFile} value={null} />
+          <ImageUpload onChange={setImageFile} value={location?.image} />
         </div>
       </div>
 

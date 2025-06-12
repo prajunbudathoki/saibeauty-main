@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
+import { zfd } from "zod-form-data";
+import { uploadFileToS3 } from "./storage.action";
 
 export const getGalleryItems = createServerFn({
   method: "POST",
@@ -26,18 +28,25 @@ export const getGalleryItemById = createServerFn()
     });
   });
 
+const createGalleryItemSchema = zfd.formData({
+  title: zfd.text(),
+  description: zfd.text(),
+  image: zfd.file(),
+});
+
 export const createGalleryItem = createServerFn({
   method: "POST",
 })
-  .validator((d: { formData: FormData }) => d)
+  .validator((d: FormData) => createGalleryItemSchema.parse(d))
   .handler(async ({ data }) => {
-    const { formData } = data;
+    const { title, description, image } = data;
     try {
+      const path = await uploadFileToS3(image, "gallery");
       const galleryItem = await prisma.galleryItem.create({
         data: {
-          title: formData.get("title") as string,
-          description: formData.get("description") as string,
-          image: formData.get("image") as string,
+          title,
+          description,
+          image: path,
         },
       });
       return galleryItem;
@@ -46,27 +55,36 @@ export const createGalleryItem = createServerFn({
     }
   });
 
+const updateGalleryItemSchema = zfd.formData({
+  id: zfd.text(),
+  title: zfd.text(),
+  description: zfd.text(),
+  image: zfd.file(),
+});
+
 export const updateGalleryItem = createServerFn({
   method: "POST",
 })
-  .validator((d: { id: string; formData: FormData }) => d)
+  .validator((d: FormData) => updateGalleryItemSchema.parse(d))
   .handler(async ({ data }) => {
-    const { id, formData } = data;
+    const { id, title, description, image } = data;
     try {
+      const path = await uploadFileToS3(image, "gallery ");
       const galleryItem = await prisma.galleryItem.update({
-        where: { id },
+        where: {
+          id,
+        },
         data: {
-          title: formData.get("title") as string,
-          description: formData.get("description") as string,
-          image: formData.get("image") as string,
+          title,
+          description,
+          image: path,
         },
       });
       return galleryItem;
     } catch (error) {
       throw new Error("Failed to update Gallery Item");
     }
-  }
-);  
+  });
 
 export const deleteGalleryItem = createServerFn({
   method: "POST",
@@ -81,5 +99,3 @@ export const deleteGalleryItem = createServerFn({
       throw new Error("Failed to delete Gallery Item");
     }
   });
-
-    

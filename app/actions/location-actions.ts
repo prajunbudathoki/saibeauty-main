@@ -1,5 +1,8 @@
 import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
+import { zfd } from "zod-form-data";
+import { uploadFileToS3 } from "./storage.action";
+import { z } from "zod";
 
 export const getLocations = createServerFn({
   method: "GET",
@@ -26,11 +29,25 @@ export const getLocationById = createServerFn({
     });
   });
 
+const createLocationSchema = zfd.formData({
+  name: zfd.text(),
+  address: zfd.text(),
+  city: zfd.text(),
+  phone: zfd.text(),
+  email: zfd.text(z.string().optional()),
+  description: zfd.text(z.string().optional()),
+  is_open_on_weekends: zfd.checkbox({ trueValue: "true" }),
+  image: zfd.file(z.instanceof(File).optional()),
+  opening_time: zfd.text(),
+  closing_time: zfd.text(),
+  google_maps_url: zfd.text(z.string().optional()),
+});
+
 export const createLocation = createServerFn({
   method: "POST",
 })
-  .validator((form: Record<string, any>) => form)
-  .handler(async ({ data}) => {
+  .validator((d: FormData) => createLocationSchema.parse(d))
+  .handler(async ({ data }) => {
     const {
       name,
       address,
@@ -43,7 +60,7 @@ export const createLocation = createServerFn({
       is_open_on_weekends,
       google_maps_url,
       image,
-    } = data
+    } = data;
 
     if (
       !name ||
@@ -56,35 +73,52 @@ export const createLocation = createServerFn({
       throw new Error("Required fields are missing");
     }
     try {
-      const location = await prisma.location.create({
+      let path: string | undefined;
+      if (image) {
+        path = await uploadFileToS3(image, "locations");
+      }
+      return await prisma.location.create({
         data: {
           name,
           address,
           city,
           phone,
-          email: email || null,
-          description: description || null,
-          image: image || null,
+          email,
+          description,
+          image: path,
           opening_time,
           closing_time,
-          is_open_on_weekends:
-            is_open_on_weekends === "true" || is_open_on_weekends === true,
-          google_maps_url: google_maps_url || null,
+          is_open_on_weekends: is_open_on_weekends === true,
+          google_maps_url,
         },
       });
-
-      return location;
     } catch (error) {
       throw new Error("Failed to create location");
     }
   });
 
+const updateLocationSchema = zfd.formData({
+  id: zfd.text(),
+  name: zfd.text(),
+  address: zfd.text(),
+  city: zfd.text(),
+  phone: zfd.text(),
+  email: zfd.text(z.string().optional()),
+  description: zfd.text(z.string().optional()),
+  is_open_on_weekends: zfd.checkbox({ trueValue: "true" }),
+  image: zfd.file(z.instanceof(File).optional()),
+  opening_time: zfd.text(),
+  closing_time: zfd.text(),
+  google_maps_url: zfd.text(z.string().optional()),
+});
+
 export const updateLocation = createServerFn({
   method: "POST",
 })
-  .validator((input: { id: string; form: Record<string, any> }) => input)
-  .handler(async ({ data: { id, form } }) => {
+  .validator((d: FormData) => updateLocationSchema.parse(d))
+  .handler(async ({ data }) => {
     const {
+      id,
       name,
       address,
       city,
@@ -96,7 +130,7 @@ export const updateLocation = createServerFn({
       is_open_on_weekends,
       google_maps_url,
       image,
-    } = form;
+    } = data;
 
     if (
       !name ||
@@ -110,6 +144,10 @@ export const updateLocation = createServerFn({
     }
 
     try {
+      let path: string | undefined;
+      if (image) {
+        path = await uploadFileToS3(image, "locations");
+      }
       const location = await prisma.location.update({
         where: { id },
         data: {
@@ -119,11 +157,10 @@ export const updateLocation = createServerFn({
           phone,
           email: email || null,
           description: description || null,
-          image: image || null,
+          image: path,
           opening_time,
           closing_time,
-          is_open_on_weekends:
-            is_open_on_weekends === "true" || is_open_on_weekends === true,
+          is_open_on_weekends: is_open_on_weekends === true,
           google_maps_url: google_maps_url || null,
           updated_at: new Date(),
         },

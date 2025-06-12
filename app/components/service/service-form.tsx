@@ -62,7 +62,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
 
       // Add the image file if it exists
       if (imageFile) {
-        console.log("image added");
         formData.set("image", imageFile);
       } else if (service?.image) {
         // Keep the existing image if no new one is provided

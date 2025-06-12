@@ -44,6 +44,7 @@
     "@radix-ui/react-toggle": "^1.1.1",
     "@radix-ui/react-toggle-group": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
+    "@rvf/zod": "7.0.1",
     "@tailwindcss/postcss": "^4.1.8",
     "@tanstack/react-router": "^1.120.12",
     "@tanstack/react-start": "^1.120.12",
@@ -72,7 +73,8 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
     "vinxi": "^0.5.6",
-    "zod-form-data": "^3.0.0"
+    "zod": "3.24.3",
+    "zod-form-data": "^2.0.7"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

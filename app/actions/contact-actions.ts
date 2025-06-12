@@ -1,18 +1,21 @@
 import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
-import { formData } from "zod-form-data";
+import { formData, zfd } from "zod-form-data";
+
+const createContactSchema = zfd.formData({
+  name: zfd.text(),
+  email: zfd.text(),
+  phone: zfd.text(),
+  message: zfd.text(),
+});
 
 export const createContact = createServerFn({
   method: "POST",
 })
-  .validator((d: { formData: FormData }) => d)
-  .handler(async ({ data: { formData } }) => {
+  .validator((d: FormData) => createContactSchema.parse(d))
+  .handler(async ({ data }) => {
+    const { name, email, message, phone } = data;
     try {
-      const name = formData.get("name") as string;
-      const email = formData.get("email") as string;
-      const phone = formData.get("phone") as string;
-      const message = formData.get("message") as string;
-
       if (!name || !email || !phone || !message) {
         throw new Error("Required fields are missing");
       }
