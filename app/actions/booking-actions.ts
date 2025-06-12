@@ -115,7 +115,7 @@ export const createAppointment = createServerFn()
       const serviceDurations = formData.getAll("serviceDurations") as string[];
 
       if (
-        !location_id||
+        !location_id ||
         !start_time ||
         !end_time ||
         !customer_name ||
@@ -174,6 +174,14 @@ export const createAppointment = createServerFn()
       console.error("Error creating appointment:", error);
       throw new Error("Failed to create appointment");
     }
+  });
+
+export const getAvailableTimeSlots = createServerFn({
+  method: "GET",
+})
+  .validator((d: { location }) => d)
+  .handler(async ({ data: location }) => {
+    
   });
 
 export const cancelBooking = createServerFn({

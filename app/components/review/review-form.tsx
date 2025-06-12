@@ -1,7 +1,4 @@
-"use client";
-
 import type React from "react";
-
 import { useState } from "react";
 import { submitReview } from "@/actions/review-actions";
 import { Button } from "@/components/ui/button";
@@ -45,7 +42,9 @@ export function ReviewForm({ appointmentId, onReviewSubmitted }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Your Rating</label>
+        <label className="block text-sm font-medium">
+          Your Rating <input />{" "}
+        </label>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
