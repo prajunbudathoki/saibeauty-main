@@ -43,10 +43,9 @@ export function BookingCard({ booking, onCancelled }: BookingCardProps) {
   const handleCancelBooking = async () => {
     setCancelling(true);
     try {
-      const result = await cancelBooking({ data: booking.id });
+      await cancelBooking({ data: booking.id });
       toast.success("Booking cancelled successfully");
       if (onCancelled) onCancelled();
-      return result;
     } catch (error) {
       toast.error("Failed to cancel booking");
     } finally {
@@ -200,7 +199,7 @@ export function BookingCard({ booking, onCancelled }: BookingCardProps) {
                 </div>
               </div>
             }
-            onConfirm={() => handleCancelBooking()}
+            onConfirm={handleCancelBooking}
             trigger={
               <Button
                 variant="outline"

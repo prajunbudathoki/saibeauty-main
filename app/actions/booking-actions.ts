@@ -1,3 +1,4 @@
+import { useSession } from "@/lib/auth-client";
 import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
 
@@ -68,8 +69,7 @@ export const getAvailableStaff = createServerFn({
     } catch (error) {
       throw new Error("Failed to fetch available staff members");
     }
-  }
-);
+  });
 
 // export const createAppointment = createServerFn({
 //   method: "POST",
@@ -93,20 +93,101 @@ export const getAvailableStaff = createServerFn({
 //     }
 //   });
 
+export const createAppointment = createServerFn()
+  .validator((d: FormData) => d)
+  .handler(async ({ data: formData }) => {
+    try {
+      const user = useSession();
+      const customer_id = user.data?.user.id;
+
+      const location_id = formData.get("location_id") as string;
+      const staff_id = formData.get("staf_id") as string | null;
+      const start_time = formData.get("start_time") as string;
+      const end_time = formData.get("end_time") as string;
+      const customer_name = formData.get("customer_name") as string;
+      const customer_email = formData.get("customer_email") as string;
+      const customer_phone = formData.get("customer_phone") as string;
+      const customer_notes = formData.get("customer_notes") as string;
+      const total_price = Number(formData.get("total_price") as string);
+
+      const serviceIds = formData.getAll("serviceIds") as string[];
+      const servicePrices = formData.getAll("servicePrices") as string[];
+      const serviceDurations = formData.getAll("serviceDurations") as string[];
+
+      if (
+        !location_id||
+        !start_time ||
+        !end_time ||
+        !customer_name ||
+        !customer_email ||
+        serviceIds.length === 0
+      ) {
+        throw new Error("Missing required fields");
+      }
+
+      const services = serviceIds.map((id, index) => ({
+        id,
+        price: Number(servicePrices[index]),
+        duration: Number(serviceDurations[index] || "0"),
+      }));
+
+      const [appointment] = await prisma.$transaction(async (tx) => {
+        const appointment = await tx.appointment.create({
+          data: {
+            customer_id,
+            location_id,
+            staff_id,
+            start_time: new Date(start_time),
+            end_time: new Date(end_time),
+            status: "pending",
+            total_price,
+            customer_name,
+            customer_email,
+            customer_phone,
+            notes: customer_notes,
+            services: {
+              create: services.map((service) => ({
+                location_service_id: service.id,
+                price: service.price,
+                duration: service.duration,
+              })),
+            },
+          },
+          include: {
+            services: {
+              include: {
+                locationService: {
+                  include: {
+                    service: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        return [appointment];
+      });
+
+      return appointment.id;
+    } catch (error: any) {
+      console.error("Error creating appointment:", error);
+      throw new Error("Failed to create appointment");
+    }
+  });
 
 export const cancelBooking = createServerFn({
   method: "POST",
 })
-.validator((bookingId: string) => bookingId)
-.handler(async ({ data: bookingId }) => {
-  try {
-    const booking = await prisma.appointment.update({
-      where: { id: bookingId },
-      data: { status: "cancelled" },
-    });
-    return booking;
-  } catch (error) {
-    throw new Error("Failed to cancel booking");
-  }
-}
-);
+  .validator((bookingId: string) => bookingId)
+  .handler(async ({ data: bookingId }) => {
+    try {
+      const booking = await prisma.appointment.update({
+        where: { id: bookingId },
+        data: { status: "cancelled" },
+      });
+      return booking;
+    } catch (error) {
+      throw new Error("Failed to cancel booking");
+    }
+  });
