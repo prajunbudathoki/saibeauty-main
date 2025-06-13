@@ -6,20 +6,20 @@ import { zfd } from "zod-form-data";
 export const getEmployees = createServerFn({
   method: "GET",
 }).handler(async () => {
-  const { data: session, error } = await authClient.getSession();
-  if (session?.user.role !== "admin") {
-    throw new Error("Role doesnot have access");
+  try {
+    // const { data: session, error } = await authClient.getSession();
+    // if (session?.user.role !== "admin") {
+    //   throw new Error("Role doesnot have access");
+    // }
+    const employees = await prisma.user.findMany({
+      where: {
+        role: "user",
+      },
+    });
+    return employees;
+  } catch (error) {
+    throw new Error("Failed to get users");
   }
-  if (error) {
-    console.log("Failed to fetch Employess", error);
-    throw new Error("Failed to fetch employees");
-  }
-  const employees = await prisma.user.findMany({
-    where: {
-      role: "user",
-    },
-  });
-  return employees;
 });
 
 const createAddEmployeeSchema = zfd.formData({
@@ -71,20 +71,20 @@ export const deleteEmployee = createServerFn()
     });
   });
 
-// export const updateEmployee = createServerFn()
-//   .validator((id: string) => id)
-//   .handler(async () => {
-//     const { data: session, error } = await authClient.getSession();
-//     if (session?.user.role !== "admin") {
-//       throw new Error("Role doesnot have access");
-//     }
-//     if (error) {
-//       console.log("Error updating employee", error);
-//       throw new Error("Failed to update employee");
-//     }
-//     await prisma.user.update({
-//       where: {
-//         role: ,
-//       },
-//     });
-//   });
+export const updateEmployee = createServerFn()
+  .validator((data: { id: string; role: string }) => data)
+  .handler(async ({ data }) => {
+    const { id, role } = data;
+    try {
+      // const { data: session, error } = await authClient.getSession();
+      // if (session?.user.role !== "admin") {
+      //   throw new Error("Role doesnot have access");
+      // }
+      await prisma.user.update({
+        where: { id },
+        data: { role },
+      });
+    } catch (error) {
+      throw new Error("Failed to update the user");
+    }
+  });

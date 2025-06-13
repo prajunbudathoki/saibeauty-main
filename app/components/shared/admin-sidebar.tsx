@@ -64,8 +64,8 @@ export function AdminSidebar() {
     role === "user"
       ? [
           {
-            title: "Employees",
-            href: "/admin/employees",
+            title: "Users",
+            href: "/admin/users",
             icon: <User className="h-5 w-5" />,
           },
         ]
@@ -107,12 +107,18 @@ export function AdminSidebar() {
       href: "/admin/contacts",
       icon: <MessageSquare className="h-5 w-5" />,
     },
+
     // Add this new item
     {
       title: "Appointments",
       href: "/admin/appointments",
       icon: <Calendar className="h-5 w-5" />,
     },
+    // {
+    //   title: "Users",
+    //   href: "/admin/users",
+    //   icon: <User className="h-5 w-5" />,
+    // },
 
     ...adminLinks,
   ];
