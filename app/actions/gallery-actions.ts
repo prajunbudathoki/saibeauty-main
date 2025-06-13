@@ -31,8 +31,8 @@ export const getGalleryItemById = createServerFn()
 
 const createGalleryItemSchema = zfd.formData({
   title: zfd.text(),
-  description: zfd.text(),
-  image: zfd.file(z.instanceof(File)),
+  description: zfd.text().optional(),
+  image: zfd.file(z.instanceof(File).optional()),
 });
 
 export const createGalleryItem = createServerFn({
@@ -44,16 +44,15 @@ export const createGalleryItem = createServerFn({
     try {
       let path: string | undefined;
       if (image) {
-        path = await uploadFileToS3(image, "service");
+        path = await uploadFileToS3(image, "galleries");
       }
-      const galleryItem = await prisma.galleryItem.create({
+      return await prisma.galleryItem.create({
         data: {
           title,
           description,
           image: path,
         },
       });
-      return galleryItem;
     } catch (error) {
       throw new Error("Failed to create Gallery Item");
     }

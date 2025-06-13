@@ -156,7 +156,7 @@ model GalleryItem {
   id          String   @id @default(uuid())
   title       String
   description String?
-  image       String
+  image       String?
   created_at  DateTime @default(now())
 }
 

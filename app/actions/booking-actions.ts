@@ -32,6 +32,7 @@ export const getLocationServices = createServerFn({
           service: {
             include: {
               category: true,
+              locationServices: true,
             },
           },
         },
