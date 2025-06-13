@@ -30,7 +30,7 @@ import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
 import { Route as AdminTestimonialsIndexImport } from './routes/admin/testimonials/index'
 import { Route as AdminServicesIndexImport } from './routes/admin/services/index'
 import { Route as AdminLocationsIndexImport } from './routes/admin/locations/index'
-import { Route as AdminEmployeesIndexImport } from './routes/admin/employees/index'
+import { Route as AdminGalleryIndexImport } from './routes/admin/gallery/index'
 import { Route as AdminCategoriesIndexImport } from './routes/admin/categories/index'
 import { Route as AdminAppointmentsIndexImport } from './routes/admin/appointments/index'
 import { Route as AdminCategoriesIdImport } from './routes/admin/categories/$id'
@@ -161,9 +161,9 @@ const AdminLocationsIndexRoute = AdminLocationsIndexImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminEmployeesIndexRoute = AdminEmployeesIndexImport.update({
-  id: '/employees/',
-  path: '/employees/',
+const AdminGalleryIndexRoute = AdminGalleryIndexImport.update({
+  id: '/gallery/',
+  path: '/gallery/',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -423,11 +423,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoriesIndexImport
       parentRoute: typeof AdminImport
     }
-    '/admin/employees/': {
-      id: '/admin/employees/'
-      path: '/employees'
-      fullPath: '/admin/employees'
-      preLoaderRoute: typeof AdminEmployeesIndexImport
+    '/admin/gallery/': {
+      id: '/admin/gallery/'
+      path: '/gallery'
+      fullPath: '/admin/gallery'
+      preLoaderRoute: typeof AdminGalleryIndexImport
       parentRoute: typeof AdminImport
     }
     '/admin/locations/': {
@@ -572,7 +572,7 @@ interface AdminRouteChildren {
   AdminCategoriesIdRoute: typeof AdminCategoriesIdRoute
   AdminAppointmentsIndexRoute: typeof AdminAppointmentsIndexRoute
   AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
-  AdminEmployeesIndexRoute: typeof AdminEmployeesIndexRoute
+  AdminGalleryIndexRoute: typeof AdminGalleryIndexRoute
   AdminLocationsIndexRoute: typeof AdminLocationsIndexRoute
   AdminServicesIndexRoute: typeof AdminServicesIndexRoute
   AdminTestimonialsIndexRoute: typeof AdminTestimonialsIndexRoute
@@ -591,7 +591,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCategoriesIdRoute: AdminCategoriesIdRoute,
   AdminAppointmentsIndexRoute: AdminAppointmentsIndexRoute,
   AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
-  AdminEmployeesIndexRoute: AdminEmployeesIndexRoute,
+  AdminGalleryIndexRoute: AdminGalleryIndexRoute,
   AdminLocationsIndexRoute: AdminLocationsIndexRoute,
   AdminServicesIndexRoute: AdminServicesIndexRoute,
   AdminTestimonialsIndexRoute: AdminTestimonialsIndexRoute,
@@ -645,7 +645,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
   '/admin/appointments': typeof AdminAppointmentsIndexRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
-  '/admin/employees': typeof AdminEmployeesIndexRoute
+  '/admin/gallery': typeof AdminGalleryIndexRoute
   '/admin/locations': typeof AdminLocationsIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
   '/admin/testimonials': typeof AdminTestimonialsIndexRoute
@@ -679,7 +679,7 @@ export interface FileRoutesByTo {
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
   '/admin/appointments': typeof AdminAppointmentsIndexRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
-  '/admin/employees': typeof AdminEmployeesIndexRoute
+  '/admin/gallery': typeof AdminGalleryIndexRoute
   '/admin/locations': typeof AdminLocationsIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
   '/admin/testimonials': typeof AdminTestimonialsIndexRoute
@@ -718,7 +718,7 @@ export interface FileRoutesById {
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
   '/admin/appointments/': typeof AdminAppointmentsIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
-  '/admin/employees/': typeof AdminEmployeesIndexRoute
+  '/admin/gallery/': typeof AdminGalleryIndexRoute
   '/admin/locations/': typeof AdminLocationsIndexRoute
   '/admin/services/': typeof AdminServicesIndexRoute
   '/admin/testimonials/': typeof AdminTestimonialsIndexRoute
@@ -757,7 +757,7 @@ export interface FileRouteTypes {
     | '/admin/categories/$id'
     | '/admin/appointments'
     | '/admin/categories'
-    | '/admin/employees'
+    | '/admin/gallery'
     | '/admin/locations'
     | '/admin/services'
     | '/admin/testimonials'
@@ -790,7 +790,7 @@ export interface FileRouteTypes {
     | '/admin/categories/$id'
     | '/admin/appointments'
     | '/admin/categories'
-    | '/admin/employees'
+    | '/admin/gallery'
     | '/admin/locations'
     | '/admin/services'
     | '/admin/testimonials'
@@ -827,7 +827,7 @@ export interface FileRouteTypes {
     | '/admin/categories/$id'
     | '/admin/appointments/'
     | '/admin/categories/'
-    | '/admin/employees/'
+    | '/admin/gallery/'
     | '/admin/locations/'
     | '/admin/services/'
     | '/admin/testimonials/'
@@ -895,7 +895,7 @@ export const routeTree = rootRoute
         "/admin/categories/$id",
         "/admin/appointments/",
         "/admin/categories/",
-        "/admin/employees/",
+        "/admin/gallery/",
         "/admin/locations/",
         "/admin/services/",
         "/admin/testimonials/",
@@ -995,8 +995,8 @@ export const routeTree = rootRoute
       "filePath": "admin/categories/index.tsx",
       "parent": "/admin"
     },
-    "/admin/employees/": {
-      "filePath": "admin/employees/index.tsx",
+    "/admin/gallery/": {
+      "filePath": "admin/gallery/index.tsx",
       "parent": "/admin"
     },
     "/admin/locations/": {

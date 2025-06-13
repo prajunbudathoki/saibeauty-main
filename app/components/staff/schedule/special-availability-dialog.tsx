@@ -46,7 +46,9 @@ export function SpecialAvailabilityDialog({
   useEffect(() => {
     const fetchExistingAvailability = async () => {
       try {
-        const data = await getSpecialAvailabilityForDate({data: { staffId, locationId, date: formattedDate }});
+        const data = await getSpecialAvailabilityForDate({
+          data: { staffId, locationId, date: formattedDate },
+        });
         if (data) {
           setExistingRecord(data);
           setIsAvailable(data.is_available);
@@ -93,7 +95,7 @@ export function SpecialAvailabilityDialog({
 
       formData.append("notes", notes);
 
-      await upsertSpecialAvailability({data: formData});
+      await upsertSpecialAvailability({ data: formData });
       toast.success("Availability updated successfully");
       onOpenChange(true); // Close dialog and refresh data
     } catch (error) {
@@ -110,7 +112,9 @@ export function SpecialAvailabilityDialog({
     if (!existingRecord) return;
 
     try {
-      await deleteStaffSpecialAvailability({data: { id: existingRecord.id, staffId, locationId }});
+      await deleteStaffSpecialAvailability({
+        data: { id: existingRecord.id, staffId, locationId },
+      });
       toast.success("Special availability deleted");
       onOpenChange(true); // Close dialog and refresh data
     } catch (error) {

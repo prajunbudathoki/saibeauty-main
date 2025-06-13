@@ -1,20 +1,30 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import type { Testimonial } from "@/lib/type"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { TestimonialForm } from "./testimonial-form"
+import { useState } from "react";
+import type { Testimonial } from "@/lib/type";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { TestimonialForm } from "./testimonial-form";
 
 interface TestimonialDialogProps {
-  testimonial?: Testimonial
-  trigger: React.ReactNode
-  title: string
+  testimonial?: Testimonial;
+  trigger: React.ReactNode;
+  title: string;
 }
 
-export function TestimonialDialog({ testimonial, trigger, title }: TestimonialDialogProps) {
-  const [open, setOpen] = useState(false)
+export function TestimonialDialog({
+  testimonial,
+  trigger,
+  title,
+}: TestimonialDialogProps) {
+  const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -23,9 +33,11 @@ export function TestimonialDialog({ testimonial, trigger, title }: TestimonialDi
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <TestimonialForm testimonial={testimonial} onSuccess={() => setOpen(false)} />
+        <TestimonialForm
+          testimonial={testimonial}
+          onSuccess={() => setOpen(false)}
+        />
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-

@@ -160,9 +160,11 @@ export const TestimonialCarousel = () => {
           <div className="flex items-center gap-2 px-4">
             {testimonials.map((testimonial) => (
               <button
-              type="button"
+                type="button"
                 key={testimonial.id}
-                onClick={() => setCurrentIndex(testimonials.indexOf(testimonial))}
+                onClick={() =>
+                  setCurrentIndex(testimonials.indexOf(testimonial))
+                }
                 className={`h-2.5 w-2.5 rounded-full transition-all ${
                   currentIndex === testimonials.indexOf(testimonial)
                     ? "bg-primary scale-125"
