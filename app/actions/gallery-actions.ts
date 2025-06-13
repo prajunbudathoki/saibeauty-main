@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
 import { zfd } from "zod-form-data";
 import { uploadFileToS3 } from "./storage.action";
+import { z } from "zod";
 
 export const getGalleryItems = createServerFn({
   method: "POST",
@@ -31,7 +32,7 @@ export const getGalleryItemById = createServerFn()
 const createGalleryItemSchema = zfd.formData({
   title: zfd.text(),
   description: zfd.text(),
-  image: zfd.file(),
+  image: zfd.file(z.instanceof(File)),
 });
 
 export const createGalleryItem = createServerFn({
@@ -41,7 +42,10 @@ export const createGalleryItem = createServerFn({
   .handler(async ({ data }) => {
     const { title, description, image } = data;
     try {
-      const path = await uploadFileToS3(image, "gallery");
+      let path: string | undefined;
+      if (image) {
+        path = await uploadFileToS3(image, "service");
+      }
       const galleryItem = await prisma.galleryItem.create({
         data: {
           title,

@@ -1,6 +1,8 @@
 import { useSession } from "@/lib/auth-client";
 import prisma from "@/lib/prisma";
+import type { TimeSlot } from "@/lib/type";
 import { createServerFn } from "@tanstack/react-start";
+import { addMinutes, getDay, isBefore, parseISO } from "date-fns";
 
 export const getLocations = createServerFn({
   method: "GET",
@@ -26,9 +28,18 @@ export const getLocationServices = createServerFn({
       const services = await prisma.locationService.findMany({
         where: { location_id: locationId },
         orderBy: { created_at: "asc" },
+        include: {
+          service: {
+            include: {
+              category: true,
+            },
+          },
+        },
       });
+
       return services;
     } catch (error) {
+      console.error("Failed to fetch services:", error);
       throw new Error("Failed to fetch services for the location");
     }
   });
@@ -55,8 +66,12 @@ export const getLocationStaffs = createServerFn({
 export const getAvailableStaff = createServerFn({
   method: "GET",
 })
-  .validator((locationId: string) => locationId)
-  .handler(async ({ data: locationId }) => {
+  .validator(
+    (data: { locationId: string; date: string; serviceIds: string[] }) => data
+  )
+  .handler(async ({ data }) => {
+    const { locationId, date, serviceIds } = data;
+
     try {
       const staffs = await prisma.staff.findMany({
         where: {
@@ -70,7 +85,6 @@ export const getAvailableStaff = createServerFn({
       throw new Error("Failed to fetch available staff members");
     }
   });
-
 // export const createAppointment = createServerFn({
 //   method: "POST",
 // })
@@ -179,12 +193,205 @@ export const createAppointment = createServerFn()
 export const getAvailableTimeSlots = createServerFn({
   method: "GET",
 })
-  .validator((d: { location }) => d)
-  .handler(async ({ data: location }) => {
-    
+  .validator(
+    (data: {
+      locationId: string;
+      staffId: string | null;
+      date: string;
+      serviceDuration: number;
+    }) => data
+  )
+  .handler(async ({ data }) => {
+    const { locationId, staffId, date, serviceDuration } = data;
+
+    try {
+      const location = await prisma.location.findUnique({
+        where: { id: locationId },
+        select: {
+          opening_time: true,
+          closing_time: true,
+          is_open_on_weekends: true,
+        },
+      });
+
+      if (!location) return [];
+
+      const dayOfWeek = getDay(new Date(date));
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      if (isWeekend && !location.is_open_on_weekends) return [];
+
+      let startTime = location.opening_time;
+      let endTime = location.closing_time;
+
+      if (staffId) {
+        const schedule = await prisma.staffSchedule.findFirst({
+          where: { staff_id: staffId, day_of_week: dayOfWeek },
+        });
+
+        if (!schedule) return [];
+        startTime = schedule.start_time;
+        endTime = schedule.end_time;
+
+        const specialAvailability =
+          await prisma.staffSpecialAvailability.findUnique({
+            where: {
+              staff_id: staffId,
+              date: date,
+            },
+          });
+
+        if (specialAvailability) {
+          if (!specialAvailability.is_available) return [];
+          if (specialAvailability.start_time && specialAvailability.end_time) {
+            startTime = specialAvailability.start_time;
+            endTime = specialAvailability.end_time;
+          }
+        }
+      }
+
+      const selectedDate = parseISO(date);
+      const [startHour, startMinute] = startTime
+        .split(":" as const)
+        .map(Number);
+      const [endHour, endMinute] = endTime.split(":" as const).map(Number);
+
+      const currentTime = new Date(selectedDate);
+      currentTime.setHours(startHour, startMinute, 0, 0);
+
+      const endDateTime = new Date(selectedDate);
+      endDateTime.setHours(endHour, endMinute, 0, 0);
+
+      const maxStartTime = new Date(endDateTime);
+      maxStartTime.setMinutes(maxStartTime.getMinutes() - serviceDuration);
+
+      const slots: TimeSlot[] = [];
+
+      while (
+        isBefore(currentTime, maxStartTime) ||
+        currentTime.getTime() === maxStartTime.getTime()
+      ) {
+        const slotEndTime = addMinutes(currentTime, serviceDuration);
+        slots.push({
+          startTime: currentTime.toISOString(),
+          endTime: slotEndTime.toISOString(),
+          available: true,
+        });
+        currentTime.setMinutes(currentTime.getMinutes() + 30);
+      }
+
+      const appointments = await prisma.appointment.findMany({
+        where: {
+          location_id: locationId,
+          staff_id: staffId || undefined,
+          start_time: {
+            gte: new Date(`${date}T00:00:00Z`),
+            lte: new Date(`${date}T23:59:59Z`),
+          },
+          status: {
+            in: ["pending", "confirmed"],
+          },
+        },
+        select: {
+          start_time: true,
+          end_time: true,
+        },
+      });
+
+      return slots.filter((slot) => {
+        const slotStart = new Date(slot.startTime);
+        const slotEnd = new Date(slot.endTime);
+
+        for (const appointment of appointments) {
+          const appointmentStart = new Date(appointment.start_time);
+          const appointmentEnd = new Date(appointment.end_time);
+
+          const overlaps =
+            (slotStart >= appointmentStart && slotStart < appointmentEnd) ||
+            (slotEnd > appointmentStart && slotEnd <= appointmentEnd) ||
+            (slotStart <= appointmentStart && slotEnd >= appointmentEnd);
+
+          if (overlaps) return false;
+        }
+
+        return true;
+      });
+    } catch (error) {
+      console.error("Failed to get available time slots:", error);
+      return [];
+    }
   });
 
-// export const getBookingByEmail
+export const getBookingsByEmail = createServerFn({
+  method: "GET",
+})
+  .validator((email: string) => email)
+  .handler(async ({ data }) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: data,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const bookings = await prisma.appointment.findMany({
+        where: {
+          customer_id: user.id,
+        },
+        orderBy: {
+          start_time: "desc",
+        },
+        include: {
+          location: {
+            select: {
+              name: true,
+              address: true,
+              city: true,
+            },
+          },
+          staff: {
+            select: {
+              name: true,
+              role: true,
+            },
+          },
+          services: {
+            include: {
+              locationService: {
+                include: {
+                  service: {
+                    select: {
+                      name: true,
+                      duration: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const now = new Date();
+      const upcoming = bookings.filter((b) => new Date(b.start_time) > now);
+      const past = bookings.filter((b) => new Date(b.start_time) <= now);
+
+      return { upcoming, past };
+    } catch (error) {
+      console.error("Error in getBookingsByEmail:", error);
+      return {
+        upcoming: [],
+        past: [],
+        error: "Failed to fetch bookings",
+      };
+    }
+  });
 
 export const cancelBooking = createServerFn({
   method: "POST",
