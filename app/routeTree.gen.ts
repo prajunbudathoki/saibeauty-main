@@ -26,6 +26,7 @@ import { Route as ClientServicesImport } from './routes/_client/services'
 import { Route as ClientGalleryImport } from './routes/_client/gallery'
 import { Route as ClientContactImport } from './routes/_client/contact'
 import { Route as ClientAboutImport } from './routes/_client/about'
+import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
 import { Route as AdminTestimonialsIndexImport } from './routes/admin/testimonials/index'
 import { Route as AdminServicesIndexImport } from './routes/admin/services/index'
 import { Route as AdminLocationsIndexImport } from './routes/admin/locations/index'
@@ -134,6 +135,12 @@ const ClientAboutRoute = ClientAboutImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => ClientRoute,
+} as any)
+
+const AdminUsersIndexRoute = AdminUsersIndexImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 const AdminTestimonialsIndexRoute = AdminTestimonialsIndexImport.update({
@@ -444,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTestimonialsIndexImport
       parentRoute: typeof AdminImport
     }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersIndexImport
+      parentRoute: typeof AdminImport
+    }
     '/_client/profile/booking/': {
       id: '/_client/profile/booking/'
       path: '/profile/booking'
@@ -562,6 +576,7 @@ interface AdminRouteChildren {
   AdminLocationsIndexRoute: typeof AdminLocationsIndexRoute
   AdminServicesIndexRoute: typeof AdminServicesIndexRoute
   AdminTestimonialsIndexRoute: typeof AdminTestimonialsIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
   AdminLocationsIdServicesSearchRoute: typeof AdminLocationsIdServicesSearchRoute
   AdminLocationsIdServicesIndexRoute: typeof AdminLocationsIdServicesIndexRoute
   AdminLocationsIdStaffsIndexRoute: typeof AdminLocationsIdStaffsIndexRoute
@@ -580,6 +595,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminLocationsIndexRoute: AdminLocationsIndexRoute,
   AdminServicesIndexRoute: AdminServicesIndexRoute,
   AdminTestimonialsIndexRoute: AdminTestimonialsIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
   AdminLocationsIdServicesSearchRoute: AdminLocationsIdServicesSearchRoute,
   AdminLocationsIdServicesIndexRoute: AdminLocationsIdServicesIndexRoute,
   AdminLocationsIdStaffsIndexRoute: AdminLocationsIdStaffsIndexRoute,
@@ -633,6 +649,7 @@ export interface FileRoutesByFullPath {
   '/admin/locations': typeof AdminLocationsIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
   '/admin/testimonials': typeof AdminTestimonialsIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/profile/booking': typeof ClientProfileBookingIndexRoute
   '/profile/my-bookings/': typeof ClientProfileMyBookingsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
@@ -666,6 +683,7 @@ export interface FileRoutesByTo {
   '/admin/locations': typeof AdminLocationsIndexRoute
   '/admin/services': typeof AdminServicesIndexRoute
   '/admin/testimonials': typeof AdminTestimonialsIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/profile/booking': typeof ClientProfileBookingIndexRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
@@ -704,6 +722,7 @@ export interface FileRoutesById {
   '/admin/locations/': typeof AdminLocationsIndexRoute
   '/admin/services/': typeof AdminServicesIndexRoute
   '/admin/testimonials/': typeof AdminTestimonialsIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
   '/_client/profile/booking/': typeof ClientProfileBookingIndexRoute
   '/_client/profile/my-bookings/': typeof ClientProfileMyBookingsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
@@ -742,6 +761,7 @@ export interface FileRouteTypes {
     | '/admin/locations'
     | '/admin/services'
     | '/admin/testimonials'
+    | '/admin/users'
     | '/profile/booking'
     | '/profile/my-bookings/'
     | '/admin/locations/$id/services/search'
@@ -774,6 +794,7 @@ export interface FileRouteTypes {
     | '/admin/locations'
     | '/admin/services'
     | '/admin/testimonials'
+    | '/admin/users'
     | '/profile/booking'
     | '/profile/my-bookings'
     | '/admin/locations/$id/services/search'
@@ -810,6 +831,7 @@ export interface FileRouteTypes {
     | '/admin/locations/'
     | '/admin/services/'
     | '/admin/testimonials/'
+    | '/admin/users/'
     | '/_client/profile/booking/'
     | '/_client/profile/my-bookings/'
     | '/admin/locations/$id/services/search'
@@ -877,6 +899,7 @@ export const routeTree = rootRoute
         "/admin/locations/",
         "/admin/services/",
         "/admin/testimonials/",
+        "/admin/users/",
         "/admin/locations/$id/services/search",
         "/admin/locations/$id/services/",
         "/admin/locations/$id/staffs/",
@@ -986,6 +1009,10 @@ export const routeTree = rootRoute
     },
     "/admin/testimonials/": {
       "filePath": "admin/testimonials/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/users/": {
+      "filePath": "admin/users/index.tsx",
       "parent": "/admin"
     },
     "/_client/profile/booking/": {

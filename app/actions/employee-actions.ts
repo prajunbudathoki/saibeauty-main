@@ -11,11 +11,8 @@ export const getEmployees = createServerFn({
     // if (session?.user.role !== "admin") {
     //   throw new Error("Role doesnot have access");
     // }
-    const employees = await prisma.user.findMany({
-      where: {
-        role: "user",
-      },
-    });
+    const employees = await prisma.user.findMany();
+    console.log(employees.map((e) => e.emailVerified));
     return employees;
   } catch (error) {
     throw new Error("Failed to get users");
@@ -88,3 +85,5 @@ export const updateEmployee = createServerFn()
       throw new Error("Failed to update the user");
     }
   });
+
+

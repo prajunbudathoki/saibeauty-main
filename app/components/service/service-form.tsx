@@ -78,7 +78,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
           description: "The service has been successfully created",
         });
       }
-      console.log({ data: { formData } });
 
       router.invalidate();
 

@@ -1,18 +1,20 @@
 import { deleteEmployee, updateEmployee } from "@/actions/employee-actions";
+import type { User } from "@/generated/prisma";
+import { useSession } from "@/lib/auth-client";
+import { useRouter } from "@tanstack/react-router";
+import { Trash } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { Router, Trash } from "lucide-react";
-import { useSession } from "@/lib/auth-client";
-import type { User } from "@/generated/prisma";
-import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
 
 export function UserTable({ users }: { users: User[] }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -27,6 +29,8 @@ export function UserTable({ users }: { users: User[] }) {
   const handleDelete = async (id: string) => {
     try {
       await deleteEmployee({ data: id });
+      toast.success("User deleted successfully");
+      router.invalidate();
     } catch (error) {
       console.error("Failed to delete user:", error);
     }
@@ -45,20 +49,73 @@ export function UserTable({ users }: { users: User[] }) {
 
   return (
     <div className="border rounded-lg container mx-auto p-4">
-      <Table >
+      <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="w-100">
             <TableHead>Email</TableHead>
             <TableHead>Role</TableHead>
+            <TableHead>Verified</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableHead>{user.email}</TableHead>
-              <TableHead>{user.role}</TableHead>
-              <TableHead>
+            <TableRow key={user.id} className="relative">
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.role}</TableCell>
+              <TableCell>
+                <Badge
+                  variant={user.emailVerified ? "default" : "destructive"}
+                  className={`
+                       max-w-[60%]
+                      flex items-center justify-center gap-1 px-2 py-0.5 rounded-full text-xs
+                        ${
+                          user.emailVerified
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }
+                      `}
+                >
+                  {user.emailVerified ? (
+                    <>
+                      <svg
+                        className="w-3 h-3 mr-1 text-green-500"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                      >
+                        <title>as</title>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      Verified
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        className="w-3 h-3 mr-1 text-red-500"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                      >
+                        <title>as</title>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                      Not Verified
+                    </>
+                  )}
+                </Badge>
+              </TableCell>
+              <TableCell>
                 {currentUser && currentUser.email !== user.email ? (
                   <div className="flex gap-2 items-center">
                     <Button
@@ -77,7 +134,7 @@ export function UserTable({ users }: { users: User[] }) {
                     </Button>
                   </div>
                 ) : null}
-              </TableHead>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
