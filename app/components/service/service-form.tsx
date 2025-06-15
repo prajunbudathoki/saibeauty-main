@@ -1,10 +1,8 @@
-import type React from "react";
-import { useState, useEffect } from "react";
-import type { Service, Category } from "@/lib/type";
+import { getCategories } from "@/actions/category-actions";
+import { createService, updateService } from "@/actions/service-actions";
 import { ImageUpload } from "@/components/shared/image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -13,13 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
-import { createService, updateService } from "@/actions/service-actions";
-import { getCategories } from "@/actions/category-actions";
+import { Textarea } from "@/components/ui/textarea";
+import type { Category } from "@/lib/type";
+import { useForm } from "@tanstack/react-form";
 import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function ServiceForm({ service, onSuccess, categoryId }) {
-  const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -50,153 +49,332 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
     fetchCategories();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  const form = useForm({
+    defaultValues: {
+      name: service?.name || "",
+      index: service?.index || "",
+      category_id: categoryId || "",
+      price: service?.price || "",
+      duration: service?.duration || "",
+      description: service?.description || "",
+    },
+    onSubmit: async () => {
+      try {
+        const formData = new FormData();
+        if (imageFile) {
+          formData.set("image", imageFile);
+        } else if (service?.image) {
+          formData.set("image", "");
+        }
 
-    try {
-      const formData = new FormData(e.currentTarget);
-      // if (categoryId && !isEditing) {
-      //   formData.set("category_id", categoryId);
-      // }
+        if (isEditing) {
+          formData.append("id", service.id);
+          await updateService({ data: formData });
+          toast.success("Service updated successfully");
+        } else {
+          await createService({ data: formData });
+          toast.success("Service created", {
+            description: "The service has been successfully created",
+          });
+        }
 
-      // Add the image file if it exists
-      if (imageFile) {
-        formData.set("image", imageFile);
-      } else if (service?.image) {
-        // Keep the existing image if no new one is provided
-        formData.set("image", "");
-      }
-
-      if (isEditing) {
-        formData.append("id", service.id);
-        await updateService({ data: formData });
-        toast.success("Service updated successfully");
-      } else {
-        await createService({ data: formData });
-        toast.success("Service created", {
-          description: "The service has been successfully created",
-        });
-      }
-
-      router.invalidate();
-
-      if (onSuccess) {
-        onSuccess();
-      } else {
+        router.invalidate();
         navigate({ to: "/admin/services" });
+      } catch (err) {
+        console.error(err);
+        toast.error("There was a problem saving the service");
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error("There was a problem saving the service");
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+  });
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     const formData = new FormData(e.currentTarget);
+  //     // if (categoryId && !isEditing) {
+  //     //   formData.set("category_id", categoryId);
+  //     // }
+
+  //     // Add the image file if it exists
+  //     if (imageFile) {
+  //       formData.set("image", imageFile);
+  //     } else if (service?.image) {
+  //       // Keep the existing image if no new one is provided
+  //       formData.set("image", "");
+  //     }
+
+  //     if (isEditing) {
+  //       formData.append("id", service.id);
+  //       await updateService({ data: formData });
+  //       toast.success("Service updated successfully");
+  //     } else {
+  //       await createService({ data: formData });
+  //       toast.success("Service created", {
+  //         description: "The service has been successfully created",
+  //       });
+  //     }
+
+  //     router.invalidate();
+
+  //     if (onSuccess) {
+  //       onSuccess();
+  //     } else {
+  //       navigate({ to: "/admin/services" });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error submitting form:", error);
+  //     toast.error("There was a problem saving the service");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // return (
+  //   <form onSubmit={handleSubmit} className="space-y-6">
+  //     <div className="space-y-4">
+  //       <div className="space-y-2">
+  //         <Label htmlFor="name">Name *</Label>
+  //         <Input id="name" name="name" defaultValue={service?.name} required />
+  //       </div>
+
+  //       <div className="space-y-2">
+  //         <Label htmlFor="index">Index *</Label>
+  //         <Input
+  //           id="index"
+  //           name="index"
+  //           type="number"
+  //           defaultValue={service?.index}
+  //           required
+  //         />
+  //       </div>
+
+  //       <div className="space-y-2">
+  //         <Label htmlFor="category_id">Category *</Label>
+  //         <Select
+  //           name="category_id"
+  //           defaultValue={categoryId || service?.category_id}
+  //           required
+  //           disabled={!!categoryId}
+  //         >
+  //           <SelectTrigger>
+  //             <SelectValue placeholder="Select a category" />
+  //           </SelectTrigger>
+  //           <SelectContent>
+  //             {categories.map((category) => (
+  //               <SelectItem key={category.id} value={category.id}>
+  //                 {category.name}
+  //               </SelectItem>
+  //             ))}
+  //           </SelectContent>
+  //         </Select>
+  //       </div>
+
+  //       <div className="grid gap-4 sm:grid-cols-2">
+  //         <div className="space-y-2">
+  //           <Label htmlFor="price">Price ($) *</Label>
+  //           <Input
+  //             id="price"
+  //             name="price"
+  //             type="number"
+  //             step="0.01"
+  //             min="0"
+  //             defaultValue={service?.price || 20}
+  //             required
+  //           />
+  //         </div>
+  //         <div className="space-y-2">
+  //           <Label htmlFor="duration">Duration (minutes)</Label>
+  //           <Input
+  //             id="duration"
+  //             name="duration"
+  //             type="number"
+  //             min="0"
+  //             defaultValue={service?.duration || 20}
+  //           />
+  //         </div>
+  //       </div>
+
+  //       <div className="space-y-2">
+  //         <Label htmlFor="description">Description</Label>
+  //         <Textarea
+  //           id="description"
+  //           name="description"
+  //           rows={3}
+  //           defaultValue={service?.description || "asd"}
+  //         />
+  //       </div>
+
+  //       <div className="space-y-2">
+  //         <Label>Service Image</Label>
+  //         <ImageUpload onChange={setImageFile} value={service?.image} />
+  //       </div>
+  //     </div>
+
+  //     <div className="flex justify-end gap-2">
+  //       <Button
+  //         type="button"
+  //         variant="outline"
+  //         onClick={() => {
+  //           if (onSuccess) {
+  //             onSuccess();
+  //           } else {
+  //             navigate({ to: "/admin/services" });
+  //           }
+  //         }}
+  //         disabled={loading}
+  //       >
+  //         Cancel
+  //       </Button>
+  //       <Button type="submit" disabled={loading}>
+  //         {loading
+  //           ? "Saving..."
+  //           : isEditing
+  //           ? "Update Service"
+  //           : "Create Service"}
+  //       </Button>
+  //     </div>
+  //   </form>
+  // );
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={form.handleSubmit} className="space-y-6">
       <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Name *</Label>
-          <Input
-            id="name"
-            name="name"
-            defaultValue={service?.name || "abc"}
-            required
-          />
-        </div>
+        <form.Field
+          name="name"
+          validators={{ onChange: ({ value }) => !value && "Required" }}
+          // biome-ignore lint/correctness/noChildrenProp: <explanation>
+          children={(field) => (
+            <div className="space-y-2">
+              <Label htmlFor="name">Name *</Label>
+              <Input
+                id="name"
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                required
+              />
+            </div>
+          )}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="index">Index *</Label>
-          <Input
-            id="index"
-            name="index"
-            type="number"
-            defaultValue={service?.index || 1}
-            required
-          />
-        </div>
+        <form.Field
+          name="index"
+          // biome-ignore lint/correctness/noChildrenProp: <explanation>
+          children={(field) => (
+            <div className="space-y-2">
+              <Label htmlFor="index">Index *</Label>
+              <Input
+                id="index"
+                type="number"
+                value={field.state.value ?? ""}
+                onChange={(e) => field.handleChange(e.target.value)}
+                required
+              />
+            </div>
+          )}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="category_id">Category *</Label>
-          <Select
-            name="category_id"
-            defaultValue={categoryId || service?.category_id}
-            required
-            disabled={!!categoryId}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <form.Field
+          name="category_id"
+          // biome-ignore lint/correctness/noChildrenProp: <explanation>
+          children={(field) => (
+            <div className="space-y-2">
+              <Label htmlFor="category_id">Category *</Label>
+              <Select
+                disabled={!!categoryId}
+                defaultValue={field.state.value}
+                onValueChange={field.handleChange}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        />
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="price">Price ($) *</Label>
-            <Input
-              id="price"
-              name="price"
-              type="number"
-              step="0.01"
-              min="0"
-              defaultValue={service?.price || 20}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="duration">Duration (minutes)</Label>
-            <Input
-              id="duration"
-              name="duration"
-              type="number"
-              min="0"
-              defaultValue={service?.duration || 20}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            name="description"
-            rows={3}
-            defaultValue={service?.description || "asd"}
+          <form.Field
+            name="price"
+            // biome-ignore lint/correctness/noChildrenProp: <explanation>
+            children={(field) => (
+              <div className="space-y-2">
+                <Label htmlFor="price">Price ($) *</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+              </div>
+            )}
+          />
+          <form.Field
+            name="duration"
+            // biome-ignore lint/correctness/noChildrenProp: <explanation>
+            children={(field) => (
+              <div className="space-y-2">
+                <Label htmlFor="duration">Duration (minutes)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+              </div>
+            )}
           />
         </div>
+
+        <form.Field
+          name="description"
+          // biome-ignore lint/correctness/noChildrenProp: <explanation>
+          children={(field) => (
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                rows={3}
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            </div>
+          )}
+        />
 
         <div className="space-y-2">
           <Label>Service Image</Label>
-          <ImageUpload onChange={setImageFile} value={service?.image} />
+          <ImageUpload value={service?.image} onChange={setImageFile} />
         </div>
       </div>
 
       <div className="flex justify-end gap-2">
         <Button
           type="button"
+          className="mr-40"
           variant="outline"
-          onClick={() => {
-            if (onSuccess) {
-              onSuccess();
-            } else {
-              navigate({ to: "/admin/services" });
-            }
-          }}
-          disabled={loading}
+          onClick={() => form.reset()}
+        >
+          Reset
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() =>
+            onSuccess ? onSuccess() : navigate({ to: "/admin/services" })
+          }
         >
           Cancel
         </Button>
-        <Button type="submit" disabled={loading}>
-          {loading
+        <Button type="submit" disabled={form.state.isSubmitting}>
+          {form.state.isSubmitting
             ? "Saving..."
             : isEditing
             ? "Update Service"
