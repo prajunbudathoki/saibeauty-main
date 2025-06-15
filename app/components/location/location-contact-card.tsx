@@ -1,5 +1,3 @@
-"use client";
-
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatTime } from "@/lib/utils";

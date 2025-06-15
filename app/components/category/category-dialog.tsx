@@ -1,9 +1,4 @@
-"use client";
-
-import type React from "react";
-
 import { useState } from "react";
-import type { Category } from "@/lib/type";
 import {
   Dialog,
   DialogContent,

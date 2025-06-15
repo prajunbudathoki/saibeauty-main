@@ -1,25 +1,24 @@
-import { motion } from "motion/react";
-import type { Category } from "@/lib/type";
+import { deleteCategory } from "@/actions/category-actions";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { CategoryDialog } from "./category-dialog";
-import { Trash2, Edit, Scissors, Eye } from "lucide-react";
-import { deleteCategory } from "@/actions/category-actions";
-import { toast } from "sonner";
-import { Link, useRouter } from "@tanstack/react-router";
 import { getCdnUrl } from "@/lib/utils";
+import { Link, useRouter } from "@tanstack/react-router";
+import { Edit, Eye, Scissors, Trash2 } from "lucide-react";
+import { motion } from "motion/react";
+import { toast } from "sonner";
+import { CategoryDialog } from "./category-dialog";
 
 export function CategoryCard({ category, serviceCount }) {
   const router = useRouter();
-  const handleDelete = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleDelete = async () => {
     try {
-      await deleteCategory(category.id);
+      await deleteCategory({ data: category.id });
       toast.success("Category deleted successfully", {
         description: "The category has been deleted successfully.",
       });
@@ -98,14 +97,17 @@ export function CategoryCard({ category, serviceCount }) {
             <ConfirmDialog
               title="Delete Category"
               description="Are you sure you want to delete this category? This will also delete all services in this category. This action cannot be undone."
-              onConfirm={() => handleDelete(category.id)}
+              onConfirm={handleDelete}
               trigger={
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size={"icon"}
+                  asChild
                   className="h-8 w-8 text-destructive hover:bg-destructive/10"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <div>
+                    <Trash2 className="h-4 w-4" />
+                  </div>
                 </Button>
               }
             />

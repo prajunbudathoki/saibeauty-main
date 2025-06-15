@@ -52,7 +52,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
   const form = useForm({
     defaultValues: {
       name: service?.name || "",
-      index: service?.index || "",
+      index: service?.index || 0,
       category_id: categoryId || "",
       price: service?.price || "",
       duration: service?.duration || "",
@@ -373,6 +373,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
         >
           Cancel
         </Button>
+
         <Button type="submit" disabled={form.state.isSubmitting}>
           {form.state.isSubmitting
             ? "Saving..."
