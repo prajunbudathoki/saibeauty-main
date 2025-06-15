@@ -46,13 +46,14 @@ export const createGalleryItem = createServerFn({
       if (image) {
         path = await uploadFileToS3(image, "galleries");
       }
-      return await prisma.galleryItem.create({
+      const galleryItem = await prisma.galleryItem.create({
         data: {
           title,
           description,
           image: path,
         },
       });
+      return galleryItem;
     } catch (error) {
       throw new Error("Failed to create Gallery Item");
     }
@@ -72,7 +73,7 @@ export const updateGalleryItem = createServerFn({
   .handler(async ({ data }) => {
     const { id, title, description, image } = data;
     try {
-      const path = await uploadFileToS3(image, "gallery ");
+      const path = await uploadFileToS3(image, "galleries");
       const galleryItem = await prisma.galleryItem.update({
         where: {
           id,

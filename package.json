@@ -46,6 +46,7 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "@rvf/zod": "7.0.1",
     "@tailwindcss/postcss": "^4.1.8",
+    "@tanstack/react-form": "^1.12.3",
     "@tanstack/react-router": "^1.120.12",
     "@tanstack/react-start": "^1.120.12",
     "@vinejs/vine": "^3.0.1",

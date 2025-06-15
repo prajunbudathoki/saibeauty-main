@@ -22,7 +22,7 @@ export function ContactForm() {
       }
 
       const formData = new FormData(formRef.current);
-      await createContact({ data: { formData } });
+      await createContact({ data: formData });
 
       toast.success("Message sent! We'll get back to you as soon as possible.");
 

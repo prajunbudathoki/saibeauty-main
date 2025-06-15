@@ -25,6 +25,7 @@ function RouteComponent() {
 
           <GalleryDialog
             title="Add Gallery Item"
+            galleryItem={galleryItems}
             trigger={
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
@@ -37,7 +38,9 @@ function RouteComponent() {
         {galleryItems.length === 0 ? (
           <div className="text-center py-12">
             <h3 className="text-lg font-medium">No gallery items yet</h3>
-            <p className="text-muted-foreground">Add your first gallery item to get started.</p>
+            <p className="text-muted-foreground">
+              Add your first gallery item to get started.
+            </p>
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -48,5 +51,5 @@ function RouteComponent() {
         )}
       </div>
     </div>
-  )
+  );
 }
