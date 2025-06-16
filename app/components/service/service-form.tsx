@@ -58,9 +58,16 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
       duration: service?.duration || "",
       description: service?.description || "",
     },
-    onSubmit: async () => {
+    onSubmit: async ({ value }) => {
       try {
         const formData = new FormData();
+        formData.append("name", value.name);
+        formData.append("index", value.index.toString());
+        formData.append("category_id", value.category_id);
+        formData.append("price", value.price.toString());
+        formData.append("duration", value.duration?.toString() || "");
+        formData.append("description", value.description || "");
+        console.log("formdata", formData);
         if (imageFile) {
           formData.set("image", imageFile);
         } else if (service?.image) {
@@ -72,6 +79,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
           await updateService({ data: formData });
           toast.success("Service updated successfully");
         } else {
+          console.log("Creating......");
           await createService({ data: formData });
           toast.success("Service created", {
             description: "The service has been successfully created",
@@ -85,9 +93,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
         toast.error("There was a problem saving the service");
       }
     },
-  });
-
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  }); // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
   //   setLoading(true);
 
@@ -249,8 +255,12 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
               <Label htmlFor="name">Name *</Label>
               <Input
                 id="name"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
+                value={field.state.value ?? ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  console.log("Input changde to:", val);
+                  field.handleChange(val);
+                }}
                 required
               />
             </div>
@@ -267,7 +277,11 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
                 id="index"
                 type="number"
                 value={field.state.value ?? ""}
-                onChange={(e) => field.handleChange(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  console.log("Input changde to:", val);
+                  field.handleChange(val);
+                }}
                 required
               />
             </div>
@@ -312,7 +326,11 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
                   step="0.01"
                   min="0"
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    console.log("Input changde to:", val);
+                    field.handleChange(val);
+                  }}
                 />
               </div>
             )}
@@ -327,7 +345,11 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
                   type="number"
                   min="0"
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    console.log("Input changde to:", val);
+                    field.handleChange(val);
+                  }}
                 />
               </div>
             )}
@@ -343,7 +365,11 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
               <Textarea
                 rows={3}
                 value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  console.log("Input changed to:", val);
+                  field.handleChange(val);
+                }}
               />
             </div>
           )}

@@ -15,7 +15,6 @@ import { toast } from "sonner";
 import { useRouter } from "@tanstack/react-router";
 import type { Category, Service } from "@/generated/prisma";
 
-
 export function ServiceCard({
   service,
 }: {
@@ -98,8 +97,11 @@ export function ServiceCard({
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 text-destructive"
+                  asChild
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <div>
+                    <Trash2 className="h-4 w-4" />
+                  </div>
                 </Button>
               }
             />

@@ -9,6 +9,9 @@ export const getServices = createServerFn({
 }).handler(async () => {
   try {
     const services = await prisma.service.findMany({
+      include: {
+        category: true,
+      },
       orderBy: {
         index: "asc",
       },
