@@ -1,34 +1,32 @@
-import { createStaff, updateStaff } from "@/actions/staff-actions";
-import { ImageUpload } from "@/components/shared/image-upload";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import type { Staff } from "@/lib/type";
-import { useForm } from "@tanstack/react-form";
-import { useNavigate } from "@tanstack/react-router";
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import type React from "react";
 import { useState } from "react";
+import type { Staff } from "@/lib/type";
+import { ImageUpload } from "@/components/shared/image-upload";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { createStaff, updateStaff } from "@/actions/staff-actions";
 
-interface StaffFormProps {
-  locationId: string;
-  staff?: Staff;
-  onSuccess?: () => void;
-}
+// Add imports for social media icons
+import { Facebook, Instagram, Twitter } from "lucide-react";
+import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
 
-export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
-  const [loading, setLoading] = useState(false);
+export function StaffForm({ locationId, staff, onSuccess }) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
+  const router = useRouter();
 
   const isEditing = !!staff;
-
   const form = useForm({
     defaultValues: {
       name: staff?.name || "",
       role: staff?.role || "",
       bio: staff?.bio || "",
+      location_id: locationId || "",
       index: staff?.index?.toString() || "0",
       is_available_for_booking: staff?.is_available_for_booking !== false,
       facebook_url: staff?.facebook_url || "",
@@ -36,21 +34,21 @@ export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
       twitter_url: staff?.twitter_url || "",
     },
     onSubmit: async ({ value }) => {
-      setLoading(true);
       try {
         const formData = new FormData();
         formData.append("name", value.name);
         formData.append("role", value.role);
-        formData.append("bio", value.bio);
-        formData.append("index", value.index);
+        formData.append("bio", value.bio || "");
+        formData.append("location_id", value.location_id);
+        formData.append("index", value.index || "0");
         formData.append(
           "is_available_for_booking",
-          String(value.is_available_for_booking)
+          value.is_available_for_booking ? "true" : "false"
         );
-        formData.append("facebook_url", value.facebook_url);
-        formData.append("instagram_url", value.instagram_url);
-        formData.append("twitter_url", value.twitter_url);
-
+        formData.append("facebook_url", value.facebook_url || "");
+        formData.append("instagram_url", value.instagram_url || "");
+        formData.append("twitter_url", value.twitter_url || "");
+        console.log("formData", formData);
         // Add the image file if it exists
         if (imageFile) {
           formData.set("image", imageFile);
@@ -60,28 +58,64 @@ export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
         }
 
         if (isEditing) {
+          formData.append("id", staff.id);
           await updateStaff({ data: { staffId: staff.id, form: formData } });
           toast.success("Staff member updated successfully");
         } else {
           await createStaff({
-            data: { location_id: locationId, form: formData },
+            data: formData,
           });
           toast.success("Staff member added successfully");
         }
-
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          navigate({ to: `/admin/locations/${locationId}/staffs` });
-        }
+        router.invalidate();
+        navigate({ to: "/admin" });
       } catch (error) {
         console.error("Error submitting form:", error);
         toast.error("There was a problem saving the staff member");
-      } finally {
-        setLoading(false);
       }
     },
   });
+
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     const formData = new FormData(e.currentTarget);
+  //     formData.append("location_id", locationId);
+  //     console.log("formData", formData);
+
+  //     // Add the image file if it exists
+  //     if (imageFile) {
+  //       formData.set("image", imageFile);
+  //     } else if (staff?.image) {
+  //       // Keep the existing image if no new one is provided
+  //       formData.set("image", "");
+  //     }
+
+  //     if (isEditing) {
+  //       await updateStaff({ data: { staffId: staff.id, form: formData } });
+  //       toast.success("Staff member updated successfully");
+  //     } else {
+  //       console.log("Creating new staff member");
+  //       await createStaff({ data: formData });
+  //       console.log("formData", formData);
+  //       toast.success("Staff member added successfully");
+  //     }
+
+  //     if (onSuccess) {
+  //       onSuccess();
+  //     } else {
+  //       navigate({ to: `/admin/locations/${locationId}/staffs` });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error submitting form:", error);
+  //     toast.error("There was a problem saving the staff member");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   return (
     <form onSubmit={form.handleSubmit} className="space-y-6">
       <div className="space-y-4">
@@ -94,17 +128,16 @@ export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
               <Input
                 id={field.name}
                 name={field.name}
-                value={staff?.name ?? ""}
+                value={field.state.value || ""}
+                required
                 onChange={(e) => {
                   const val = e.target.value;
                   field.handleChange(val);
                 }}
-                required
               />
             </div>
           )}
         />
-
         <form.Field
           name="role"
           // biome-ignore lint/correctness/noChildrenProp: <explanation>
@@ -114,17 +147,17 @@ export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
               <Input
                 id={field.name}
                 name={field.name}
-                value={staff?.role ?? ""}
+                value={field.state.value || ""}
+                placeholder="e.g. Hair Stylist, Makeup Artist"
+                required
                 onChange={(e) => {
                   const val = e.target.value;
                   field.handleChange(val);
                 }}
-                required
               />
             </div>
           )}
         />
-
         <form.Field
           name="bio"
           // biome-ignore lint/correctness/noChildrenProp: <explanation>
@@ -135,41 +168,32 @@ export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
                 id={field.name}
                 name={field.name}
                 rows={4}
-                value={staff?.bio ?? ""}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  field.handleChange(val);
-                }}
+                value={field.state.value || ""}
                 placeholder="Brief description or biography"
-              />
-            </div>
-          )}
-        />
-        <form.Field
-          name="index"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
-          children={(field) => (
-            <div className="space-y-2">
-              <Label htmlFor={field.name}>Display Order</Label>
-              <Input
-                id={field.name}
-                name={field.name}
-                type="number"
-                min="0"
-                value={staff?.index?.toString() || "0"}
                 onChange={(e) => {
                   const val = e.target.value;
                   field.handleChange(val);
                 }}
-                placeholder="Lower numbers appear first"
               />
-              <p className="text-xs text-muted-foreground">
-                Staff members are sorted by this number (lower numbers appear
-                first)
-              </p>
             </div>
           )}
         />
+
+        <div className="space-y-2">
+          <Label htmlFor="index">Display Order</Label>
+          <Input
+            id="index"
+            name="index"
+            type="number"
+            min="0"
+            defaultValue={staff?.index?.toString() || "0"}
+            placeholder="Lower numbers appear first"
+          />
+          <p className="text-xs text-muted-foreground">
+            Staff members are sorted by this number (lower numbers appear first)
+          </p>
+        </div>
+
         <form.Field
           name="is_available_for_booking"
           // biome-ignore lint/correctness/noChildrenProp: <explanation>
@@ -179,11 +203,7 @@ export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
                 id={field.name}
                 name={field.name}
                 value="true"
-                checked={field.state.value !== false}
-                onChange={(e) => {
-                  const val = (e.target as HTMLInputElement).checked;
-                  field.handleChange(val);
-                }}
+                defaultChecked={staff?.is_available_for_booking !== false}
               />
               <Label htmlFor={field.name}>Available for booking</Label>
             </div>
@@ -192,87 +212,81 @@ export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
 
         <div className="space-y-2">
           <Label>Profile Image</Label>
-          <ImageUpload
-            onChange={setImageFile}
-            value={imageFile ? undefined : staff?.image ?? null}
-          />
+          <ImageUpload onChange={setImageFile} value={staff?.image} />
         </div>
 
-        <form.Field
-          name="facebook_url"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
-          children={(field) => (
+        <div className="space-y-2">
+          <Label>Social Media Links</Label>
+          <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Facebook className="h-4 w-4 text-blue-600" />
-                <Label htmlFor={field.name} className="text-sm">
+                <Label htmlFor="facebook_url" className="text-sm">
                   Facebook
                 </Label>
               </div>
               <Input
-                id={field.name}
-                name={field.name}
+                id="facebook_url"
+                name="facebook_url"
                 type="url"
                 placeholder="https://facebook.com/username"
-                value={staff?.facebook_url || ""}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  field.handleChange(val);
-                }}
+                defaultValue={staff?.facebook_url || ""}
               />
             </div>
-          )}
-        />
-        <form.Field
-          name="instagram_url"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
-          children={(field) => (
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Instagram className="h-4 w-4 text-pink-600" />
-                <Label htmlFor={field.name} className="text-sm">
+                <Label htmlFor="instagram_url" className="text-sm">
                   Instagram
                 </Label>
               </div>
               <Input
-                id={field.name}
-                name={field.name}
+                id="instagram_url"
+                name="instagram_url"
                 type="url"
                 placeholder="https://instagram.com/username"
-                value={staff?.instagram_url || ""}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  field.handleChange(val);
-                }}
+                defaultValue={staff?.instagram_url || ""}
               />
             </div>
-          )}
-        />
-        <form.Field
-          name="twitter_url"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
-          children={(field) => (
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Twitter className="h-4 w-4 text-blue-400" />
-                <Label htmlFor={field.name} className="text-sm">
+                <Label htmlFor="twitter_url" className="text-sm">
                   Twitter
                 </Label>
               </div>
               <Input
-                id={field.name}
-                name={field.name}
+                id="twitter_url"
+                name="twitter_url"
                 type="url"
                 placeholder="https://twitter.com/username"
-                value={staff?.twitter_url || ""}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  field.handleChange(val);
-                }}
+                defaultValue={staff?.twitter_url || ""}
               />
             </div>
-          )}
-        />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            onSuccess
+              ? onSuccess()
+              : navigate({ to: `/admin/locations/${locationId}/staffs` });
+          }}
+          disabled={form.state.isSubmitting}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" disabled={form.state.isSubmitting}>
+          {form.state.isSubmitting
+            ? "Saving..."
+            : isEditing
+            ? "Update Staff"
+            : "Add Staff"}
+        </Button>
       </div>
     </form>
   );

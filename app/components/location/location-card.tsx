@@ -106,7 +106,7 @@ export function LocationCard({ location }: { location: Location }) {
               className="hover:bg-primary/10 hover:text-primary"
             >
               <Link
-                to="/admin/locations/$id/staffs/schedules"
+                to="/admin/locations/$id/staffs"
                 params={{ id: location.id }}
               >
                 <Users className="h-4 w-4 mr-1" />
