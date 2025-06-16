@@ -1,6 +1,5 @@
 import type React from "react";
 import { useState } from "react";
-import type { Staff } from "@/lib/type";
 import { ImageUpload } from "@/components/shared/image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +13,15 @@ import { createStaff, updateStaff } from "@/actions/staff-actions";
 import { Facebook, Instagram, Twitter } from "lucide-react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
+import type { Staff } from "@/generated/prisma";
 
-export function StaffForm({ locationId, staff, onSuccess }) {
+type StaffFormProps = {
+  locationId: string;
+  staff?: Staff;
+  onSuccess: () => void;
+};
+
+export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
   const router = useRouter();
@@ -34,6 +40,7 @@ export function StaffForm({ locationId, staff, onSuccess }) {
       twitter_url: staff?.twitter_url || "",
     },
     onSubmit: async ({ value }) => {
+      console.log("sdfsdf");
       try {
         const formData = new FormData();
         formData.append("name", value.name);
@@ -60,15 +67,15 @@ export function StaffForm({ locationId, staff, onSuccess }) {
         if (isEditing) {
           formData.append("id", staff.id);
           await updateStaff({ data: { staffId: staff.id, form: formData } });
-          toast.success("Staff member updated successfully");
         } else {
           await createStaff({
             data: formData,
           });
-          toast.success("Staff member added successfully");
         }
-        router.invalidate();
-        navigate({ to: "/admin" });
+        toast.success(
+          `Staff member ${isEditing ? "updated" : "added"} successfully`
+        );
+        await router.invalidate();
       } catch (error) {
         console.error("Error submitting form:", error);
         toast.error("There was a problem saving the staff member");
@@ -76,52 +83,17 @@ export function StaffForm({ locationId, staff, onSuccess }) {
     },
   });
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   try {
-  //     const formData = new FormData(e.currentTarget);
-  //     formData.append("location_id", locationId);
-  //     console.log("formData", formData);
-
-  //     // Add the image file if it exists
-  //     if (imageFile) {
-  //       formData.set("image", imageFile);
-  //     } else if (staff?.image) {
-  //       // Keep the existing image if no new one is provided
-  //       formData.set("image", "");
-  //     }
-
-  //     if (isEditing) {
-  //       await updateStaff({ data: { staffId: staff.id, form: formData } });
-  //       toast.success("Staff member updated successfully");
-  //     } else {
-  //       console.log("Creating new staff member");
-  //       await createStaff({ data: formData });
-  //       console.log("formData", formData);
-  //       toast.success("Staff member added successfully");
-  //     }
-
-  //     if (onSuccess) {
-  //       onSuccess();
-  //     } else {
-  //       navigate({ to: `/admin/locations/${locationId}/staffs` });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error);
-  //     toast.error("There was a problem saving the staff member");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   return (
-    <form onSubmit={form.handleSubmit} className="space-y-6">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+      className="space-y-6"
+    >
       <div className="space-y-4">
         <form.Field
           name="name"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Name *</Label>
@@ -131,6 +103,7 @@ export function StaffForm({ locationId, staff, onSuccess }) {
                 value={field.state.value || ""}
                 required
                 onChange={(e) => {
+                  e.preventDefault();
                   const val = e.target.value;
                   field.handleChange(val);
                 }}
@@ -140,7 +113,6 @@ export function StaffForm({ locationId, staff, onSuccess }) {
         />
         <form.Field
           name="role"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Role *</Label>
@@ -152,6 +124,7 @@ export function StaffForm({ locationId, staff, onSuccess }) {
                 required
                 onChange={(e) => {
                   const val = e.target.value;
+                  e.preventDefault();
                   field.handleChange(val);
                 }}
               />
@@ -160,7 +133,6 @@ export function StaffForm({ locationId, staff, onSuccess }) {
         />
         <form.Field
           name="bio"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Bio</Label>
@@ -172,6 +144,7 @@ export function StaffForm({ locationId, staff, onSuccess }) {
                 placeholder="Brief description or biography"
                 onChange={(e) => {
                   const val = e.target.value;
+                  e.preventDefault();
                   field.handleChange(val);
                 }}
               />
@@ -196,7 +169,6 @@ export function StaffForm({ locationId, staff, onSuccess }) {
 
         <form.Field
           name="is_available_for_booking"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="flex items-center space-x-2">
               <Checkbox

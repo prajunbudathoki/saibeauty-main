@@ -99,7 +99,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
         <form.Field
           name="name"
           validators={{ onChange: ({ value }) => !value && "Required" }}
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Name *</Label>
@@ -119,7 +118,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
 
         <form.Field
           name="index"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor="index">Index *</Label>
@@ -139,7 +137,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
 
         <form.Field
           name="category_id"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor="category_id">Category *</Label>
@@ -166,7 +163,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <form.Field
             name="price"
-            // biome-ignore lint/correctness/noChildrenProp: <explanation>
             children={(field) => (
               <div className="space-y-2">
                 <Label htmlFor="price">Price ($) *</Label>
@@ -185,7 +181,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
           />
           <form.Field
             name="duration"
-            // biome-ignore lint/correctness/noChildrenProp: <explanation>
             children={(field) => (
               <div className="space-y-2">
                 <Label htmlFor="duration">Duration (minutes)</Label>
@@ -205,7 +200,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
 
         <form.Field
           name="description"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>

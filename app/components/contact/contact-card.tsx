@@ -50,7 +50,6 @@ export function ContactCard({ contact }) {
                 {contact.email}
               </a>
             </div>
-
             {contact.phone && (
               <div className="flex items-center gap-2 text-sm">
                 <Phone className="h-4 w-4 text-muted-foreground" />

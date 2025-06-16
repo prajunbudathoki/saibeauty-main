@@ -44,9 +44,9 @@ import { Route as ClientProfileBookingIndexImport } from './routes/_client/profi
 import { Route as AdminLocationsIdStaffsIndexImport } from './routes/admin/locations/$id/staffs/index'
 import { Route as AdminLocationsIdServicesIndexImport } from './routes/admin/locations/$id/services/index'
 import { Route as ClientProfileBookingConfirmationIndexImport } from './routes/_client/profile/booking/confirmation/index'
-import { Route as AdminLocationsIdStaffsSchedulesImport } from './routes/admin/locations/$id/staffs/schedules'
-import { Route as AdminLocationsIdStaffsReviewsImport } from './routes/admin/locations/$id/staffs/reviews'
 import { Route as AdminLocationsIdServicesSearchImport } from './routes/admin/locations/$id/services/search'
+import { Route as AdminLocationsIdStaffsStaffidSchedulesImport } from './routes/admin/locations/$id/staffs/$staffid/schedules'
+import { Route as AdminLocationsIdStaffsStaffidReviewsImport } from './routes/admin/locations/$id/staffs/$staffid/reviews'
 
 // Create/Update Routes
 
@@ -251,24 +251,24 @@ const ClientProfileBookingConfirmationIndexRoute =
     getParentRoute: () => ClientRoute,
   } as any)
 
-const AdminLocationsIdStaffsSchedulesRoute =
-  AdminLocationsIdStaffsSchedulesImport.update({
-    id: '/staffs/schedules',
-    path: '/staffs/schedules',
-    getParentRoute: () => AdminLocationsIdRoute,
-  } as any)
-
-const AdminLocationsIdStaffsReviewsRoute =
-  AdminLocationsIdStaffsReviewsImport.update({
-    id: '/staffs/reviews',
-    path: '/staffs/reviews',
-    getParentRoute: () => AdminLocationsIdRoute,
-  } as any)
-
 const AdminLocationsIdServicesSearchRoute =
   AdminLocationsIdServicesSearchImport.update({
     id: '/services/search',
     path: '/services/search',
+    getParentRoute: () => AdminLocationsIdRoute,
+  } as any)
+
+const AdminLocationsIdStaffsStaffidSchedulesRoute =
+  AdminLocationsIdStaffsStaffidSchedulesImport.update({
+    id: '/staffs/$staffid/schedules',
+    path: '/staffs/$staffid/schedules',
+    getParentRoute: () => AdminLocationsIdRoute,
+  } as any)
+
+const AdminLocationsIdStaffsStaffidReviewsRoute =
+  AdminLocationsIdStaffsStaffidReviewsImport.update({
+    id: '/staffs/$staffid/reviews',
+    path: '/staffs/$staffid/reviews',
     getParentRoute: () => AdminLocationsIdRoute,
   } as any)
 
@@ -493,20 +493,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLocationsIdServicesSearchImport
       parentRoute: typeof AdminLocationsIdImport
     }
-    '/admin/locations/$id/staffs/reviews': {
-      id: '/admin/locations/$id/staffs/reviews'
-      path: '/staffs/reviews'
-      fullPath: '/admin/locations/$id/staffs/reviews'
-      preLoaderRoute: typeof AdminLocationsIdStaffsReviewsImport
-      parentRoute: typeof AdminLocationsIdImport
-    }
-    '/admin/locations/$id/staffs/schedules': {
-      id: '/admin/locations/$id/staffs/schedules'
-      path: '/staffs/schedules'
-      fullPath: '/admin/locations/$id/staffs/schedules'
-      preLoaderRoute: typeof AdminLocationsIdStaffsSchedulesImport
-      parentRoute: typeof AdminLocationsIdImport
-    }
     '/_client/profile/booking/confirmation/': {
       id: '/_client/profile/booking/confirmation/'
       path: '/profile/booking/confirmation'
@@ -526,6 +512,20 @@ declare module '@tanstack/react-router' {
       path: '/staffs'
       fullPath: '/admin/locations/$id/staffs'
       preLoaderRoute: typeof AdminLocationsIdStaffsIndexImport
+      parentRoute: typeof AdminLocationsIdImport
+    }
+    '/admin/locations/$id/staffs/$staffid/reviews': {
+      id: '/admin/locations/$id/staffs/$staffid/reviews'
+      path: '/staffs/$staffid/reviews'
+      fullPath: '/admin/locations/$id/staffs/$staffid/reviews'
+      preLoaderRoute: typeof AdminLocationsIdStaffsStaffidReviewsImport
+      parentRoute: typeof AdminLocationsIdImport
+    }
+    '/admin/locations/$id/staffs/$staffid/schedules': {
+      id: '/admin/locations/$id/staffs/$staffid/schedules'
+      path: '/staffs/$staffid/schedules'
+      fullPath: '/admin/locations/$id/staffs/$staffid/schedules'
+      preLoaderRoute: typeof AdminLocationsIdStaffsStaffidSchedulesImport
       parentRoute: typeof AdminLocationsIdImport
     }
   }
@@ -581,18 +581,20 @@ const ClientRouteWithChildren =
 
 interface AdminLocationsIdRouteChildren {
   AdminLocationsIdServicesSearchRoute: typeof AdminLocationsIdServicesSearchRoute
-  AdminLocationsIdStaffsReviewsRoute: typeof AdminLocationsIdStaffsReviewsRoute
-  AdminLocationsIdStaffsSchedulesRoute: typeof AdminLocationsIdStaffsSchedulesRoute
   AdminLocationsIdServicesIndexRoute: typeof AdminLocationsIdServicesIndexRoute
   AdminLocationsIdStaffsIndexRoute: typeof AdminLocationsIdStaffsIndexRoute
+  AdminLocationsIdStaffsStaffidReviewsRoute: typeof AdminLocationsIdStaffsStaffidReviewsRoute
+  AdminLocationsIdStaffsStaffidSchedulesRoute: typeof AdminLocationsIdStaffsStaffidSchedulesRoute
 }
 
 const AdminLocationsIdRouteChildren: AdminLocationsIdRouteChildren = {
   AdminLocationsIdServicesSearchRoute: AdminLocationsIdServicesSearchRoute,
-  AdminLocationsIdStaffsReviewsRoute: AdminLocationsIdStaffsReviewsRoute,
-  AdminLocationsIdStaffsSchedulesRoute: AdminLocationsIdStaffsSchedulesRoute,
   AdminLocationsIdServicesIndexRoute: AdminLocationsIdServicesIndexRoute,
   AdminLocationsIdStaffsIndexRoute: AdminLocationsIdStaffsIndexRoute,
+  AdminLocationsIdStaffsStaffidReviewsRoute:
+    AdminLocationsIdStaffsStaffidReviewsRoute,
+  AdminLocationsIdStaffsStaffidSchedulesRoute:
+    AdminLocationsIdStaffsStaffidSchedulesRoute,
 }
 
 const AdminLocationsIdRouteWithChildren =
@@ -677,11 +679,11 @@ export interface FileRoutesByFullPath {
   '/profile/booking': typeof ClientProfileBookingIndexRoute
   '/profile/my-bookings/': typeof ClientProfileMyBookingsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
-  '/admin/locations/$id/staffs/reviews': typeof AdminLocationsIdStaffsReviewsRoute
-  '/admin/locations/$id/staffs/schedules': typeof AdminLocationsIdStaffsSchedulesRoute
   '/profile/booking/confirmation': typeof ClientProfileBookingConfirmationIndexRoute
   '/admin/locations/$id/services': typeof AdminLocationsIdServicesIndexRoute
   '/admin/locations/$id/staffs': typeof AdminLocationsIdStaffsIndexRoute
+  '/admin/locations/$id/staffs/$staffid/reviews': typeof AdminLocationsIdStaffsStaffidReviewsRoute
+  '/admin/locations/$id/staffs/$staffid/schedules': typeof AdminLocationsIdStaffsStaffidSchedulesRoute
 }
 
 export interface FileRoutesByTo {
@@ -712,11 +714,11 @@ export interface FileRoutesByTo {
   '/profile/booking': typeof ClientProfileBookingIndexRoute
   '/profile/my-bookings': typeof ClientProfileMyBookingsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
-  '/admin/locations/$id/staffs/reviews': typeof AdminLocationsIdStaffsReviewsRoute
-  '/admin/locations/$id/staffs/schedules': typeof AdminLocationsIdStaffsSchedulesRoute
   '/profile/booking/confirmation': typeof ClientProfileBookingConfirmationIndexRoute
   '/admin/locations/$id/services': typeof AdminLocationsIdServicesIndexRoute
   '/admin/locations/$id/staffs': typeof AdminLocationsIdStaffsIndexRoute
+  '/admin/locations/$id/staffs/$staffid/reviews': typeof AdminLocationsIdStaffsStaffidReviewsRoute
+  '/admin/locations/$id/staffs/$staffid/schedules': typeof AdminLocationsIdStaffsStaffidSchedulesRoute
 }
 
 export interface FileRoutesById {
@@ -752,11 +754,11 @@ export interface FileRoutesById {
   '/_client/profile/booking/': typeof ClientProfileBookingIndexRoute
   '/_client/profile/my-bookings/': typeof ClientProfileMyBookingsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
-  '/admin/locations/$id/staffs/reviews': typeof AdminLocationsIdStaffsReviewsRoute
-  '/admin/locations/$id/staffs/schedules': typeof AdminLocationsIdStaffsSchedulesRoute
   '/_client/profile/booking/confirmation/': typeof ClientProfileBookingConfirmationIndexRoute
   '/admin/locations/$id/services/': typeof AdminLocationsIdServicesIndexRoute
   '/admin/locations/$id/staffs/': typeof AdminLocationsIdStaffsIndexRoute
+  '/admin/locations/$id/staffs/$staffid/reviews': typeof AdminLocationsIdStaffsStaffidReviewsRoute
+  '/admin/locations/$id/staffs/$staffid/schedules': typeof AdminLocationsIdStaffsStaffidSchedulesRoute
 }
 
 export interface FileRouteTypes {
@@ -792,11 +794,11 @@ export interface FileRouteTypes {
     | '/profile/booking'
     | '/profile/my-bookings/'
     | '/admin/locations/$id/services/search'
-    | '/admin/locations/$id/staffs/reviews'
-    | '/admin/locations/$id/staffs/schedules'
     | '/profile/booking/confirmation'
     | '/admin/locations/$id/services'
     | '/admin/locations/$id/staffs'
+    | '/admin/locations/$id/staffs/$staffid/reviews'
+    | '/admin/locations/$id/staffs/$staffid/schedules'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -826,11 +828,11 @@ export interface FileRouteTypes {
     | '/profile/booking'
     | '/profile/my-bookings'
     | '/admin/locations/$id/services/search'
-    | '/admin/locations/$id/staffs/reviews'
-    | '/admin/locations/$id/staffs/schedules'
     | '/profile/booking/confirmation'
     | '/admin/locations/$id/services'
     | '/admin/locations/$id/staffs'
+    | '/admin/locations/$id/staffs/$staffid/reviews'
+    | '/admin/locations/$id/staffs/$staffid/schedules'
   id:
     | '__root__'
     | '/_client'
@@ -864,11 +866,11 @@ export interface FileRouteTypes {
     | '/_client/profile/booking/'
     | '/_client/profile/my-bookings/'
     | '/admin/locations/$id/services/search'
-    | '/admin/locations/$id/staffs/reviews'
-    | '/admin/locations/$id/staffs/schedules'
     | '/_client/profile/booking/confirmation/'
     | '/admin/locations/$id/services/'
     | '/admin/locations/$id/staffs/'
+    | '/admin/locations/$id/staffs/$staffid/reviews'
+    | '/admin/locations/$id/staffs/$staffid/schedules'
   fileRoutesById: FileRoutesById
 }
 
@@ -1017,10 +1019,10 @@ export const routeTree = rootRoute
       "parent": "/admin",
       "children": [
         "/admin/locations/$id/services/search",
-        "/admin/locations/$id/staffs/reviews",
-        "/admin/locations/$id/staffs/schedules",
         "/admin/locations/$id/services/",
-        "/admin/locations/$id/staffs/"
+        "/admin/locations/$id/staffs/",
+        "/admin/locations/$id/staffs/$staffid/reviews",
+        "/admin/locations/$id/staffs/$staffid/schedules"
       ]
     },
     "/admin/appointments/": {
@@ -1063,14 +1065,6 @@ export const routeTree = rootRoute
       "filePath": "admin/locations/$id/services/search.tsx",
       "parent": "/admin/locations/$id"
     },
-    "/admin/locations/$id/staffs/reviews": {
-      "filePath": "admin/locations/$id/staffs/reviews.tsx",
-      "parent": "/admin/locations/$id"
-    },
-    "/admin/locations/$id/staffs/schedules": {
-      "filePath": "admin/locations/$id/staffs/schedules.tsx",
-      "parent": "/admin/locations/$id"
-    },
     "/_client/profile/booking/confirmation/": {
       "filePath": "_client/profile/booking/confirmation/index.tsx",
       "parent": "/_client"
@@ -1081,6 +1075,14 @@ export const routeTree = rootRoute
     },
     "/admin/locations/$id/staffs/": {
       "filePath": "admin/locations/$id/staffs/index.tsx",
+      "parent": "/admin/locations/$id"
+    },
+    "/admin/locations/$id/staffs/$staffid/reviews": {
+      "filePath": "admin/locations/$id/staffs/$staffid/reviews.tsx",
+      "parent": "/admin/locations/$id"
+    },
+    "/admin/locations/$id/staffs/$staffid/schedules": {
+      "filePath": "admin/locations/$id/staffs/$staffid/schedules.tsx",
       "parent": "/admin/locations/$id"
     }
   }

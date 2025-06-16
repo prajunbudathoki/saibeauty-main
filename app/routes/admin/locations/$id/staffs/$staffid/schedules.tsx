@@ -10,11 +10,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
-
-export const Route = createFileRoute("/admin/locations/$id/staffs/schedules")({
+export const Route = createFileRoute(
+  "/admin/locations/$id/staffs/$staffid/schedules"
+)({
   component: RouteComponent,
   loader: async ({ params }) => {
-    const [staff, schedules,location] = await Promise.all([
+    const [staff, schedules, location] = await Promise.all([
       getStaffById({ data: params.id }),
       getStaffSchedules({
         data: { staffId: params.id, locationId: params.id },
@@ -22,13 +23,14 @@ export const Route = createFileRoute("/admin/locations/$id/staffs/schedules")({
       getLocationById({ data: params.id }),
     ]);
     return { staff, schedules, location };
-    
   },
 });
 
 function RouteComponent() {
   const { staff, schedules, location } = Route.useLoaderData();
-  const existingDays = Array.isArray(schedules) ? schedules.map((schedule) => schedule.day_of_week) : [];
+  const existingDays = Array.isArray(schedules)
+    ? schedules.map((schedule) => schedule.day_of_week)
+    : [];
   return (
     <div>
       <AdminHeader title={`${staff.name} - Schedules`} />

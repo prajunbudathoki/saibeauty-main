@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import type { Staff } from "@/lib/type";
 import {
   Card,
   CardContent,
@@ -27,6 +26,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { StarRating } from "../shared/star-rating";
 import { Link } from "@tanstack/react-router";
+import type { Staff } from "@/generated/prisma";
 // Keep the rest of the imports
 
 interface StaffCardProps {
@@ -164,7 +164,11 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
               className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
             >
               <Link
-                to={`/admin/locations/${locationId}/staffs/${staff.id}/reviews`}
+                to={"/admin/locations/$id/staffs/$staffid/reviews"}
+                params={{
+                  id: locationId,
+                  staffid: staff.id,
+                }}
               >
                 <Star className="h-4 w-4" />
               </Link>
@@ -176,7 +180,11 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
               className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
             >
               <Link
-                to={`/admin/locations/${locationId}/staffs/${staff.id}/schedules`}
+                to={"/admin/locations/$id/staffs/$staffid/schedules"}
+                params={{
+                  id: locationId,
+                  staffid: staff.id,
+                }}
               >
                 <Clock className="h-4 w-4" />
               </Link>
@@ -191,7 +199,6 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
                 </Button>
               }
             />
-
             <ConfirmDialog
               title="Delete Staff Member"
               description="Are you sure you want to delete this staff member? This action cannot be undone."

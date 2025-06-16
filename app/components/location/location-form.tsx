@@ -90,7 +90,6 @@ export function LocationForm({ location, onSuccess }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <form.Field
             name="name"
-            // biome-ignore lint/correctness/noChildrenProp: <explanation>
             children={(field) => (
               <div className="space-y-2">
                 <Label htmlFor={field.name}>Name *</Label>
@@ -109,7 +108,6 @@ export function LocationForm({ location, onSuccess }) {
           />
           <form.Field
             name="city"
-            // biome-ignore lint/correctness/noChildrenProp: <explanation>
             children={(field) => (
               <div className="space-y-2">
                 <Label htmlFor={field.name}>City *</Label>
@@ -130,7 +128,6 @@ export function LocationForm({ location, onSuccess }) {
 
         <form.Field
           name="address"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Address *</Label>
@@ -150,7 +147,6 @@ export function LocationForm({ location, onSuccess }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <form.Field
             name="phone"
-            // biome-ignore lint/correctness/noChildrenProp: <explanation>
             children={(field) => (
               <div className="space-y-2">
                 <Label htmlFor={field.name}>Phone *</Label>
@@ -169,7 +165,6 @@ export function LocationForm({ location, onSuccess }) {
           />
           <form.Field
             name="email"
-            // biome-ignore lint/correctness/noChildrenProp: <explanation>
             children={(field) => (
               <div className="space-y-2">
                 <Label htmlFor={field.name}>Email</Label>
@@ -189,7 +184,6 @@ export function LocationForm({ location, onSuccess }) {
         </div>
         <form.Field
           name="description"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Description</Label>
@@ -209,7 +203,6 @@ export function LocationForm({ location, onSuccess }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <form.Field
             name="opening_time"
-            // biome-ignore lint/correctness/noChildrenProp: <explanation>
             children={(field) => (
               <div className="space-y-2">
                 <Label htmlFor={field.name}>Opening Time *</Label>
@@ -229,7 +222,6 @@ export function LocationForm({ location, onSuccess }) {
           />
           <form.Field
             name="closing_time"
-            // biome-ignore lint/correctness/noChildrenProp: <explanation>
             children={(field) => (
               <div className="space-y-2">
                 <Label htmlFor={field.name}>Closing Time *</Label>
@@ -250,7 +242,6 @@ export function LocationForm({ location, onSuccess }) {
         </div>
         <form.Field
           name="google_maps_url"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Google Maps URL</Label>
@@ -268,7 +259,6 @@ export function LocationForm({ location, onSuccess }) {
         />
         <form.Field
           name="is_open_on_weekends"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="flex items-center space-x-2">
               <Checkbox

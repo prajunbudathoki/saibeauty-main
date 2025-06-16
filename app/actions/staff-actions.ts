@@ -62,7 +62,6 @@ export const getStaffById = createServerFn({
 const createStaffSchema = zfd.formData({
   name: zfd.text(),
   location_id: zfd.text(),
-  address: zfd.text(),
   role: zfd.text(),
   index: zfd.text(),
   bio: zfd.text(),

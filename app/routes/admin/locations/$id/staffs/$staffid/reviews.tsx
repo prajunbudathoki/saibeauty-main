@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/admin/locations/$id/staffs/reviews")({
+export const Route = createFileRoute("/admin/locations/$id/staffs/$staffid/reviews")({
   loader: async ({ params }) => {
     try {
       const staff = await getStaffById({ data: params.id});

@@ -3,7 +3,6 @@
 import type React from "react";
 
 import { useState } from "react";
-import type { Staff } from "@/lib/type";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { StaffForm } from "./staff-form";
+import type { Staff } from "@/generated/prisma";
 
 interface StaffDialogProps {
   locationId: string;

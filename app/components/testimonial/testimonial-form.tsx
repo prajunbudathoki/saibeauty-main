@@ -82,7 +82,6 @@ export function TestimonialForm({ testimonial, onSuccess }) {
       <div className="space-y-4">
         <form.Field
           name="name"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Name *</Label>
@@ -101,7 +100,6 @@ export function TestimonialForm({ testimonial, onSuccess }) {
         />
         <form.Field
           name="designation"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Designation</Label>
@@ -120,7 +118,6 @@ export function TestimonialForm({ testimonial, onSuccess }) {
         />
         <form.Field
           name="review"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Review *</Label>
@@ -140,7 +137,6 @@ export function TestimonialForm({ testimonial, onSuccess }) {
         />
         <form.Field
           name="review"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Review *</Label>
@@ -160,7 +156,6 @@ export function TestimonialForm({ testimonial, onSuccess }) {
         />
         <form.Field
           name="rating"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Rating *</Label>

@@ -56,7 +56,6 @@ export function CategoryForm({ category, onSuccess }) {
         <form.Field
           name="name"
           validators={{ onChange: ({ value }) => !value && "Required" }}
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor="name">Name *</Label>
@@ -74,7 +73,6 @@ export function CategoryForm({ category, onSuccess }) {
         />
         <form.Field
           name="index"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor="index">Index *</Label>
@@ -93,7 +91,6 @@ export function CategoryForm({ category, onSuccess }) {
         />
         <form.Field
           name="description"
-          // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
