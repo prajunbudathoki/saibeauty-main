@@ -16,59 +16,18 @@ export function CategoryForm({ category, onSuccess }) {
 
   const isEditing = !!category;
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   try {
-  //     const formData = new FormData(e.currentTarget);
-
-  //     // Add the image file if it exists
-  //     if (imageFile) {
-  //       formData.set("image", imageFile);
-  //     } else if (category?.image) {
-  //       // Keep the existing image if no new one is provided
-  //       formData.set("image", "");
-  //     }
-  //     if (isEditing) {
-  //       formData.append("id", category.id);
-  //       await updateCategory({ data: formData });
-  //       toast.success("Category updated", {
-  //         description: "The category has been successfully updated",
-  //       });
-  //       router.invalidate();
-  //     } else {
-  //       await createCategory({ data: formData });
-  //       toast.success("Category created", {
-  //         description: "The category has been successfully created",
-  //       });
-  //       router.invalidate();
-  //     }
-
-  //     if (onSuccess) {
-  //       onSuccess();
-  //     } else {
-  //       navigate({ to: "/" });
-  //     }
-  //   } catch (error: any) {
-  //     toast.error("Error saving category", {
-  //       description:
-  //         error.message || "There was a problem saving the category.",
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const form = useForm({
     defaultValues: {
       name: category?.name || "",
-      index: category?.index || "",
       description: category?.description || "",
+      index: category?.index || 0,
     },
-    onSubmit: async () => {
+    onSubmit: async ({ value }) => {
       try {
         const formData = new FormData();
+        formData.append("name", value.name);
+        formData.append("description", value.description);
+        formData.append("index", value.index);
         if (imageFile) {
           formData.set("image", imageFile);
         } else if (category?.image) {
@@ -77,11 +36,10 @@ export function CategoryForm({ category, onSuccess }) {
         if (isEditing) {
           formData.append("id", category.id);
           await updateCategory({ data: formData });
-          toast.success("Service updated successfully");
         } else {
           await createCategory({ data: formData });
-          toast.success("Service created", {
-            description: "The service has been successfully created",
+          toast.success("Category created", {
+            description: "The category has been successfully created",
           });
         }
         router.invalidate();
@@ -105,7 +63,10 @@ export function CategoryForm({ category, onSuccess }) {
               <Input
                 id="name"
                 value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.handleChange(val);
+                }}
                 required
               />
             </div>
@@ -121,7 +82,10 @@ export function CategoryForm({ category, onSuccess }) {
                 id="index"
                 type="number"
                 value={field.state.value ?? ""}
-                onChange={(e) => field.handleChange(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.handleChange(val);
+                }}
                 required
               />
             </div>
@@ -135,8 +99,11 @@ export function CategoryForm({ category, onSuccess }) {
               <Label htmlFor="description">Description</Label>
               <Textarea
                 rows={3}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
+                value={field.state.value ?? ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.handleChange(val);
+                }}
               />
             </div>
           )}
@@ -144,19 +111,21 @@ export function CategoryForm({ category, onSuccess }) {
 
         <div className="space-y-2">
           <Label>Category Image</Label>
-          <ImageUpload onChange={setImageFile} value={category.image} />
+          <ImageUpload onChange={setImageFile} value={category?.image} />
         </div>
       </div>
 
       <div className="flex justify-end gap-2">
-        <Button
-          type="button"
-          className="mr-40"
-          variant="outline"
-          onClick={() => form.reset()}
-        >
-          Reset
-        </Button>
+        <div className="flex-1">
+          <Button
+            type="button"
+            disabled={form.state.isSubmitting}
+            variant="outline"
+            onClick={() => form.reset()}
+          >
+            Reset
+          </Button>
+        </div>
         <Button
           type="button"
           variant="outline"

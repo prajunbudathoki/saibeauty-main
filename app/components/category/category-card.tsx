@@ -78,8 +78,10 @@ export function CategoryCard({ category, serviceCount }) {
               <Link to="/admin/categories/$id" params={{ id: category.id }}>
                 <Eye className="h-4 w-4" />
               </Link>
+              {/* <Link to={`/admin/categories/${category.id}`}>
+                <Eye className="h-4 w-4" />
+              </Link> */}
             </Button>
-
             <CategoryDialog
               category={category}
               title="Edit Category"

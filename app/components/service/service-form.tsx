@@ -79,7 +79,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
           await updateService({ data: formData });
           toast.success("Service updated successfully");
         } else {
-          console.log("Creating......");
           await createService({ data: formData });
           toast.success("Service created", {
             description: "The service has been successfully created",
@@ -93,156 +92,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
         toast.error("There was a problem saving the service");
       }
     },
-  }); // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   try {
-  //     const formData = new FormData(e.currentTarget);
-  //     // if (categoryId && !isEditing) {
-  //     //   formData.set("category_id", categoryId);
-  //     // }
-
-  //     // Add the image file if it exists
-  //     if (imageFile) {
-  //       formData.set("image", imageFile);
-  //     } else if (service?.image) {
-  //       // Keep the existing image if no new one is provided
-  //       formData.set("image", "");
-  //     }
-
-  //     if (isEditing) {
-  //       formData.append("id", service.id);
-  //       await updateService({ data: formData });
-  //       toast.success("Service updated successfully");
-  //     } else {
-  //       await createService({ data: formData });
-  //       toast.success("Service created", {
-  //         description: "The service has been successfully created",
-  //       });
-  //     }
-
-  //     router.invalidate();
-
-  //     if (onSuccess) {
-  //       onSuccess();
-  //     } else {
-  //       navigate({ to: "/admin/services" });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error);
-  //     toast.error("There was a problem saving the service");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // return (
-  //   <form onSubmit={handleSubmit} className="space-y-6">
-  //     <div className="space-y-4">
-  //       <div className="space-y-2">
-  //         <Label htmlFor="name">Name *</Label>
-  //         <Input id="name" name="name" defaultValue={service?.name} required />
-  //       </div>
-
-  //       <div className="space-y-2">
-  //         <Label htmlFor="index">Index *</Label>
-  //         <Input
-  //           id="index"
-  //           name="index"
-  //           type="number"
-  //           defaultValue={service?.index}
-  //           required
-  //         />
-  //       </div>
-
-  //       <div className="space-y-2">
-  //         <Label htmlFor="category_id">Category *</Label>
-  //         <Select
-  //           name="category_id"
-  //           defaultValue={categoryId || service?.category_id}
-  //           required
-  //           disabled={!!categoryId}
-  //         >
-  //           <SelectTrigger>
-  //             <SelectValue placeholder="Select a category" />
-  //           </SelectTrigger>
-  //           <SelectContent>
-  //             {categories.map((category) => (
-  //               <SelectItem key={category.id} value={category.id}>
-  //                 {category.name}
-  //               </SelectItem>
-  //             ))}
-  //           </SelectContent>
-  //         </Select>
-  //       </div>
-
-  //       <div className="grid gap-4 sm:grid-cols-2">
-  //         <div className="space-y-2">
-  //           <Label htmlFor="price">Price ($) *</Label>
-  //           <Input
-  //             id="price"
-  //             name="price"
-  //             type="number"
-  //             step="0.01"
-  //             min="0"
-  //             defaultValue={service?.price || 20}
-  //             required
-  //           />
-  //         </div>
-  //         <div className="space-y-2">
-  //           <Label htmlFor="duration">Duration (minutes)</Label>
-  //           <Input
-  //             id="duration"
-  //             name="duration"
-  //             type="number"
-  //             min="0"
-  //             defaultValue={service?.duration || 20}
-  //           />
-  //         </div>
-  //       </div>
-
-  //       <div className="space-y-2">
-  //         <Label htmlFor="description">Description</Label>
-  //         <Textarea
-  //           id="description"
-  //           name="description"
-  //           rows={3}
-  //           defaultValue={service?.description || "asd"}
-  //         />
-  //       </div>
-
-  //       <div className="space-y-2">
-  //         <Label>Service Image</Label>
-  //         <ImageUpload onChange={setImageFile} value={service?.image} />
-  //       </div>
-  //     </div>
-
-  //     <div className="flex justify-end gap-2">
-  //       <Button
-  //         type="button"
-  //         variant="outline"
-  //         onClick={() => {
-  //           if (onSuccess) {
-  //             onSuccess();
-  //           } else {
-  //             navigate({ to: "/admin/services" });
-  //           }
-  //         }}
-  //         disabled={loading}
-  //       >
-  //         Cancel
-  //       </Button>
-  //       <Button type="submit" disabled={loading}>
-  //         {loading
-  //           ? "Saving..."
-  //           : isEditing
-  //           ? "Update Service"
-  //           : "Create Service"}
-  //       </Button>
-  //     </div>
-  //   </form>
-  // );
+  });
   return (
     <form onSubmit={form.handleSubmit} className="space-y-6">
       <div className="space-y-4">
@@ -258,7 +108,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
                 value={field.state.value ?? ""}
                 onChange={(e) => {
                   const val = e.target.value;
-                  console.log("Input changde to:", val);
                   field.handleChange(val);
                 }}
                 required
@@ -279,7 +128,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
                 value={field.state.value ?? ""}
                 onChange={(e) => {
                   const val = e.target.value;
-                  console.log("Input changde to:", val);
                   field.handleChange(val);
                 }}
                 required
@@ -328,7 +176,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
                   value={field.state.value}
                   onChange={(e) => {
                     const val = e.target.value;
-                    console.log("Input changde to:", val);
                     field.handleChange(val);
                   }}
                 />
@@ -347,7 +194,6 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
                   value={field.state.value}
                   onChange={(e) => {
                     const val = e.target.value;
-                    console.log("Input changde to:", val);
                     field.handleChange(val);
                   }}
                 />
@@ -382,14 +228,16 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
       </div>
 
       <div className="flex justify-end gap-2">
-        <Button
-          type="button"
-          className="mr-40"
-          variant="outline"
-          onClick={() => form.reset()}
-        >
-          Reset
-        </Button>
+        <div className="flex-1">
+          <Button
+            disabled={form.state.isSubmitting}
+            type="button"
+            variant="outline"
+            onClick={() => form.reset()}
+          >
+            Reset
+          </Button>
+        </div>
         <Button
           type="button"
           variant="outline"

@@ -20,7 +20,7 @@ export const Route = createFileRoute("/admin/services/")({
 
 function RouteComponent() {
   const { services, categories } = Route.useLoaderData();
-  
+
   return (
     <div>
       <AdminHeader title="Services" />
@@ -30,6 +30,8 @@ function RouteComponent() {
           <h2 className="text-lg font-medium">All Services</h2>
 
           <ServiceDialog
+            service={null}
+            categoryId={undefined}
             title="Add Service"
             trigger={
               <Button>
@@ -56,9 +58,10 @@ function RouteComponent() {
                 key={service.id}
                 service={{
                   ...service,
-                  created_at: service.created_at instanceof Date
-                    ? service.created_at.toISOString()
-                    : service.created_at,
+                  created_at:
+                    service.created_at instanceof Date
+                      ? service.created_at.toISOString()
+                      : service.created_at,
                 }}
               />
             ))}

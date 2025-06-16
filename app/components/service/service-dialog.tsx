@@ -1,6 +1,4 @@
-import type React from "react";
 import { useState } from "react";
-import type { Service } from "@/lib/type";
 import {
   Dialog,
   DialogContent,

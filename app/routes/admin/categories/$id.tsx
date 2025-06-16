@@ -40,6 +40,7 @@ function ServicesCategoryPage() {
 
           <ServiceDialog
             title="Add Service"
+            service={services}
             categoryId={category.id}
             trigger={
               <Button>
@@ -66,9 +67,11 @@ function ServicesCategoryPage() {
                 key={service.id}
                 service={{
                   ...service,
-                  created_at: service.created_at instanceof Date
-                    ? service.created_at.toISOString()
-                    : service.created_at,
+                  category,
+                  // created_at:
+                  //   service.created_at instanceof Date
+                  //     ? service.created_at.toISOString()
+                  //     : service.created_at,
                 }}
               />
             ))}
@@ -78,4 +81,3 @@ function ServicesCategoryPage() {
     </div>
   );
 }
-

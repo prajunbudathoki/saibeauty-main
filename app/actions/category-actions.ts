@@ -51,7 +51,7 @@ export const createCategory = createServerFn({
       if (image) {
         path = await uploadFileToS3(image, "categories");
       }
-      return await prisma.category.create({
+      const category = await prisma.category.create({
         data: {
           name,
           description,
@@ -59,6 +59,7 @@ export const createCategory = createServerFn({
           image: path,
         },
       });
+      return category;
     } catch (error) {
       console.log(error);
       throw new Error("Failed to create Category");
