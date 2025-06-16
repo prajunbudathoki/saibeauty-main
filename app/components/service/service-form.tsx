@@ -102,9 +102,10 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
           // biome-ignore lint/correctness/noChildrenProp: <explanation>
           children={(field) => (
             <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
+              <Label htmlFor={field.name}>Name *</Label>
               <Input
-                id="name"
+                id={field.name}
+                name={field.name}
                 value={field.state.value ?? ""}
                 onChange={(e) => {
                   const val = e.target.value;

@@ -7,41 +7,75 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Loader2, Send } from "lucide-react";
 import { motion } from "motion/react";
+import { useForm } from "@tanstack/react-form";
 
 export function ContactForm() {
   const [loading, setLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+    },
+    onSubmit: async ({ value }) => {
+      setLoading(true);
+      try {
+        const formData = new FormData();
+        formData.append("name", value.name);
+        formData.append("email", value.email);
+        formData.append("phone", value.phone);
+        formData.append("message", value.message);
 
-    try {
-      if (!formRef.current) {
-        throw new Error("Form not found");
+        await createContact({ data: formData });
+
+        toast.success(
+          "Message sent! We'll get back to you as soon as possible."
+        );
+
+        form.reset();
+      } catch (error) {
+        console.error("Error submitting contact form:", error);
+        toast.error(
+          "There was a problem sending your message. Please try again."
+        );
+      } finally {
+        setLoading(false);
       }
+    },
+  });
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setLoading(true);
 
-      const formData = new FormData(formRef.current);
-      await createContact({ data: formData });
+  //   try {
+  //     if (!formRef.current) {
+  //       throw new Error("Form not found");
+  //     }
 
-      toast.success("Message sent! We'll get back to you as soon as possible.");
+  //     const formData = new FormData(formRef.current);
+  //     await createContact({ data: formData });
 
-      // Reset the form
-      formRef.current.reset();
-    } catch (error) {
-      console.error("Error submitting contact form:", error);
-      toast.error(
-        "There was a problem sending your message. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     toast.success("Message sent! We'll get back to you as soon as possible.");
+
+  //     // Reset the form
+  //     formRef.current.reset();
+  //   } catch (error) {
+  //     console.error("Error submitting contact form:", error);
+  //     toast.error(
+  //       "There was a problem sending your message. Please try again."
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <motion.form
       ref={formRef}
-      onSubmit={handleSubmit}
+      onSubmit={form.handleSubmit}
       className="space-y-5"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -101,7 +135,7 @@ export function ContactForm() {
       <Button
         type="submit"
         className="w-full h-11 transition-all"
-        disabled={loading}
+        disabled={form.state.isSubmitting}
       >
         {loading ? (
           <>

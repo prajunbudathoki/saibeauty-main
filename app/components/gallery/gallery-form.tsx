@@ -1,4 +1,3 @@
-import type React from "react";
 import { useState } from "react";
 import { ImageUpload } from "@/components/shared/image-upload";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import {
   createGalleryItem,
   updateGalleryItem,
 } from "@/actions/gallery-actions";
+import { useForm } from "@tanstack/react-form";
 
 export function GalleryForm({ galleryItem, onSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -20,49 +20,52 @@ export function GalleryForm({ galleryItem, onSuccess }) {
   const router = useRouter();
 
   const isEditing = !!galleryItem;
+  const form = useForm({
+    defaultValues: {
+      title: galleryItem?.title || "",
+      description: galleryItem?.description || "",
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        const formData = new FormData();
+        formData.append("title", value.title);
+        formData.append("description", value.description);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+        // Add the image file if it exists
+        if (imageFile) {
+          formData.set("image", imageFile);
+        } else if (galleryItem?.image) {
+          // Keep the existing image if no new one is provided
+          formData.set("image", "");
+        }
 
-    try {
-      const formData = new FormData(e.currentTarget);
+        if (isEditing) {
+          formData.append("id", galleryItem.id);
+          await updateGalleryItem({ data: formData });
+          toast.success("Gallery item updated successfully");
+        } else {
+          await createGalleryItem({ data: formData });
+          toast.success("Gallery created", {
+            description: "The Gallery has been created successfully",
+          });
+        }
+        router.invalidate();
 
-      // Add the image file if it exists
-      if (imageFile) {
-        formData.set("image", imageFile);
-      } else if (galleryItem?.image) {
-        // Keep the existing image if no new one is provided
-        formData.set("image", "");
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigate({ to: "/admin/gallery" });
+        }
+      } catch (error: any) {
+        console.error("Error submitting form:", error);
+        toast.error("There was a problem saving the gallery item");
+      } finally {
+        setLoading(false);
       }
-
-      if (isEditing) {
-        formData.append("id", galleryItem.id);
-        await updateGalleryItem({ data: formData });
-        toast.success("Gallery item updated successfully");
-      } else {
-        await createGalleryItem({ data: formData });
-        toast.success("Gallery created", {
-          description: "The Gallery has been created successfully",
-        });
-      }
-      router.invalidate();
-
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        navigate({ to: "/admin/gallery" });
-      }
-    } catch (error: any) {
-      console.error("Error submitting form:", error);
-      toast.error("There was a problem saving the gallery item");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    },
+  });
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={form.handleSubmit} className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="title">Title *</Label>
@@ -106,12 +109,12 @@ export function GalleryForm({ galleryItem, onSuccess }) {
               navigate({ to: "/admin/gallery" });
             }
           }}
-          disabled={loading}
+          disabled={form.state.isSubmitting}
         >
           Cancel
         </Button>
-        <Button type="submit" disabled={loading}>
-          {loading
+        <Button type="submit" disabled={form.state.isSubmitting}>
+          {form.state.isSubmitting
             ? "Saving..."
             : isEditing
             ? "Update Gallery Item"

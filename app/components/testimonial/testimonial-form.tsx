@@ -1,6 +1,5 @@
 import type React from "react";
 import { useState } from "react";
-import type { Testimonial } from "@/lib/type";
 import { ImageUpload } from "@/components/shared/image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +18,7 @@ import {
   updateTestimonial,
 } from "@/actions/testimonial-actions";
 import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
 
 export function TestimonialForm({ testimonial, onSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -27,101 +27,161 @@ export function TestimonialForm({ testimonial, onSuccess }) {
   const router = useRouter();
   const isEditing = !!testimonial;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const formData = new FormData(e.currentTarget);
+  const form = useForm({
+    defaultValues: {
+      name: testimonial?.name || "",
+      designation: testimonial?.designation || "",
+      rating: testimonial?.rating?.toString() || "5",
+      review: testimonial?.review || "",
+    },
+    onSubmit: async ({ value }) => {
+      setLoading(true);
+      try {
+        const formData = new FormData();
+        formData.append("name", value.name);
+        formData.append("designation", value.designation);
+        formData.append("rating", value.rating);
+        formData.append("review", value.review);
 
-      // Add the image file if it exists
-      if (imageFile) {
-        formData.set("image", imageFile);
-      } else if (testimonial?.image) {
-        // Keep the existing image if no new one is provided
-        formData.set("image", "");
-      }
-      // converting the fields into object as formData was not converted by serverfn
-      // const plainData = Object.fromEntries(formData.entries());
-      // plainData.rating = Number(plainData.rating);
-      if (isEditing) {
-        formData.append("id", testimonial.id);
-        await updateTestimonial({ data: formData });
-        toast.success("Testimonial updated successfully");
-        router.invalidate();
-      } else {
-        await createTestimonial({ data: formData });
-        toast.success("Testimonial created", {
-          description: "Testimonial has been created successfully",
-        });
-        router.invalidate();
-      }
+        // Add the image file if it exists
+        if (imageFile) {
+          formData.set("image", imageFile);
+        } else if (testimonial?.image) {
+          // Keep the existing image if no new one is provided
+          formData.set("image", "");
+        }
 
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        navigate({ to: "/" });
+        if (isEditing) {
+          formData.append("id", testimonial.id);
+          await updateTestimonial({ data: formData });
+          toast.success("Testimonial updated successfully");
+        } else {
+          await createTestimonial({ data: formData });
+          toast.success("Testimonial created", {
+            description: "Testimonial has been created successfully",
+          });
+        }
+        router.invalidate();
+
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigate({ to: "/admin/testimonials" });
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        toast.error("There was a problem saving the testimonial");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error("There was a problem saving the testimonial");
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+  });
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={form.handleSubmit} className="space-y-6">
       <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Name *</Label>
-          <Input
-            id="name"
-            name="name"
-            defaultValue={testimonial?.name}
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="designation">Designation</Label>
-          <Input
-            id="designation"
-            name="designation"
-            defaultValue={testimonial?.designation || ""}
-            placeholder="e.g. Regular Customer"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="rating">Rating *</Label>
-          <Select
-            name="rating"
-            defaultValue={testimonial?.rating?.toString() || "5"}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select rating" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">1 Star</SelectItem>
-              <SelectItem value="2">2 Stars</SelectItem>
-              <SelectItem value="3">3 Stars</SelectItem>
-              <SelectItem value="4">4 Stars</SelectItem>
-              <SelectItem value="5">5 Stars</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="review">Review *</Label>
-          <Textarea
-            id="review"
-            name="review"
-            rows={4}
-            defaultValue={testimonial?.review}
-            required
-          />
-        </div>
+        <form.Field
+          name="name"
+          // biome-ignore lint/correctness/noChildrenProp: <explanation>
+          children={(field) => (
+            <div className="space-y-2">
+              <Label htmlFor={field.name}>Name *</Label>
+              <Input
+                id={field.name}
+                name={field.name}
+                required
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.handleChange(val);
+                }}
+                value={field.state.value ?? ""}
+              />
+            </div>
+          )}
+        />
+        <form.Field
+          name="designation"
+          // biome-ignore lint/correctness/noChildrenProp: <explanation>
+          children={(field) => (
+            <div className="space-y-2">
+              <Label htmlFor={field.name}>Designation</Label>
+              <Input
+                id={field.name}
+                name={field.name}
+                placeholder="e.g. Regular Customer"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.handleChange(val);
+                }}
+                value={field.state.value ?? ""}
+              />
+            </div>
+          )}
+        />
+        <form.Field
+          name="review"
+          // biome-ignore lint/correctness/noChildrenProp: <explanation>
+          children={(field) => (
+            <div className="space-y-2">
+              <Label htmlFor={field.name}>Review *</Label>
+              <Textarea
+                id={field.name}
+                name={field.name}
+                rows={4}
+                required
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.handleChange(val);
+                }}
+                value={field.state.value ?? ""}
+              />
+            </div>
+          )}
+        />
+        <form.Field
+          name="review"
+          // biome-ignore lint/correctness/noChildrenProp: <explanation>
+          children={(field) => (
+            <div className="space-y-2">
+              <Label htmlFor={field.name}>Review *</Label>
+              <Textarea
+                id={field.name}
+                name={field.name}
+                rows={4}
+                required
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.handleChange(val);
+                }}
+                value={field.state.value ?? ""}
+              />
+            </div>
+          )}
+        />
+        <form.Field
+          name="rating"
+          // biome-ignore lint/correctness/noChildrenProp: <explanation>
+          children={(field) => (
+            <div className="space-y-2">
+              <Label htmlFor={field.name}>Rating *</Label>
+              <Select
+                defaultValue={field.state.value}
+                onValueChange={field.handleChange}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a rating" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[1, 2, 3, 4, 5].map((rating) => (
+                    <SelectItem key={rating} value={rating.toString()}>
+                      {rating} Star{rating > 1 ? "s" : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        />
 
         <div className="space-y-2">
           <Label>Customer Photo</Label>

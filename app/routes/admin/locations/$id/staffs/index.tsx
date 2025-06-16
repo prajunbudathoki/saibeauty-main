@@ -10,16 +10,16 @@ import { ArrowLeft, Plus, Users } from "lucide-react";
 export const Route = createFileRoute("/admin/locations/$id/staffs/")({
   component: RouteComponent,
   loader: async ({ params }) => {
-    const [location, staffs] = await Promise.all([
-      getLocationById({ data: params.id }),
-      getStaffsByLocation({ data: params.id }),
-    ]);
-    return { location, staffs };
+    const staffs = await getStaffsByLocation({ data: params.id });
+
+    return staffs;
   },
 });
 
 function RouteComponent() {
-  const { location, staffs } = Route.useLoaderData();
+  const  staffs  = Route.useLoaderData();
+  const {location} = Route.useRouteContext()
+ 
   return (
     <div>
       <AdminHeader title={`${location.name} - Staff`} />

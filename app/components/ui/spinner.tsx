@@ -2,6 +2,7 @@ import React from "react";
 
 export const Spinner = () => {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: <explanation>
     <div role="status">
       <svg
         aria-hidden="true"

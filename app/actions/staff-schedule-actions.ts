@@ -36,7 +36,7 @@ export const createStaffSchedule = createServerFn({
     if (!staff_id || !location_id || !start_time || !day_of_week) {
       throw new Error("Required fields are missing");
     }
-    if (end_time && new Date(end_time) <= new Date(start_time)) {
+    if (end_time && end_time <= start_time) {
       throw new Error("End time must be after start time");
     }
     const existingSchedule = await prisma.staffSchedule.findFirst({
@@ -44,7 +44,7 @@ export const createStaffSchedule = createServerFn({
         staff_id,
         location_id,
         day_of_week,
-        start_time: new Date(start_time).toISOString(),
+        start_time,
       },
     });
     if (existingSchedule) {
@@ -55,14 +55,15 @@ export const createStaffSchedule = createServerFn({
         data: {
           staff_id,
           location_id,
-          start_time: new Date(start_time).toISOString(),
-          end_time: end_time ? new Date(end_time).toISOString() : null,
+          start_time,
+          end_time: end_time || "",
           day_of_week,
-          is_available: is_available !== undefined ? is_available : true,
+          is_available: is_available !== undefined ? Boolean(is_available) : true,
         },
       });
       return schedule;
     } catch (error) {
+      console.error("Failed to create staff schedule:", error);
       throw new Error("Failed to create staff schedule");
     }
   });
@@ -70,7 +71,7 @@ export const createStaffSchedule = createServerFn({
 export const updateStaffSchedule = createServerFn({
   method: "POST",
 })
-  .validator((id: string, form: Record<string, any>) => ({ id, form }))
+  .validator((input: { id: string; form: Record<string, any> }) => input)
   .handler(async ({ data: { id, form } }) => {
     const {
       staff_id,
@@ -83,7 +84,7 @@ export const updateStaffSchedule = createServerFn({
     if (!staff_id || !location_id || !start_time || !day_of_week) {
       throw new Error("Required fields are missing");
     }
-    if (end_time && new Date(end_time) <= new Date(start_time)) {
+    if (end_time && end_time <= start_time) {
       throw new Error("End time must be after start time");
     }
     try {
@@ -92,14 +93,15 @@ export const updateStaffSchedule = createServerFn({
         data: {
           staff_id,
           location_id,
-          start_time: new Date(start_time).toISOString(),
-          end_time: end_time ? new Date(end_time).toISOString() : null,
+          start_time,
+          end_time: end_time || "",
           day_of_week,
-          is_available: is_available !== undefined ? is_available : true,
+          is_available: is_available !== undefined ? Boolean(is_available) : true,
         },
       });
       return updatedSchedule;
     } catch (error) {
+      console.error("Failed to update staff schedule:", error);
       throw new Error("Failed to update staff schedule");
     }
   });

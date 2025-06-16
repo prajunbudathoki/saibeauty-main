@@ -20,14 +20,16 @@ import {
 } from "lucide-react";
 import { deleteLocation } from "@/actions/location-actions";
 import { toast } from "sonner";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import type { Location } from "@/generated/prisma";
 
 export function LocationCard({ location }: { location: Location }) {
+  const router = useRouter();
   const handleDelete = async () => {
     try {
       await deleteLocation({ data: location.id });
       toast.success("Location deleted successfully");
+      router.invalidate();
     } catch (error) {
       toast.error("Failed to delete the location");
     }
@@ -104,7 +106,7 @@ export function LocationCard({ location }: { location: Location }) {
               className="hover:bg-primary/10 hover:text-primary"
             >
               <Link
-                to="/admin/locations/$id/staffs/schedule"
+                to="/admin/locations/$id/staffs/schedules"
                 params={{ id: location.id }}
               >
                 <Users className="h-4 w-4 mr-1" />
