@@ -3,12 +3,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar, Star } from "lucide-react";
 import { motion } from "motion/react";
+import { getLocations } from "@/actions/location-actions";
+import { getCdnUrl } from "@/lib/utils";
 
 export const Route = createFileRoute("/_client/about")({
   component: RouteComponent,
+  loader: async () => {
+    const locations = await getLocations();
+    return { locations };
+  },
 });
 
 function RouteComponent() {
+  const { locations } = Route.useLoaderData();
   const services = [
     {
       title: "Hair Styling & Treatments",
@@ -450,8 +457,8 @@ function RouteComponent() {
             className="grid md:grid-cols-2 gap-8"
             variants={staggerContainer}
           >
-            {branches.map((branch, index) => (
-              <motion.div key={branch.location} variants={itemVariants}>
+            {locations.map((location, index) => (
+              <motion.div key={location.name} variants={itemVariants}>
                 <Card className="salon-card overflow-hidden group">
                   <motion.div
                     className="relative h-48"
@@ -459,9 +466,9 @@ function RouteComponent() {
                     transition={{ duration: 0.3 }}
                   >
                     <img
-                      src={"/placeholder.svg?height=192&width=400"}
-                      alt={`${branch.location} branch`}
-                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      src={getCdnUrl(location.image) || "/placeholder.svg"}
+                      alt={`${location.name} location`}
+                      className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-110"
                     />
                     <div className="absolute top-4 left-4">
                       <Badge
@@ -471,7 +478,7 @@ function RouteComponent() {
                             : "bg-accent text-accent-foreground"
                         }
                       >
-                        {branch.status}
+                        {index === 0 ? "Main Branch" : "New Branch"}
                       </Badge>
                     </div>
                   </motion.div>
@@ -479,11 +486,12 @@ function RouteComponent() {
                     <div className="flex items-center gap-2 mb-2">
                       <MapPin className="w-5 h-5 text-primary" />
                       <h3 className="text-xl font-bold text-foreground">
-                        {branch.location}
+                        {location.name}, {location.city}
                       </h3>
                     </div>
                     <p className="text-muted-foreground">
-                      Established in {branch.year}
+                      Established in {"2024"}, {" "}
+                      <strong>{location.address}</strong>
                     </p>
                   </CardContent>
                 </Card>

@@ -25,6 +25,7 @@ function RouteComponent() {
             <h2 className="text-lg font-medium">All Locations</h2>
 
             <LocationDialog
+              location={null}
               title="Add Location"
               trigger={
                 <Button>
