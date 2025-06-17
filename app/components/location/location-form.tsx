@@ -10,9 +10,14 @@ import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
+import type { Location } from "@/generated/prisma";
 
-export function LocationForm({ location, onSuccess }) {
-  const [loading, setLoading] = useState(false);
+type LocationFormProps = {
+  location: Location;
+  onSuccess: () => void;
+};
+
+export function LocationForm({ location, onSuccess }: LocationFormProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
   const router = useRouter();
@@ -32,7 +37,6 @@ export function LocationForm({ location, onSuccess }) {
       is_open_on_weekends: location?.is_open_on_weekends !== false,
     },
     onSubmit: async ({ value }) => {
-      setLoading(true);
       try {
         const formData = new FormData();
         formData.append("name", value.name);
@@ -60,26 +64,18 @@ export function LocationForm({ location, onSuccess }) {
         if (isEditing) {
           formData.append("id", location.id);
           await updateLocation({ data: formData });
-          toast.success("Location updated successfully");
         } else {
           await createLocation({ data: formData });
-          toast.success("Location created successfully");
         }
-
-        router.invalidate();
-
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          navigate({ to: "/admin/locations" });
-        }
+        toast.success(
+          `Location ${isEditing ? "updated" : "added"} successfully `
+        );
+        await router.invalidate();
       } catch (error: any) {
         console.error("Error submitting form:", error);
         toast.error(
           error.message || "There was a problem saving the location."
         );
-      } finally {
-        setLoading(false);
       }
     },
   });

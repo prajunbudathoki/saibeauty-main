@@ -40,7 +40,6 @@ export function StaffForm({ locationId, staff, onSuccess }: StaffFormProps) {
       twitter_url: staff?.twitter_url || "",
     },
     onSubmit: async ({ value }) => {
-      console.log("sdfsdf");
       try {
         const formData = new FormData();
         formData.append("name", value.name);

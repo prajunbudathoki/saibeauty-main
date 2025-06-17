@@ -12,13 +12,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import type { Service } from "@/generated/prisma";
 import type { Category } from "@/lib/type";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export function ServiceForm({ service, onSuccess, categoryId }) {
+type ServiceFormProps = {
+  categoryId: string;
+  service: Service;
+  onSuccess: () => void;
+};
+
+export function ServiceForm({
+  service,
+  onSuccess,
+  categoryId,
+}: ServiceFormProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -77,15 +88,11 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
         if (isEditing) {
           formData.append("id", service.id);
           await updateService({ data: formData });
-          toast.success("Service updated successfully");
         } else {
           await createService({ data: formData });
-          toast.success("Service created", {
-            description: "The service has been successfully created",
-          });
         }
-
-        router.invalidate();
+        toast.success(`Service ${isEditing} ? "updated" : "added"successfully`);
+        await router.invalidate();
         navigate({ to: "/admin/services" });
       } catch (err) {
         console.error(err);
@@ -94,7 +101,13 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
     },
   });
   return (
-    <form onSubmit={form.handleSubmit} className="space-y-6">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+      className="space-y-6"
+    >
       <div className="space-y-4">
         <form.Field
           name="name"
@@ -126,7 +139,7 @@ export function ServiceForm({ service, onSuccess, categoryId }) {
                 type="number"
                 value={field.state.value ?? ""}
                 onChange={(e) => {
-                  const val = e.target.value;
+                  const val = Number(e.target.value);
                   field.handleChange(val);
                 }}
                 required

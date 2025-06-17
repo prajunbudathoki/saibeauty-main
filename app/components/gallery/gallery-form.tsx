@@ -11,8 +11,14 @@ import {
   updateGalleryItem,
 } from "@/actions/gallery-actions";
 import { useForm } from "@tanstack/react-form";
+import type { GalleryItem } from "@/generated/prisma";
 
-export function GalleryForm({ galleryItem, onSuccess }) {
+type GalleryFormProps = {
+  galleryItem: GalleryItem;
+  onSuccess: () => void;
+};
+
+export function GalleryForm({ galleryItem, onSuccess }: GalleryFormProps) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -42,25 +48,16 @@ export function GalleryForm({ galleryItem, onSuccess }) {
         if (isEditing) {
           formData.append("id", galleryItem.id);
           await updateGalleryItem({ data: formData });
-          toast.success("Gallery item updated successfully");
         } else {
           await createGalleryItem({ data: formData });
-          toast.success("Gallery created", {
-            description: "The Gallery has been created successfully",
-          });
         }
-        router.invalidate();
-
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          navigate({ to: "/admin/gallery" });
-        }
+        toast.success(
+          `Gallery ${isEditing ? "updated" : "created"} successfully`
+        );
+        await router.invalidate();
       } catch (error: any) {
         console.error("Error submitting form:", error);
         toast.error("There was a problem saving the gallery item");
-      } finally {
-        setLoading(false);
       }
     },
   });

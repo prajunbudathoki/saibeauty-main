@@ -46,31 +46,6 @@ export function ContactForm() {
       }
     },
   });
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   try {
-  //     if (!formRef.current) {
-  //       throw new Error("Form not found");
-  //     }
-
-  //     const formData = new FormData(formRef.current);
-  //     await createContact({ data: formData });
-
-  //     toast.success("Message sent! We'll get back to you as soon as possible.");
-
-  //     // Reset the form
-  //     formRef.current.reset();
-  //   } catch (error) {
-  //     console.error("Error submitting contact form:", error);
-  //     toast.error(
-  //       "There was a problem sending your message. Please try again."
-  //     );
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   return (
     <motion.form

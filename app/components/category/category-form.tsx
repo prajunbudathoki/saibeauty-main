@@ -4,12 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import type { Category } from "@/generated/prisma";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function CategoryForm({ category, onSuccess }) {
+type CategoryFormProps = {
+  category: Category;
+  onSuccess: () => void;
+};
+
+export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
   const router = useRouter();
@@ -27,7 +33,8 @@ export function CategoryForm({ category, onSuccess }) {
         const formData = new FormData();
         formData.append("name", value.name);
         formData.append("description", value.description);
-        formData.append("index", value.index);
+        formData.append("index", value.index.toString());
+
         if (imageFile) {
           formData.set("image", imageFile);
         } else if (category?.image) {
@@ -38,11 +45,11 @@ export function CategoryForm({ category, onSuccess }) {
           await updateCategory({ data: formData });
         } else {
           await createCategory({ data: formData });
-          toast.success("Category created", {
-            description: "The category has been successfully created",
-          });
         }
-        router.invalidate();
+        toast.success(
+          `Category ${isEditing ? "updated" : "created"} successfully `
+        );
+        await router.invalidate();
         navigate({ to: "/admin/categories" });
       } catch (error) {
         toast.error("There was a problem saving the category");
@@ -81,7 +88,7 @@ export function CategoryForm({ category, onSuccess }) {
                 type="number"
                 value={field.state.value ?? ""}
                 onChange={(e) => {
-                  const val = e.target.value;
+                  const val = Number(e.target.value);
                   field.handleChange(val);
                 }}
                 required
