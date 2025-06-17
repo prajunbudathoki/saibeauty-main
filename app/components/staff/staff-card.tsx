@@ -68,9 +68,7 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
     }
   };
 
-  const imageUrl = staff.image
-    ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/saibeauty/${staff.image}`
-    : "/placeholder.svg?height=300&width=300";
+  const imageUrl = staff.image;
 
   return (
     <motion.div
@@ -79,11 +77,11 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
       transition={{ duration: 0.3 }}
     >
       <Card className="overflow-hidden h-full flex flex-col">
-        <div className="relative h-48">
+        <div className="relative">
           <img
             src={imageUrl || "/placeholder.svg"}
             alt={staff.name}
-            className="object-cover"
+            className="object-cover w-full h-48"
           />
           {/* Add availability badge in the top-right corner of the image */}
           {staff.is_available_for_booking && (
@@ -98,9 +96,9 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
           )}
         </div>
         <CardHeader className="pb-2">
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-bold text-lg">{staff.name}</h3>
+              <h3 className="font-bold text-lg ">{staff.name}</h3>
               <p className="text-sm text-muted-foreground">{staff.role}</p>
             </div>
           </div>
@@ -170,7 +168,9 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
                   staffid: staff.id,
                 }}
               >
-                <Star className="h-4 w-4" />
+                <div>
+                  <Star className="h-4 w-4" />
+                </div>
               </Link>
             </Button>
             <Button
@@ -186,7 +186,9 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
                   staffid: staff.id,
                 }}
               >
-                <Clock className="h-4 w-4" />
+                <div>
+                  <Clock className="h-4 w-4" />
+                </div>
               </Link>
             </Button>
             <StaffDialog
@@ -195,7 +197,9 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
               title="Edit Staff Member"
               trigger={
                 <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Edit className="h-4 w-4" />
+                  <div>
+                    <Edit className="h-4 w-4" />
+                  </div>
                 </Button>
               }
             />
@@ -209,7 +213,9 @@ export function StaffCard({ staff, locationId }: StaffCardProps) {
                   size="icon"
                   className="h-8 w-8 text-destructive"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <div>
+                    <Trash2 className="h-4 w-4" />
+                  </div>
                 </Button>
               }
             />
