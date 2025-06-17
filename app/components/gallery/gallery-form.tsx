@@ -70,25 +70,45 @@ export function GalleryForm({ galleryItem, onSuccess }: GalleryFormProps) {
     >
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="title">Title *</Label>
-          <Input
-            id="title"
+          <form.Field
             name="title"
-            defaultValue={galleryItem?.title}
-            required
+            children={(field) => (
+              <div className="space-y-2">
+                <Label htmlFor={field.name}>Title *</Label>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value ?? ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    field.handleChange(val);
+                  }}
+                  required
+                />
+              </div>
+            )}
           />
         </div>
-
         <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
+          <form.Field
             name="description"
-            rows={3}
-            defaultValue={galleryItem?.description || ""}
+            children={(field) => (
+              <div className="space-y-2">
+                <Label htmlFor={field.name}>Description</Label>
+                <Textarea
+                  id={field.name}
+                  name={field.name}
+                  rows={3}
+                  value={field.state.value ?? ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    field.handleChange(val);
+                  }}
+                />
+              </div>
+            )}
           />
         </div>
-
         <div className="space-y-2">
           <Label>Image {!isEditing && "*"}</Label>
           <ImageUpload onChange={setImageFile} value={galleryItem?.image} />
@@ -101,6 +121,16 @@ export function GalleryForm({ galleryItem, onSuccess }: GalleryFormProps) {
       </div>
 
       <div className="flex justify-end gap-2">
+        <div className="flex-1">
+          <Button
+            disabled={form.state.isSubmitting}
+            type="button"
+            variant="outline"
+            onClick={() => form.reset()}
+          >
+            Reset
+          </Button>
+        </div>
         <Button
           type="button"
           variant="outline"
