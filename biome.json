@@ -25,6 +25,9 @@
       },
       "correctness": {
         "noChildrenProp": "off"
+      },
+      "complexity": {
+        "useOptionalChain": "off"
       }
     }
   },

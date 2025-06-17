@@ -12,6 +12,7 @@ import {
 } from "@/actions/gallery-actions";
 import { useForm } from "@tanstack/react-form";
 import type { GalleryItem } from "@/generated/prisma";
+import { Spinner } from "../ui/spinner";
 
 type GalleryFormProps = {
   galleryItem: GalleryItem;
@@ -146,11 +147,13 @@ export function GalleryForm({ galleryItem, onSuccess }: GalleryFormProps) {
           Cancel
         </Button>
         <Button type="submit" disabled={form.state.isSubmitting}>
-          {form.state.isSubmitting
-            ? "Saving..."
-            : isEditing
-            ? "Update Gallery Item"
-            : "Create Gallery Item"}
+          {form.state.isSubmitting ? (
+            <Spinner />
+          ) : isEditing ? (
+            "Update Gallery Item"
+          ) : (
+            "Create Gallery Item"
+          )}
         </Button>
       </div>
     </form>
