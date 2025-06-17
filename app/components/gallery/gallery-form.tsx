@@ -19,13 +19,12 @@ type GalleryFormProps = {
 };
 
 export function GalleryForm({ galleryItem, onSuccess }: GalleryFormProps) {
-  const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const navigate = useNavigate();
   const router = useRouter();
 
-  const isEditing = !!galleryItem;
+  const isEditing = !!galleryItem?.id;
   const form = useForm({
     defaultValues: {
       title: galleryItem?.title || "",
@@ -62,7 +61,13 @@ export function GalleryForm({ galleryItem, onSuccess }: GalleryFormProps) {
     },
   });
   return (
-    <form onSubmit={form.handleSubmit} className="space-y-6">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+      className="space-y-6"
+    >
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="title">Title *</Label>

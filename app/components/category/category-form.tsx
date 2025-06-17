@@ -20,7 +20,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
   const navigate = useNavigate();
   const router = useRouter();
 
-  const isEditing = !!category;
+  const isEditing = !!category?.id;
 
   const form = useForm({
     defaultValues: {

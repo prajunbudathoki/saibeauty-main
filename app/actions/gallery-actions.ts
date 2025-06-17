@@ -31,7 +31,7 @@ export const getGalleryItemById = createServerFn()
 
 const createGalleryItemSchema = zfd.formData({
   title: zfd.text(),
-  description: zfd.text().optional(),
+  description: zfd.text(z.string().optional()),
   image: zfd.file(z.instanceof(File).optional()),
 });
 
