@@ -118,52 +118,6 @@ export const createStaff = createServerFn({
     }
   });
 
-// export const createStaff = createServerFn({
-//   method: "POST",
-// })
-//   .validator((form: Record<string, any>) => form)
-//   .handler(async ({ data: form }) => {
-//     const {
-//       location_id,
-//       name,
-//       role,
-//       bio,
-//       image,
-//       is_available_for_booking,
-//       index,
-//       facebook_url,
-//       instagram_url,
-//       twitter_url,
-//     } = form;
-
-//     // if (!location_id || !name || !role) {
-//     //   throw new Error("Required fields are missing");
-//     // }
-
-//     try {
-//       const staff = await prisma.staff.create({
-//         data: {
-//           location_id,
-//           name,
-//           role,
-//           bio: bio || null,
-//           image: image || null,
-//           is_available_for_booking:
-//             is_available_for_booking === "true" ||
-//             is_available_for_booking === true,
-//           index: Number.isFinite(Number(index)) ? Number(index) : 0,
-//           facebook_url: facebook_url || null,
-//           instagram_url: instagram_url || null,
-//           twitter_url: twitter_url || null,
-//         },
-//       });
-//       return staff;
-//     } catch (error) {
-//       console.error("Prisma error creating staff:", error);
-//       throw new Error("Failed to create staff member");
-//     }
-//   });
-
 export const updateStaff = createServerFn({
   method: "POST",
 })

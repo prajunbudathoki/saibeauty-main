@@ -84,12 +84,17 @@ export const getAvailableStaff = createServerFn({
   )
   .handler(async ({ data }) => {
     const { locationId, date, serviceIds } = data;
-
+    const weekday = new Date(date).getDay();
     try {
       const staffs = await prisma.staff.findMany({
         where: {
           location_id: locationId,
           is_available_for_booking: true,
+          StaffSchedule: {
+            some: {
+              day_of_week: weekday,
+            },
+          },
         },
         orderBy: [{ index: "asc" }, { name: "asc" }],
       });

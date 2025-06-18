@@ -27,6 +27,7 @@ export function StaffSelection() {
             date: state.date,
           },
         });
+        console.log("Available staff members:", data);
         setStaffMembers(data);
       } catch (error) {
         console.error("Error loading staff:", error);
