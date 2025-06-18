@@ -19,17 +19,17 @@ export function TimeSlotSelection() {
   useEffect(() => {
     async function loadTimeSlots() {
       if (!state.location || !state.date) return;
-
       try {
-        const data = await getAvailableTimeSlots({
+        const res = await getAvailableTimeSlots({
           data: {
             locationId: state.location.id,
-            date: state.date,
-            serviceDuration: state.totalDuration,
-            staffId: state.staff?.id ?? null,
+            date: format(state.date, "yyyy-MM-dd"),
+            staffId: state.staff?.id,
+            totalDuration: state.totalDuration,
           },
         });
-        setTimeSlots(data);
+        console.log("Available time slots:", res);
+        setTimeSlots(res);
       } catch (error) {
         console.error("Error loading time slots:", error);
       } finally {

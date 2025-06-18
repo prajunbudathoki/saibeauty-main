@@ -2,7 +2,16 @@ import { useSession } from "@/lib/auth-client";
 import prisma from "@/lib/prisma";
 import type { TimeSlot } from "@/lib/type";
 import { createServerFn } from "@tanstack/react-start";
-import { addMinutes, getDay, isBefore, parseISO } from "date-fns";
+import {
+  addMinutes,
+  endOfDay,
+  getDay,
+  isBefore,
+  parseISO,
+  setHours,
+  setMinutes,
+  startOfDay,
+} from "date-fns";
 import { isLoggedIn } from "./isAdmin";
 
 export const getLocations = createServerFn({
@@ -172,137 +181,123 @@ export const createAppointment = createServerFn()
   });
 
 export const getAvailableTimeSlots = createServerFn({
-  method: "GET",
+  method: "POST",
 })
-  .validator(
-    (data: {
-      locationId: string;
-      staffId: string | null;
-      date: string;
-      serviceDuration: number;
-    }) => data
-  )
+  .validator((form: Record<string, any>) => form)
   .handler(async ({ data }) => {
-    const { locationId, staffId, date, serviceDuration } = data;
+    const { locationId, staffId, date, totalDuration } = data;
+    console.log("getAvailableTimeSlots input:", data);
+    const dayOfWeek = new Date(date).getDay();
+    const location = await prisma.location.findUnique({
+      where: { id: locationId },
+    });
 
-    try {
-      const location = await prisma.location.findUnique({
-        where: { id: locationId },
-        select: {
-          opening_time: true,
-          closing_time: true,
-          is_open_on_weekends: true,
-        },
-      });
+    if (!location) return [];
 
-      if (!location) return [];
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    if (isWeekend && !location.is_open_on_weekends) return [];
 
-      const dayOfWeek = getDay(new Date(date));
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-      if (isWeekend && !location.is_open_on_weekends) return [];
+    let startTime = location.opening_time;
+    let endTime = location.closing_time;
 
-      let startTime = location.opening_time;
-      let endTime = location.closing_time;
-
-      if (staffId) {
-        const schedule = await prisma.staffSchedule.findFirst({
-          where: { staff_id: staffId, day_of_week: dayOfWeek },
-        });
-
-        if (!schedule) {
-          throw new Error("Staff schedule not found for this day");
-        }
-        startTime = schedule.start_time;
-        endTime = schedule.end_time;
-
-        const specialAvailability =
-          await prisma.staffSpecialAvailability.findFirst({
-            where: {
-              staff_id: staffId,
-              date: date,
-            },
-          });
-
-        if (specialAvailability) {
-          if (!specialAvailability.is_available) return [];
-          if (specialAvailability.start_time && specialAvailability.end_time) {
-            startTime = specialAvailability.start_time;
-            endTime = specialAvailability.end_time;
-          }
-        }
-      }
-
-      const selectedDate = parseISO(date);
-      const [startHour, startMinute] = startTime
-        .split(":" as const)
-        .map(Number);
-      const [endHour, endMinute] = endTime.split(":" as const).map(Number);
-
-      const currentTime = new Date(selectedDate);
-      currentTime.setHours(startHour, startMinute, 0, 0);
-
-      const endDateTime = new Date(selectedDate);
-      endDateTime.setHours(endHour, endMinute, 0, 0);
-
-      const maxStartTime = new Date(endDateTime);
-      maxStartTime.setMinutes(maxStartTime.getMinutes() - serviceDuration);
-      console.log("Opening:", startTime, "Closing:", endTime);
-
-      const slots: TimeSlot[] = [];
-
-      while (
-        isBefore(currentTime, maxStartTime) ||
-        currentTime.getTime() === maxStartTime.getTime()
-      ) {
-        const slotEndTime = addMinutes(currentTime, serviceDuration);
-        slots.push({
-          startTime: currentTime.toISOString(),
-          endTime: slotEndTime.toISOString(),
-          available: true,
-        });
-        currentTime.setMinutes(currentTime.getMinutes() + 30);
-      }
-
-      const appointments = await prisma.appointment.findMany({
+    if (staffId) {
+      const schedule = await prisma.staffSchedule.findFirst({
         where: {
+          staff_id: staffId,
           location_id: locationId,
-          staff_id: staffId || undefined,
-          start_time: {
-            gte: new Date(date),
-            lte: endDateTime,
-          },
-          status: {
-            in: ["pending", "confirmed"],
-          },
         },
-        select: {
-          start_time: true,
-          end_time: true,
+        orderBy: {
+          day_of_week: "asc",
         },
       });
+      console.log("Staff schedule:", schedule);
 
-      return slots.filter((slot) => {
-        const slotStart = new Date(slot.startTime);
-        const slotEnd = new Date(slot.endTime);
+      if (!schedule) {
+        return [];
+      }
+      startTime = schedule.start_time;
+      endTime = schedule.end_time;
 
-        for (const appointment of appointments) {
-          const appointmentStart = new Date(appointment.start_time);
-          const appointmentEnd = new Date(appointment.end_time);
+      const specialAvailability =
+        await prisma.staffSpecialAvailability.findFirst({
+          where: {
+            staff_id: staffId,
+            date: parseISO(date),
+          },
+        });
 
-          const overlaps =
-            (slotStart >= appointmentStart && slotStart < appointmentEnd) ||
-            (slotEnd > appointmentStart && slotEnd <= appointmentEnd) ||
-            (slotStart <= appointmentStart && slotEnd >= appointmentEnd);
-
-          if (overlaps) return false;
+      if (specialAvailability) {
+        if (!specialAvailability.is_available) {
+          return [];
         }
 
-        return true;
-      });
-    } catch (error) {
-      console.error("Failed to get available time slots:", error);
-      return [];
+        if (specialAvailability.start_time && specialAvailability.end_time) {
+          startTime = specialAvailability.start_time;
+          endTime = specialAvailability.end_time;
+        }
+      }
     }
+
+    const slots: TimeSlot[] = [];
+    const selectedDate = parseISO(date);
+
+    const [startHour, startMinute] = startTime.split(":").map(Number);
+    const [endHour, endMinute] = endTime.split(":").map(Number);
+
+    let current = setMinutes(setHours(selectedDate, startHour), startMinute);
+    const end = setMinutes(setHours(selectedDate, endHour), endMinute);
+
+    const maxStart = addMinutes(end, -totalDuration);
+
+    while (isBefore(current, maxStart) || +current === +maxStart) {
+      const slotEnd = addMinutes(current, totalDuration);
+      slots.push({
+        startTime: current.toISOString(),
+        endTime: slotEnd.toISOString(),
+        available: true,
+      });
+      current = addMinutes(current, 30);
+    }
+
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        location_id: locationId,
+        staff_id: staffId,
+        start_time: {
+          gte: startOfDay(parseISO(date)),
+          lte: endOfDay(parseISO(date)),
+        },
+        status: {
+          in: ["pending", "confirmed"],
+        },
+      },
+      select: {
+        start_time: true,
+        end_time: true,
+      },
+    });
+    console.log("Generated slots:", slots.length);
+    console.log("Appointments fetched:", appointments.length);
+
+    return slots.filter((slot) => {
+      const slotStart = new Date(slot.startTime);
+      const slotEnd = new Date(slot.endTime);
+
+      for (const appointment of appointments) {
+        const aStart = new Date(appointment.start_time);
+        const aEnd = new Date(appointment.end_time);
+
+        if (
+          (slotStart >= aStart && slotStart < aEnd) ||
+          (slotEnd > aStart && slotEnd <= aEnd) ||
+          (slotStart <= aStart && slotEnd >= aEnd)
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    });
   });
 
 export const getBookingsByEmail = createServerFn({

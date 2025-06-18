@@ -16,9 +16,9 @@ export const Route = createFileRoute(
   component: RouteComponent,
   loader: async ({ params }) => {
     const [staff, schedules, location] = await Promise.all([
-      getStaffById({ data: params.id }),
+      getStaffById({ data: params.staffid }),
       getStaffSchedules({
-        data: { staffId: params.id, locationId: params.id },
+        data: { staffId: params.staffid, locationId: params.id },
       }),
       getLocationById({ data: params.id }),
     ]);

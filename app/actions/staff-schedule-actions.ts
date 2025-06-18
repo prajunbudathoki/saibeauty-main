@@ -23,22 +23,26 @@ export const getStaffSchedules = createServerFn({
 export const createStaffSchedule = createServerFn({
   method: "POST",
 })
-  .validator((form: Record<string, any>) => form)
+  .validator((form: any) => form)
   .handler(async ({ data: formData }) => {
-    const {
-      staff_id,
-      location_id,
-      start_time,
-      day_of_week,
-      end_time,
-      is_available,
-    } = formData;
-    if (!staff_id || !location_id || !start_time || !day_of_week) {
-      throw new Error("Required fields are missing");
+    const staff_id = formData.get("staff_id") as string;
+    const location_id = formData.get("location_id") as string;
+    const day_of_week = Number(formData.get("day_of_week")); 
+    const start_time = formData.get("start_time") as string;
+    const end_time = formData.get("end_time") as string;
+    const is_available =
+      formData.get("is_available") !== null
+        ? Boolean(formData.get("is_available"))
+        : true;
+
+    if (!staff_id || !location_id || !start_time || day_of_week === undefined) {
+      throw new Error("Missing required fields");
     }
+
     if (end_time && end_time <= start_time) {
       throw new Error("End time must be after start time");
     }
+
     const existingSchedule = await prisma.staffSchedule.findFirst({
       where: {
         staff_id,
@@ -47,9 +51,11 @@ export const createStaffSchedule = createServerFn({
         start_time,
       },
     });
+
     if (existingSchedule) {
       throw new Error("Schedule for this day and time already exists");
     }
+
     try {
       const schedule = await prisma.staffSchedule.create({
         data: {
@@ -58,7 +64,7 @@ export const createStaffSchedule = createServerFn({
           start_time,
           end_time: end_time || "",
           day_of_week,
-          is_available: is_available !== undefined ? Boolean(is_available) : true,
+          is_available,
         },
       });
       return schedule;
@@ -96,7 +102,8 @@ export const updateStaffSchedule = createServerFn({
           start_time,
           end_time: end_time || "",
           day_of_week,
-          is_available: is_available !== undefined ? Boolean(is_available) : true,
+          is_available:
+            is_available !== undefined ? Boolean(is_available) : true,
         },
       });
       return updatedSchedule;

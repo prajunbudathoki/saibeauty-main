@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "@tanstack/react-router";
 
 interface WeeklyScheduleFormProps {
   staffId: string;
@@ -35,6 +36,8 @@ export function WeeklyScheduleForm({
   const [selectedDay, setSelectedDay] = useState<string>("");
   const [startTime, setStartTime] = useState("10:00");
   const [endTime, setEndTime] = useState("22:00");
+
+  const router = useRouter();
 
   const days = [
     { value: "0", label: "Sunday" },
@@ -68,9 +71,11 @@ export function WeeklyScheduleForm({
       formData.append("day_of_week", selectedDay);
       formData.append("start_time", startTime);
       formData.append("end_time", endTime);
+      console.log("formData", formData);
 
       await createStaffSchedule({ data: formData });
       toast.success("Schedule created successfully");
+      await router.invalidate();
 
       // Reset form
       setSelectedDay("");
