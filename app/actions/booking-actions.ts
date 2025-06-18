@@ -13,7 +13,9 @@ import {
   startOfDay,
 } from "date-fns";
 import { isLoggedIn } from "./isAdmin";
-
+import { auth } from "@/lib/auth";
+import { getEvent } from "@tanstack/react-start/server";
+import { getHeaders } from "@tanstack/react-start/server";
 export const getLocations = createServerFn({
   method: "GET",
 }).handler(async () => {
@@ -101,11 +103,18 @@ export const createAppointment = createServerFn()
   .validator((d: FormData) => d)
   .handler(async ({ data: formData }) => {
     try {
-      const user = useSession();
-      const customer_id = user.data?.user.id;
+      const event = getEvent();
+      const session = await auth.api.getSession({
+        headers: event.headers,
+      });
+      if (!session?.user?.id) {
+        throw new Error("User is not authenticated");
+      }
+
+      const customer_id = session?.user.id;
 
       const location_id = formData.get("location_id") as string;
-      const staff_id = formData.get("staf_id") as string | null;
+      const staff_id = formData.get("staff_id") as string | null;
       const start_time = formData.get("start_time") as string;
       const end_time = formData.get("end_time") as string;
       const customer_name = formData.get("customer_name") as string;
@@ -117,7 +126,14 @@ export const createAppointment = createServerFn()
       const serviceIds = formData.getAll("serviceIds") as string[];
       const servicePrices = formData.getAll("servicePrices") as string[];
       const serviceDurations = formData.getAll("serviceDurations") as string[];
-
+      console.log(
+        location_id,
+        start_time,
+        end_time,
+        customer_name,
+        customer_email,
+        serviceIds.length === 0
+      );
       if (
         !location_id ||
         !start_time ||
@@ -135,45 +151,29 @@ export const createAppointment = createServerFn()
         duration: Number(serviceDurations[index] || "0"),
       }));
 
-      const [appointment] = await prisma.$transaction(async (tx) => {
-        const appointment = await tx.appointment.create({
-          data: {
-            customer_id,
-            location_id,
-            staff_id,
-            start_time: new Date(start_time),
-            end_time: new Date(end_time),
-            status: "pending",
-            total_price,
-            customer_name,
-            customer_email,
-            customer_phone,
-            notes: customer_notes,
-            services: {
-              create: services.map((service) => ({
-                location_service_id: service.id,
-                price: service.price,
-                duration: service.duration,
-              })),
-            },
+      const appointment = await prisma.appointment.create({
+        data: {
+          customer_id,
+          location_id,
+          staff_id,
+          start_time: new Date(start_time),
+          end_time: new Date(end_time),
+          status: "pending",
+          total_price,
+          customer_name,
+          customer_email,
+          customer_phone,
+          notes: customer_notes,
+          services: {
+            create: services.map((service) => ({
+              location_service_id: service.id,
+              price: service.price,
+              duration: service.duration,
+            })),
           },
-          include: {
-            services: {
-              include: {
-                locationService: {
-                  include: {
-                    service: true,
-                  },
-                },
-              },
-            },
-          },
-        });
-
-        return [appointment];
+        },
       });
-
-      return appointment.id;
+      return appointment;
     } catch (error: any) {
       console.error("Error creating appointment:", error);
       throw new Error("Failed to create appointment");

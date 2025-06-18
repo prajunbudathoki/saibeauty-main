@@ -30,16 +30,15 @@ export function BookingSummary() {
       duration: service.service?.duration || 0,
     }));
     const formData = new FormData();
-    formData.append("locationId", state.location.id);
-    formData.append("staffId", state.staff?.id || "");
-    formData.append("startTime", state.timeSlot.startTime);
-    formData.append("endTime", state.timeSlot.endTime);
-    formData.append("customerName", state.customerDetails.name);
-    formData.append("customerEmail", state.customerDetails.email);
-    formData.append("customerPhone", state.customerDetails.phone);
-    formData.append("customerNotes", state.customerDetails.notes || "");
-    formData.append("totalPrice", state.totalPrice.toString());
-
+    formData.append("location_id", state.location.id);
+    formData.append("staff_id", state.staff?.id || "");
+    formData.append("start_time", state.timeSlot.startTime);
+    formData.append("end_time", state.timeSlot.endTime);
+    formData.append("customer_name", state.customerDetails.name);
+    formData.append("customer_email", state.customerDetails.email);
+    formData.append("customer_phone", state.customerDetails.phone);
+    formData.append("customer_notes", state.customerDetails.notes || "");
+    formData.append("total_price", state.totalPrice.toString());
     // Add services to FormData
     services.forEach((service, index) => {
       formData.append("serviceIds", service.id);
@@ -49,14 +48,15 @@ export function BookingSummary() {
         service.duration ? service.duration.toString() : ""
       );
     });
+    console.log("formData after services", formData);
 
     // Call the server action with FormData
-    const appointmentId = await createAppointment({ data: formData });
+    const appointment = await createAppointment({ data: formData });
 
     // Redirect to confirmation page
-    navigate({ to: `/profile/booking/confirmation?id=${appointmentId}` });
+    navigate({ to: `/profile/booking/confirmation?id=${appointment.id}` });
     // Reset booking state
-    router.invalidate();
+    await router.invalidate();
 
     setLoading(false);
   };

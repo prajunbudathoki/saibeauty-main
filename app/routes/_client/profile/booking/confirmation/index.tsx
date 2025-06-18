@@ -14,11 +14,19 @@ import {
   Scissors,
   User,
 } from "lucide-react";
+import { z } from "zod";
+
+const searchSchema = z.object({
+  id: z.string(),
+});
 
 export const Route = createFileRoute("/_client/profile/booking/confirmation/")({
+  validateSearch: searchSchema,
   component: RouteComponent,
-  loader: async ({ params }: { params: { id: string } }) => {
-    const appointmentId = params.id;
+  loaderDeps: ({ search }) => search,
+  loader: async ({ deps }) => {
+    const appointmentId = deps.id;
+    console.log("Loading appointment details for ID:", appointmentId);
     if (!appointmentId) {
       return { error: "No appointment ID provided" };
     }
@@ -42,7 +50,6 @@ export const Route = createFileRoute("/_client/profile/booking/confirmation/")({
 function RouteComponent() {
   const { appointment, staff, location, services, error } =
     Route.useLoaderData();
-
   const loading = !appointment && !error;
 
   const formatDate = (date: string | Date) =>

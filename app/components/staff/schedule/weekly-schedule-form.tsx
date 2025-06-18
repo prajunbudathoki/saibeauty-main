@@ -71,7 +71,6 @@ export function WeeklyScheduleForm({
       formData.append("day_of_week", selectedDay);
       formData.append("start_time", startTime);
       formData.append("end_time", endTime);
-      console.log("formData", formData);
 
       await createStaffSchedule({ data: formData });
       toast.success("Schedule created successfully");
