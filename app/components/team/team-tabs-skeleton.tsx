@@ -1,6 +1,6 @@
 import { Skeleton } from "../ui/skeleton";
 
-export default function TeamTabsSkeleton({ locations }) {
+export default function TeamTabsSkeleton() {
   return (
     <div className="space-y-8">
       <div className="flex gap-2 border-b">

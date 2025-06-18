@@ -86,27 +86,6 @@ export const getAvailableStaff = createServerFn({
       throw new Error("Failed to fetch available staff members");
     }
   });
-// export const createAppointment = createServerFn({
-//   method: "POST",
-// })
-//   .validator((data: { formData: FormData }) => data)
-//   .handler(async ({ data }) => {
-//     const { formData } = data;
-//     try {
-//       const appointment = await prisma.appointment.create({
-//         data: {
-//           location_id: formData.get("location_id") as string,
-//           staff_id: formData.get("staff_id") as string,
-//           customer_name: formData.get("customer_name") as string,
-//           customer_email: formData.get("customer_email") as string,
-//           customer_phone: formData.get("customer_phone") as string,
-//         },
-//       });
-//       return appointment;
-//     } catch (error) {
-//       throw new Error("Failed to create appointment");
-//     }
-//   });
 
 export const createAppointment = createServerFn()
   .validator((d: FormData) => d)
@@ -325,12 +304,13 @@ export const getAvailableTimeSlots = createServerFn({
 export const getBookingsByEmail = createServerFn({
   method: "GET",
 })
-  .validator((email: string) => email)
+  .validator((d: { email: string }) => d)
   .handler(async ({ data }) => {
+    const { email } = data;
     try {
       const user = await prisma.user.findUnique({
         where: {
-          email: data,
+          email,
         },
         select: {
           id: true,
@@ -407,5 +387,62 @@ export const cancelBooking = createServerFn({
       return booking;
     } catch (error) {
       throw new Error("Failed to cancel booking");
+    }
+  });
+
+export const getMyBookings = createServerFn({
+  method: "GET",
+})
+  .handler(async () => {
+    const user = useSession();
+    const customerId = user.data?.user.email;
+
+    if (!customerId) {
+      return { upcoming: [], past: [] };
+    }
+
+    try {
+      const bookings = await prisma.appointment.findMany({
+        where: { customer_id: customerId },
+        orderBy: { start_time: "desc" },
+        include: {
+          location: {
+            select: {
+              name: true,
+              address: true,
+              city: true,
+            },
+          },
+          staff: {
+            select: {
+              name: true,
+              role: true,
+            },
+          },
+          services: {
+            include: {
+              locationService: {
+                include: {
+                  service: {
+                    select: {
+                      name: true,
+                      duration: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const now = new Date();
+      const upcoming = bookings.filter((b) => new Date(b.start_time) > now);
+      const past = bookings.filter((b) => new Date(b.start_time) <= now);
+
+      return { upcoming, past };
+    } catch (error) {
+      console.error("Error fetching my bookings:", error);
+      return { upcoming: [], past: [] };
     }
   });

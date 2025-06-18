@@ -1,5 +1,6 @@
 import { getLocations } from "@/actions/location-actions";
-import TeamTabs from "@/components/team/team-tabs-skeleton";
+import TeamTabsSkeleton from "@/components/team/team-tabs-skeleton";
+import { TeamTabs } from "@/components/team/team-tabs";
 import { createFileRoute } from "@tanstack/react-router";
 import { Award, Heart, Sparkles, Users } from "lucide-react";
 import { motion } from "motion/react";
@@ -9,12 +10,12 @@ export const Route = createFileRoute("/_client/team")({
   component: RouteComponent,
   loader: async () => {
     const locations = await getLocations();
-    return locations;
+    return { locations };
   },
 });
 
 function RouteComponent() {
-  const locations = Route.useLoaderData();
+  const { locations } = Route.useLoaderData();
   return (
     <div>
       {/* Hero Section */}
@@ -150,7 +151,7 @@ function RouteComponent() {
           </p>
         </motion.div>
 
-        <Suspense fallback={<TeamTabs locations={locations} />}>
+        <Suspense fallback={<TeamTabsSkeleton />}>
           <TeamTabs locations={locations} />
         </Suspense>
       </div>

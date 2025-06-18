@@ -27,7 +27,8 @@
         "noChildrenProp": "off"
       },
       "complexity": {
-        "useOptionalChain": "off"
+        "useOptionalChain": "off",
+        "noForEach": "off"
       }
     }
   },

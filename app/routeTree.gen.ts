@@ -38,7 +38,6 @@ import { Route as AdminCategoriesIdImport } from './routes/admin/categories/$id'
 import { Route as AdminAppointmentsIdImport } from './routes/admin/appointments/$id'
 import { Route as ClientProfileUserInfoImport } from './routes/_client/profile/user-info'
 import { Route as ClientProfileUserAppointmentsImport } from './routes/_client/profile/user-appointments'
-import { Route as ClientProfileMyBookingsImport } from './routes/_client/profile/my-bookings'
 import { Route as ClientProfileMyBookingsIndexImport } from './routes/_client/profile/my-bookings/index'
 import { Route as ClientProfileBookingIndexImport } from './routes/_client/profile/booking/index'
 import { Route as AdminLocationsIdStaffsIndexImport } from './routes/admin/locations/$id/staffs/index'
@@ -211,17 +210,11 @@ const ClientProfileUserAppointmentsRoute =
     getParentRoute: () => ClientRoute,
   } as any)
 
-const ClientProfileMyBookingsRoute = ClientProfileMyBookingsImport.update({
-  id: '/profile/my-bookings',
-  path: '/profile/my-bookings',
-  getParentRoute: () => ClientRoute,
-} as any)
-
 const ClientProfileMyBookingsIndexRoute =
   ClientProfileMyBookingsIndexImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => ClientProfileMyBookingsRoute,
+    id: '/profile/my-bookings/',
+    path: '/profile/my-bookings/',
+    getParentRoute: () => ClientRoute,
   } as any)
 
 const ClientProfileBookingIndexRoute = ClientProfileBookingIndexImport.update({
@@ -381,13 +374,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexImport
       parentRoute: typeof AdminImport
     }
-    '/_client/profile/my-bookings': {
-      id: '/_client/profile/my-bookings'
-      path: '/profile/my-bookings'
-      fullPath: '/profile/my-bookings'
-      preLoaderRoute: typeof ClientProfileMyBookingsImport
-      parentRoute: typeof ClientImport
-    }
     '/_client/profile/user-appointments': {
       id: '/_client/profile/user-appointments'
       path: '/profile/user-appointments'
@@ -481,10 +467,10 @@ declare module '@tanstack/react-router' {
     }
     '/_client/profile/my-bookings/': {
       id: '/_client/profile/my-bookings/'
-      path: '/'
-      fullPath: '/profile/my-bookings/'
+      path: '/profile/my-bookings'
+      fullPath: '/profile/my-bookings'
       preLoaderRoute: typeof ClientProfileMyBookingsIndexImport
-      parentRoute: typeof ClientProfileMyBookingsImport
+      parentRoute: typeof ClientImport
     }
     '/admin/locations/$id/services/search': {
       id: '/admin/locations/$id/services/search'
@@ -533,20 +519,6 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-interface ClientProfileMyBookingsRouteChildren {
-  ClientProfileMyBookingsIndexRoute: typeof ClientProfileMyBookingsIndexRoute
-}
-
-const ClientProfileMyBookingsRouteChildren: ClientProfileMyBookingsRouteChildren =
-  {
-    ClientProfileMyBookingsIndexRoute: ClientProfileMyBookingsIndexRoute,
-  }
-
-const ClientProfileMyBookingsRouteWithChildren =
-  ClientProfileMyBookingsRoute._addFileChildren(
-    ClientProfileMyBookingsRouteChildren,
-  )
-
 interface ClientRouteChildren {
   ClientAboutRoute: typeof ClientAboutRoute
   ClientContactRoute: typeof ClientContactRoute
@@ -554,10 +526,10 @@ interface ClientRouteChildren {
   ClientServicesRoute: typeof ClientServicesRoute
   ClientTeamRoute: typeof ClientTeamRoute
   ClientIndexRoute: typeof ClientIndexRoute
-  ClientProfileMyBookingsRoute: typeof ClientProfileMyBookingsRouteWithChildren
   ClientProfileUserAppointmentsRoute: typeof ClientProfileUserAppointmentsRoute
   ClientProfileUserInfoRoute: typeof ClientProfileUserInfoRoute
   ClientProfileBookingIndexRoute: typeof ClientProfileBookingIndexRoute
+  ClientProfileMyBookingsIndexRoute: typeof ClientProfileMyBookingsIndexRoute
   ClientProfileBookingConfirmationIndexRoute: typeof ClientProfileBookingConfirmationIndexRoute
 }
 
@@ -568,10 +540,10 @@ const ClientRouteChildren: ClientRouteChildren = {
   ClientServicesRoute: ClientServicesRoute,
   ClientTeamRoute: ClientTeamRoute,
   ClientIndexRoute: ClientIndexRoute,
-  ClientProfileMyBookingsRoute: ClientProfileMyBookingsRouteWithChildren,
   ClientProfileUserAppointmentsRoute: ClientProfileUserAppointmentsRoute,
   ClientProfileUserInfoRoute: ClientProfileUserInfoRoute,
   ClientProfileBookingIndexRoute: ClientProfileBookingIndexRoute,
+  ClientProfileMyBookingsIndexRoute: ClientProfileMyBookingsIndexRoute,
   ClientProfileBookingConfirmationIndexRoute:
     ClientProfileBookingConfirmationIndexRoute,
 }
@@ -663,7 +635,6 @@ export interface FileRoutesByFullPath {
   '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/': typeof ClientIndexRoute
   '/admin/': typeof AdminIndexRoute
-  '/profile/my-bookings': typeof ClientProfileMyBookingsRouteWithChildren
   '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
   '/admin/appointments/$id': typeof AdminAppointmentsIdRoute
@@ -677,7 +648,7 @@ export interface FileRoutesByFullPath {
   '/admin/testimonials': typeof AdminTestimonialsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/profile/booking': typeof ClientProfileBookingIndexRoute
-  '/profile/my-bookings/': typeof ClientProfileMyBookingsIndexRoute
+  '/profile/my-bookings': typeof ClientProfileMyBookingsIndexRoute
   '/admin/locations/$id/services/search': typeof AdminLocationsIdServicesSearchRoute
   '/profile/booking/confirmation': typeof ClientProfileBookingConfirmationIndexRoute
   '/admin/locations/$id/services': typeof AdminLocationsIdServicesIndexRoute
@@ -738,7 +709,6 @@ export interface FileRoutesById {
   '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/_client/': typeof ClientIndexRoute
   '/admin/': typeof AdminIndexRoute
-  '/_client/profile/my-bookings': typeof ClientProfileMyBookingsRouteWithChildren
   '/_client/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/_client/profile/user-info': typeof ClientProfileUserInfoRoute
   '/admin/appointments/$id': typeof AdminAppointmentsIdRoute
@@ -778,7 +748,6 @@ export interface FileRouteTypes {
     | '/auth/update-password'
     | '/'
     | '/admin/'
-    | '/profile/my-bookings'
     | '/profile/user-appointments'
     | '/profile/user-info'
     | '/admin/appointments/$id'
@@ -792,7 +761,7 @@ export interface FileRouteTypes {
     | '/admin/testimonials'
     | '/admin/users'
     | '/profile/booking'
-    | '/profile/my-bookings/'
+    | '/profile/my-bookings'
     | '/admin/locations/$id/services/search'
     | '/profile/booking/confirmation'
     | '/admin/locations/$id/services'
@@ -850,7 +819,6 @@ export interface FileRouteTypes {
     | '/auth/update-password'
     | '/_client/'
     | '/admin/'
-    | '/_client/profile/my-bookings'
     | '/_client/profile/user-appointments'
     | '/_client/profile/user-info'
     | '/admin/appointments/$id'
@@ -910,10 +878,10 @@ export const routeTree = rootRoute
         "/_client/services",
         "/_client/team",
         "/_client/",
-        "/_client/profile/my-bookings",
         "/_client/profile/user-appointments",
         "/_client/profile/user-info",
         "/_client/profile/booking/",
+        "/_client/profile/my-bookings/",
         "/_client/profile/booking/confirmation/"
       ]
     },
@@ -991,13 +959,6 @@ export const routeTree = rootRoute
       "filePath": "admin/index.tsx",
       "parent": "/admin"
     },
-    "/_client/profile/my-bookings": {
-      "filePath": "_client/profile/my-bookings.tsx",
-      "parent": "/_client",
-      "children": [
-        "/_client/profile/my-bookings/"
-      ]
-    },
     "/_client/profile/user-appointments": {
       "filePath": "_client/profile/user-appointments.tsx",
       "parent": "/_client"
@@ -1059,7 +1020,7 @@ export const routeTree = rootRoute
     },
     "/_client/profile/my-bookings/": {
       "filePath": "_client/profile/my-bookings/index.tsx",
-      "parent": "/_client/profile/my-bookings"
+      "parent": "/_client"
     },
     "/admin/locations/$id/services/search": {
       "filePath": "admin/locations/$id/services/search.tsx",
