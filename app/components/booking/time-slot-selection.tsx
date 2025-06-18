@@ -26,7 +26,7 @@ export function TimeSlotSelection() {
             locationId: state.location.id,
             date: state.date,
             serviceDuration: state.totalDuration,
-            staffId: state.staff?.id,
+            staffId: state.staff?.id ?? null,
           },
         });
         setTimeSlots(data);

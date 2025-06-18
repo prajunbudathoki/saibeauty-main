@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getBookingsByEmail, getMyBookings } from "@/actions/booking-actions";
+import { getMyBookings } from "@/actions/booking-actions";
 import { BookingCard } from "@/components/booking/booking-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,22 +8,19 @@ import {
   Loader2,
   Search,
   Calendar,
-  MailQuestion, 
+  MailQuestion,
   CalendarCheck,
   CalendarClock,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_client/profile/my-bookings/")({
   component: RouteComponent,
   loader: async () => {
-    const session = useSession();
-    const authUser = session.data?.user.email;
-    console.log("authuser", authUser);
     const bookings = await getMyBookings();
-    return { bookings, authUser };
+    return { bookings };
   },
 });
 

@@ -28,23 +28,19 @@ export function ServiceSelection() {
         const data = await getLocationServices({ data: state.location.id });
         setServices(data);
 
-        // Extract unique categories
         const uniqueCategoriesMap = new Map<
           string,
           { id: string; name: string }
         >();
 
         // Add each category only once
-        // biome-ignore lint/complexity/noForEach: <explanation>
         data.forEach((item) => {
-          if (item.service_id && item.service_id) {
-            const categoryId = item.service_id;
-            if (!uniqueCategoriesMap.has(categoryId)) {
-              uniqueCategoriesMap.set(categoryId, {
-                id: categoryId,
-                name: item.service_id,
-              });
-            }
+          const category = item.service?.category;
+          if (category && !uniqueCategoriesMap.has(category.id)) {
+            uniqueCategoriesMap.set(category.id, {
+              id: category.id,
+              name: category.name,
+            });
           }
         });
 

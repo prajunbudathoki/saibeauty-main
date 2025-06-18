@@ -1,5 +1,4 @@
 import type React from "react";
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { createStaffSchedule } from "@/actions/staff-schedule-actions";
