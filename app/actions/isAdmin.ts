@@ -17,11 +17,11 @@ export async function isAdmin() {
 }
 
 export async function isLoggedIn() {
-  const { data, error } = await authClient.getSession();
+  const { data, error } = authClient.useSession();
   if (error) {
     return false;
   }
-  if (!data.session) {
+  if (!data || !data.session) {
     return false;
   }
   return true;

@@ -481,7 +481,7 @@ export const getMyBookings = createServerFn({
     const now = new Date();
     const upcoming = bookings.filter((b) => new Date(b.start_time) > now);
     const past = bookings.filter((b) => new Date(b.start_time) <= now);
-
+    console.log("bookings:", bookings);
     return { upcoming, past };
   } catch (error) {
     console.error("Error fetching my bookings:", error);
@@ -489,31 +489,3 @@ export const getMyBookings = createServerFn({
   }
 });
 
-// export const getMyBookings = createServerFn({
-//   method: "POST",
-// }).handler(async ({ data: email }) => {
-//   if (!email) return { upcoming: [], past: [] };
-
-//   const bookings = await prisma.appointment.findMany({
-//     where: { customer_id: email },
-//     orderBy: { start_time: "desc" },
-//     include: {
-//       location: { select: { name: true, address: true, city: true } },
-//       staff: { select: { name: true, role: true } },
-//       services: {
-//         include: {
-//           locationService: {
-//             include: {
-//               service: { select: { name: true, duration: true } },
-//             },
-//           },
-//         },
-//       },
-//     },
-//   });
-
-//   const now = new Date();
-//   const upcoming = bookings.filter((b) => new Date(b.start_time) > now);
-//   const past = bookings.filter((b) => new Date(b.start_time) <= now);
-//   return { upcoming, past };
-// });

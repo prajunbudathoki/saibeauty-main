@@ -72,12 +72,12 @@ export function BookingCard({ booking, onCancelled }: BookingCardProps) {
             </div>
             <div>
               <div className="font-medium">
-                {format(parseISO(booking.start_time), "EEEE, MMMM d, yyyy")}
+                {format(booking.start_time, "EEEE, MMMM d, yyyy")}
               </div>
               <div className="text-sm text-muted-foreground flex items-center gap-1">
                 <Clock className="h-3.5 w-3.5" />
-                {format(parseISO(booking.start_time), "h:mm a")} -{" "}
-                {format(parseISO(booking.end_time), "h:mm a")}
+                {format((booking.start_time), "h:mm a")} -{" "}
+                {format((booking.end_time), "h:mm a")}
               </div>
             </div>
           </div>

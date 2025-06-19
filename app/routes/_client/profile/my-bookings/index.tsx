@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getMyBookings } from "@/actions/booking-actions";
 import { BookingCard } from "@/components/booking/booking-card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Loader2,
@@ -14,14 +13,15 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { authClient, useSession } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_client/profile/my-bookings/")({
-  component: RouteComponent,
   loader: async () => {
-    const bookings = await getMyBookings();
-    return { bookings };
+    const allBookings = await getMyBookings();
+
+    // If getMyBookings already returns { upcoming, past }, just use them directly
+    return { bookings: allBookings };
   },
+  component: RouteComponent,
 });
 
 function RouteComponent() {
@@ -30,6 +30,18 @@ function RouteComponent() {
   const [pastBookings, setPastBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if ("error" in bookings) {
+      setError("Failed to fetch bookings");
+      setUpcomingBookings([]);
+      setPastBookings([]);
+      return;
+    }
+
+    setUpcomingBookings(bookings.upcoming || []);
+    setPastBookings(bookings.past || []);
+  }, [bookings]);
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -74,6 +86,7 @@ function RouteComponent() {
 
   return (
     <div className="container max-w-4xl mx-auto py-12 px-4">
+      {/* <pre>{JSON.stringify(bookings, null, 2)}</pre> */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
