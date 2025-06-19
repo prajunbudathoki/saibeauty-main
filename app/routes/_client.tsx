@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useSession } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_client")({
   component: RouteComponent,
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/_client")({
 function RouteComponent() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,7 +71,9 @@ function RouteComponent() {
                 { href: "/services", label: "Services" },
                 { href: "/team", label: "Team" },
                 { href: "/gallery", label: "Gallery" },
-                { href: "/profile/my-bookings", label: "My Bookings" },
+                ...(session
+                  ? [{ href: "/profile/my-bookings", label: "My Bookings" }]
+                  : []),
                 { href: "/contact", label: "Contact" },
               ].map((link) => (
                 <Link
@@ -119,7 +123,9 @@ function RouteComponent() {
               { href: "/services", label: "Services" },
               { href: "/team", label: "Team" },
               { href: "/gallery", label: "Gallery" },
-              { href: "/profile/my-bookings", label: "My Bookings" },
+              ...(session
+                ? [{ href: "/profile/my-bookings", label: "My Bookings" }]
+                : []),
               { href: "/contact", label: "Contact" },
             ].map((link) => (
               <Link

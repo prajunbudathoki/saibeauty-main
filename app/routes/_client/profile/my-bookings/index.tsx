@@ -12,13 +12,12 @@ import {
   CalendarClock,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useSession } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_client/profile/my-bookings/")({
   loader: async () => {
     const allBookings = await getMyBookings();
-
-    // If getMyBookings already returns { upcoming, past }, just use them directly
     return { bookings: allBookings };
   },
   component: RouteComponent,
@@ -26,10 +25,12 @@ export const Route = createFileRoute("/_client/profile/my-bookings/")({
 
 function RouteComponent() {
   const { bookings } = Route.useLoaderData();
+  const { data: session } = useSession();
   const [upcomingBookings, setUpcomingBookings] = useState<any[]>([]);
   const [pastBookings, setPastBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if ("error" in bookings) {
