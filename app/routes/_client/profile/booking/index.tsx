@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   BookingProvider,
   useBooking,
@@ -11,7 +11,9 @@ import { TimeSlotSelection } from "@/components/booking/time-slot-selection";
 import { CustomerForm } from "@/components/booking/customer-form";
 import { BookingSummary } from "@/components/booking/booking-summary";
 import { motion } from "motion/react";
-
+import { useSession } from "@/lib/auth-client";
+import { Navigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/_client/profile/booking/")({
   component: () => (
@@ -23,6 +25,15 @@ export const Route = createFileRoute("/_client/profile/booking/")({
 
 function RouteComponent() {
   const { state } = useBooking();
+  const { data: session } = useSession();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!session?.user) {
+      navigate({ to: "/auth/login" });
+    }
+  }, [session, navigate]);
+
   return (
     <div className="container max-w-4xl mx-auto py-12 px-4">
       <motion.div
