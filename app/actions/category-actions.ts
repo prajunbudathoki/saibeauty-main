@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { uploadFileToS3 } from "./storage.action";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 
 export const getCategories = createServerFn({
   method: "GET",
@@ -39,13 +40,10 @@ const createCategorySchema = zfd.formData({
 export const createCategory = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => createCategorySchema.parse(d))
   .handler(async ({ data }) => {
     const { name, image, description, index } = data;
-    // const { data: session, error } = await authClient.getSession();
-    // if (session?.user.role !== "admin") {
-    //   throw new Error("Role doesnot have access");
-    // }
     try {
       let path: string | undefined;
       if (image) {

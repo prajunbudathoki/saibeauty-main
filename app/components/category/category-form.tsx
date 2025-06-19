@@ -50,7 +50,6 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
           `Category ${isEditing ? "updated" : "created"} successfully `
         );
         await router.invalidate();
-        navigate({ to: "/admin/categories" });
       } catch (error) {
         toast.error("There was a problem saving the category");
       }

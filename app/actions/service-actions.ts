@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { zfd } from "zod-form-data";
 import { uploadFileToS3 } from "./storage.action";
 import { z } from "zod";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 
 export const getServices = createServerFn({
   method: "GET",
@@ -65,6 +66,7 @@ const createServiceSchema = zfd.formData({
 export const createService = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => createServiceSchema.parse(d))
   .handler(async ({ data }) => {
     const { category_id, image, index, name, price, description, duration } =
