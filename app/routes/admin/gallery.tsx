@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 
-export const Route = createFileRoute("/admin/gallery/")({
+export const Route = createFileRoute("/admin/gallery")({
   component: RouteComponent,
   loader: async () => {
     const gallery = await getGalleryItems();

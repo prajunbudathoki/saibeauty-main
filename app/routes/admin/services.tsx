@@ -7,7 +7,7 @@ import { getServices } from "@/actions/service-actions";
 import { getCategories } from "@/actions/category-actions";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/admin/services/")({
+export const Route = createFileRoute("/admin/services")({
   loader: async () => {
     const [services, categories] = await Promise.all([
       getServices(),

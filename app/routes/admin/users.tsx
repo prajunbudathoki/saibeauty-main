@@ -3,7 +3,7 @@ import { AddUser } from "@/components/users/add-user";
 import { UserTable } from "@/components/users/users-table";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/admin/users/")({
+export const Route = createFileRoute("/admin/users")({
   component: RouteComponent,
   loader: async () => {
     const users = await getEmployees();
