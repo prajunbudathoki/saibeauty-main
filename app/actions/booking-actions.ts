@@ -16,6 +16,11 @@ import { isLoggedIn } from "./isAdmin";
 import { auth } from "@/lib/auth";
 import { getEvent } from "@tanstack/react-start/server";
 import { getHeaders } from "@tanstack/react-start/server";
+import type {
+  Staff,
+  StaffSchedule,
+  StaffSpecialAvailability,
+} from "@/generated/prisma";
 export const getLocations = createServerFn({
   method: "GET",
 }).handler(async () => {
@@ -90,15 +95,53 @@ export const getAvailableStaff = createServerFn({
         where: {
           location_id: locationId,
           is_available_for_booking: true,
-          StaffSchedule: {
-            some: {
-              day_of_week: weekday,
+        },
+        include: {
+          StaffSchedule: true,
+          StaffSpecialAvailability: {
+            where: {
+              date: parseISO(date),
+              is_available: true,
             },
           },
         },
+
         orderBy: [{ index: "asc" }, { name: "asc" }],
       });
-      return staffs;
+      console.log("Available staffs:", JSON.stringify(staffs, null, 2));
+      return staffs.filter(
+        (
+          staff: Staff & {
+            StaffSchedule: StaffSchedule[];
+            StaffSpecialAvailability: StaffSpecialAvailability[];
+          }
+        ) => {
+          const isAvailableOnDay = staff.StaffSchedule.some(
+            (schedule) => schedule.day_of_week === weekday
+          );
+          if (staff.StaffSpecialAvailability.length > 0) {
+            const specialAvailability = staff.StaffSpecialAvailability[0];
+            if (!specialAvailability.is_available) {
+              return false;
+            }
+            if (
+              specialAvailability.start_time &&
+              specialAvailability.end_time
+            ) {
+              const startTime = new Date(specialAvailability.start_time);
+              const endTime = new Date(specialAvailability.end_time);
+              const selectedDate = new Date(date);
+              if (selectedDate >= startTime || selectedDate <= endTime) {
+                return true;
+              }
+            }
+          }
+          if (!isAvailableOnDay) {
+            return false;
+          }
+          return true;
+        }
+      );
     } catch (error) {
       throw new Error("Failed to fetch available staff members");
     }
