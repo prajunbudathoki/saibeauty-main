@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { uploadFileToS3 } from "./storage.action";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 
 export const getStaffsByLocation = createServerFn({
   method: "GET",
@@ -75,6 +76,7 @@ const createStaffSchema = zfd.formData({
 export const createStaff = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => createStaffSchema.parse(d))
   .handler(async ({ data }) => {
     const {
@@ -121,6 +123,7 @@ export const createStaff = createServerFn({
 export const updateStaff = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((input: { staffId: string; form: Record<string, any> }) => input)
   .handler(async ({ data: { staffId, form } }) => {
     const {
@@ -167,6 +170,7 @@ export const updateStaff = createServerFn({
 export const deleteStaff = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((staffId: string) => staffId)
   .handler(async ({ data: staffId }) => {
     try {

@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { zfd } from "zod-form-data";
 import { uploadFileToS3 } from "./storage.action";
 import { z } from "zod";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 
 export const getGalleryItems = createServerFn({
   method: "POST",
@@ -38,6 +39,7 @@ const createGalleryItemSchema = zfd.formData({
 export const createGalleryItem = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => createGalleryItemSchema.parse(d))
   .handler(async ({ data }) => {
     const { title, description, image } = data;
@@ -69,6 +71,7 @@ const updateGalleryItemSchema = zfd.formData({
 export const updateGalleryItem = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => updateGalleryItemSchema.parse(d))
   .handler(async ({ data }) => {
     const { id, title, description, image } = data;
@@ -93,6 +96,7 @@ export const updateGalleryItem = createServerFn({
 export const deleteGalleryItem = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((id: string) => id)
   .handler(async ({ data }) => {
     try {

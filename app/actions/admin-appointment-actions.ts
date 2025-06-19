@@ -1,9 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import prisma from "@/lib/prisma";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 
 export const getAppointments = createServerFn({
   method: "GET",
 })
+  .middleware([adminAuthMiddleware])
   .validator(
     (filters?: {
       startDate?: string;
@@ -65,6 +67,7 @@ export const getAppointments = createServerFn({
 export const getAppointmentById = createServerFn({
   method: "GET",
 })
+  .middleware([adminAuthMiddleware])
   .validator((id: string) => id)
   .handler(async ({ data }) => {
     try {
@@ -92,6 +95,7 @@ export const getAppointmentById = createServerFn({
 export const updateAppointmentStatus = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((input: { id: string; status: string }) => input)
   .handler(async ({ data: { id, status } }) => {
     try {
@@ -106,8 +110,6 @@ export const updateAppointmentStatus = createServerFn({
       if (!currentAppointment) {
         throw new Error("Appointment not found");
       }
-
-      // Allowed status values as per Prisma enum
       const allowedStatuses = [
         "pending",
         "confirmed",
@@ -141,6 +143,7 @@ export const updateAppointmentStatus = createServerFn({
 export const rescheduleAppointment = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator(
     (input: { id: string; startTime: string; endTime: string }) => input
   )
@@ -179,6 +182,7 @@ export const rescheduleAppointment = createServerFn({
 export const assignStaffToAppointment = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((input: { id: string; staffId: string }) => input)
   .handler(async ({ data: { id, staffId } }) => {
     try {
@@ -217,6 +221,7 @@ export const assignStaffToAppointment = createServerFn({
 export const deleteAppointment = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
     try {
@@ -246,86 +251,63 @@ export const deleteAppointment = createServerFn({
 
 export const getAppointmentStats = createServerFn({
   method: "GET",
-}).handler(async () => {
-  try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+})
+  .middleware([adminAuthMiddleware])
+  .handler(async () => {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const nextWeek = new Date(today);
-    nextWeek.setDate(nextWeek.getDate() + 7);
+      const nextWeek = new Date(today);
+      nextWeek.setDate(nextWeek.getDate() + 7);
 
-    const todayCount = await prisma.appointment.count({
-      where: {
-        start_time: {
-          gte: today,
-          lt: tomorrow,
+      const todayCount = await prisma.appointment.count({
+        where: {
+          start_time: {
+            gte: today,
+            lt: tomorrow,
+          },
         },
-      },
-    });
+      });
 
-    const upcomingCount = await prisma.appointment.count({
-      where: {
-        start_time: {
-          gte: today,
-          lt: nextWeek,
+      const upcomingCount = await prisma.appointment.count({
+        where: {
+          start_time: {
+            gte: today,
+            lt: nextWeek,
+          },
         },
-      },
-    });
+      });
 
-    const pendingCount = await prisma.appointment.count({
-      where: {
-        status: "pending",
-      },
-    });
+      const pendingCount = await prisma.appointment.count({
+        where: {
+          status: "pending",
+        },
+      });
 
-    const totalCount = await prisma.appointment.count();
+      const totalCount = await prisma.appointment.count();
 
-    return {
-      today: todayCount,
-      upcoming: upcomingCount,
-      pending: pendingCount,
-      total: totalCount,
-    };
-  } catch (error) {
-    throw new Error("Failed to fetch appointment stats");
-  }
-});
+      return {
+        today: todayCount,
+        upcoming: upcomingCount,
+        pending: pendingCount,
+        total: totalCount,
+      };
+    } catch (error) {
+      throw new Error("Failed to fetch appointment stats");
+    }
+  });
 
 export const getAdminDashboardData = createServerFn({
   method: "GET",
-}).handler(async () => {
-  try {
-    const [
-      locationCount,
-      categoryCount,
-      serviceCount,
-      galleryItemCount,
-      testimonialCount,
-      contactCount,
-      appointmentStats,
-      recentLocations,
-      recentContacts,
-      recentServices,
-      recentTestimonials,
-    ] = await Promise.all([
-      prisma.location.count(),
-      prisma.category.count(),
-      prisma.service.count(),
-      prisma.testimonial.count(),
-      prisma.contact.count(),
-      prisma.galleryItem.count(),
-      getAppointmentStats(),
-      prisma.location.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
-      prisma.contact.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
-      prisma.service.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
-      prisma.testimonial.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
-    ]);
-
-    return {
-      dashstats: {
+})
+  .middleware([adminAuthMiddleware])
+  .handler(async () => {
+    try {
+      const [
         locationCount,
         categoryCount,
         serviceCount,
@@ -333,15 +315,45 @@ export const getAdminDashboardData = createServerFn({
         testimonialCount,
         contactCount,
         appointmentStats,
-      },
-      dashrecents: {
         recentLocations,
         recentContacts,
         recentServices,
         recentTestimonials,
-      },
-    };
-  } catch (error) {
-    throw new Error("Failed to fetch dashboard data");
-  }
-});
+      ] = await Promise.all([
+        prisma.location.count(),
+        prisma.category.count(),
+        prisma.service.count(),
+        prisma.testimonial.count(),
+        prisma.contact.count(),
+        prisma.galleryItem.count(),
+        getAppointmentStats(),
+        prisma.location.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
+        prisma.contact.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
+        prisma.service.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
+        prisma.testimonial.findMany({
+          orderBy: { created_at: "desc" },
+          take: 3,
+        }),
+      ]);
+
+      return {
+        dashstats: {
+          locationCount,
+          categoryCount,
+          serviceCount,
+          galleryItemCount,
+          testimonialCount,
+          contactCount,
+          appointmentStats,
+        },
+        dashrecents: {
+          recentLocations,
+          recentContacts,
+          recentServices,
+          recentTestimonials,
+        },
+      };
+    } catch (error) {
+      throw new Error("Failed to fetch dashboard data");
+    }
+  });

@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { zfd } from "zod-form-data";
 import { uploadFileToS3 } from "./storage.action";
 import { z } from "zod";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 
 export const getLocations = createServerFn({
   method: "GET",
@@ -46,6 +47,7 @@ const createLocationSchema = zfd.formData({
 export const createLocation = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => createLocationSchema.parse(d))
   .handler(async ({ data }) => {
     const {
@@ -115,6 +117,7 @@ const updateLocationSchema = zfd.formData({
 export const updateLocation = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => updateLocationSchema.parse(d))
   .handler(async ({ data }) => {
     const {
@@ -174,6 +177,7 @@ export const updateLocation = createServerFn({
 export const deleteLocation = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
     try {

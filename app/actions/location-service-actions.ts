@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getLocationServices = createServerFn({
@@ -30,12 +31,9 @@ export const getLocationServices = createServerFn({
 export const addServiceToLocation = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: { formData: FormData }) => d)
   .handler(async ({ data }) => {
-    // if (!location_id || !service_id) {
-    //   throw new Error("Location ID and Service ID are required");
-    // }
-
     const existingService = await prisma.locationService.findFirst({
       where: {
         location_id: data.formData.get("location_id") as string,
@@ -73,6 +71,7 @@ export const addServiceToLocation = createServerFn({
 export const updateLocationService = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((input: { id: string; form: Record<string, any> }) => input)
   .handler(async ({ data: { id, form } }) => {
     const { location_id, price } = form;
@@ -105,6 +104,7 @@ export const updateLocationService = createServerFn({
 export const removeServiceFromLocation = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((input: { id: string; locationId: string }) => input)
   .handler(async ({ data: { id, locationId } }) => {
     try {

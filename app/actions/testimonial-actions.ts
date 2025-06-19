@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { createServerFn } from "@tanstack/react-start";
 import { zfd } from "zod-form-data";
 import { uploadFileToS3 } from "./storage.action";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 
 export const getTestimonials = createServerFn({
   method: "GET",
@@ -39,13 +40,10 @@ const createTestimonialSchema = zfd.formData({
 export const createTestimonial = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => createTestimonialSchema.parse(d))
   .handler(async ({ data }) => {
     const { name, designation, rating, review, image } = data;
-    // const { data: session } = await authClient.getSession();
-    // if (session?.user.role !== "admin") {
-    //   throw new Error("Role doesnot have access");
-    // }
     try {
       const path = await uploadFileToS3(image, "testimonials");
       return await prisma.testimonial.create({
@@ -74,17 +72,10 @@ const updateTestimonialSchema = zfd.formData({
 export const updateTestimonial = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => updateTestimonialSchema.parse(d))
   .handler(async ({ data }) => {
     const { name, id, rating, review, designation } = data;
-    // const { data: session } = await authClient.getSession();
-    // if (session?.user.role !== "admin") {
-    //   throw new Error("User is not an admin");
-    // }
-
-    // if (!name || !review || Number.isNaN(rating) || rating < 1 || rating > 5) {
-    //   throw new Error("Required fields are missing or invalid");
-    // }
 
     try {
       const updated = await prisma.testimonial.update({
@@ -106,13 +97,10 @@ export const updateTestimonial = createServerFn({
   });
 
 export const deleteTestimonial = createServerFn()
+  .middleware([adminAuthMiddleware])
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
     try {
-      // const { data: session } = await authClient.getSession();
-      // if (session?.user.role !== "admin") {
-      //   throw new Error("Role doesnot have access");
-      // }
       return await prisma.testimonial.delete({
         where: { id },
       });

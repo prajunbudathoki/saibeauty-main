@@ -107,6 +107,7 @@ const updateServiceSchema = zfd.formData({
 export const updateService = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => updateServiceSchema.parse(d))
   .handler(async ({ data }) => {
     const { id, image, index, name, price, description, duration } = data;
@@ -136,14 +137,10 @@ export const updateService = createServerFn({
   });
 
 export const deleteService = createServerFn()
+  .middleware([adminAuthMiddleware])
   .validator((id: string) => id)
   .handler(async ({ data }) => {
     try {
-      // const { data: session, error } = await authClient.getSession();
-      // if (session?.user.role !== "admin") {
-      //   throw new Error("Role doesnot have access");
-      // }
-
       return await prisma.service.delete({
         where: {
           id: data,

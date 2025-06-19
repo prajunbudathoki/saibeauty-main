@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getStaffSchedules = createServerFn({
@@ -23,11 +24,12 @@ export const getStaffSchedules = createServerFn({
 export const createStaffSchedule = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((form: any) => form)
   .handler(async ({ data: formData }) => {
     const staff_id = formData.get("staff_id") as string;
     const location_id = formData.get("location_id") as string;
-    const day_of_week = Number(formData.get("day_of_week")); 
+    const day_of_week = Number(formData.get("day_of_week"));
     const start_time = formData.get("start_time") as string;
     const end_time = formData.get("end_time") as string;
     const is_available =
@@ -77,6 +79,7 @@ export const createStaffSchedule = createServerFn({
 export const updateStaffSchedule = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((input: { id: string; form: Record<string, any> }) => input)
   .handler(async ({ data: { id, form } }) => {
     const {
@@ -114,6 +117,7 @@ export const updateStaffSchedule = createServerFn({
   });
 
 export const deleteStaffSchedule = createServerFn()
+  .middleware([adminAuthMiddleware])
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
     try {

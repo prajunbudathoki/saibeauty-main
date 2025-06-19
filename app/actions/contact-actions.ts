@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { adminAuthMiddleware } from "@/middleware/admin-middleware";
 import { createServerFn } from "@tanstack/react-start";
 import { formData, zfd } from "zod-form-data";
 
@@ -12,6 +13,7 @@ const createContactSchema = zfd.formData({
 export const createContact = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((d: FormData) => createContactSchema.parse(d))
   .handler(async ({ data }) => {
     const { name, email, message, phone } = data;
@@ -37,6 +39,7 @@ export const createContact = createServerFn({
 export const deleteContact = createServerFn({
   method: "POST",
 })
+  .middleware([adminAuthMiddleware])
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
     try {
