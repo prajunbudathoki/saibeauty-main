@@ -21,7 +21,7 @@ function RouteComponent() {
           <img
             src="/services.jpg?height=800&width=1920"
             alt="Background pattern"
-            className="object-cover"
+            className="object-cover w-full h-full"
           />
         </div>
         <div className="container relative z-10">
