@@ -30,7 +30,7 @@ function RouteComponent() {
 
   useEffect(() => {
     if (!session?.user) {
-      navigate({ to: "/auth/login" });
+      navigate({ to: "/auth/login" ,replace: true});
     }
   }, [session, navigate]);
 
