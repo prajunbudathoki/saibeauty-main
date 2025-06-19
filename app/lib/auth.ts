@@ -3,7 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@/generated/prisma";
 import { admin, role } from "better-auth/plugins";
 import { createTransport } from "nodemailer";
-import Mail from "nodemailer/lib/mailer";
+import type Mail from "nodemailer/lib/mailer";
 
 const prisma = new PrismaClient();
 

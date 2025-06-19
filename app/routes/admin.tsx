@@ -1,5 +1,7 @@
+import { NotFound } from "@/components/not-found";
 import { AdminHeader } from "@/components/shared/admin-header";
 import { AdminSidebar } from "@/components/shared/admin-sidebar";
+import { useSession } from "@/lib/auth-client";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin")({
@@ -7,6 +9,16 @@ export const Route = createFileRoute("/admin")({
 });
 
 function RouteComponent() {
+  const { data: session } = useSession();
+  if (!session) {
+    return;
+  }
+  if (
+    !session.user ||
+    !["admin", "superadmin"].includes(session.user.role ?? "")
+  ) {
+    return <NotFound />;
+  }
   return (
     <>
       <div className="flex min-h-screen">
