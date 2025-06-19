@@ -14,6 +14,13 @@ import {
 } from "../ui/table";
 import { formatPrice } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { min } from "date-fns";
+
+function minToHourMinute(duration: number): string {
+  const hours = Math.floor(duration / 60);
+  const minutes = duration % 60;
+  return `${hours > 0 ? `${hours}h ` : ""}${minutes}m`;
+}
 
 export function ServicesTabs({ locations }) {
   const [activeLocation, setActiveLocation] = useState<string>(
@@ -97,7 +104,7 @@ export function ServicesTabs({ locations }) {
     >
       <div className="mb-8 border-b">
         <TabsList className="h-auto p-0 bg-transparent flex flex-nowrap overflow-x-auto">
-          {locations.map((location) => (
+          {locations.map((location: any) => (
             <TabsTrigger
               key={location.id}
               value={location.id}
@@ -182,6 +189,9 @@ export function ServicesTabs({ locations }) {
                                           locationService.service
                                             ?.duration}{" "}
                                         min
+                                        {minToHourMinute(
+                                          locationService.duration || 0
+                                        )}
                                       </TableCell>
                                       <TableCell className="w-[20%]">
                                         {locationService.price !== null
