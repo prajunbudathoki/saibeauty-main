@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-router";
 import appCss from "@/styles/app.css?url";
 import { Toaster } from "@/components/ui/sonner";
-
+import { NotFound } from "@/components/not-found";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -32,6 +32,9 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
+  notFoundComponent: () => {
+    return <NotFound />;
+  },
 });
 
 function RootComponent() {
