@@ -14,12 +14,12 @@ import {
 } from "../ui/table";
 import { formatPrice } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { min } from "date-fns";
 
 function minToHourMinute(duration: number): string {
   const hours = Math.floor(duration / 60);
   const minutes = duration % 60;
-  return `${hours > 0 ? `${hours}h ` : ""}${minutes}m`;
+  // return `${hours > 0 ? `${hours}h ` : ""}${minutes}m`;
+  return `${hours > 0 ? `${hours}hr ` : ""}${minutes > 0 ? `${minutes}min` : ""}`;
 }
 
 export function ServicesTabs({ locations }) {

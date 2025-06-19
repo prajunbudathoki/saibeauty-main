@@ -36,7 +36,7 @@ export function LocationContactCard({ location }) {
                   <p className="font-medium text-sm mb-1">Phone</p>
                   <a
                     href={`tel:${location.phone}`}
-                    className="text-muted-foreground text-sm hover:text-primary transition-colors"
+                    className="text-muted-foreground text-sm mr-2 hover:text-primary transition-colors"
                   >
                     {location.phone}
                   </a>
@@ -51,7 +51,7 @@ export function LocationContactCard({ location }) {
                   <p className="font-medium text-sm mb-1">Email</p>
                   <a
                     href={`mailto:${location.email}`}
-                    className="text-muted-foreground text-sm hover:text-primary transition-colors"
+                    className="text-muted-foreground text-sm hover:text-primary mr-2 transition-colors"
                   >
                     {location.email}
                   </a>

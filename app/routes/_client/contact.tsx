@@ -69,7 +69,7 @@ function RouteComponent() {
           <div className="aspect-[21/9] w-full rounded-xl overflow-hidden border shadow-sm">
             <iframe
               title="as"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387193.30596552044!2d-74.25986548248684!3d40.69714941932609!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sca!4v1648482801994!5m2!1sen!2sca"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3612.923662592041!2d55.3734774!3d25.104445299999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f65a820117963%3A0x8dbf8764aa9095fe!2sSai%20Beauty%20Salon%20Liwan!5e0!3m2!1sne!2snp!4v1749030148579!5m2!1sne!2snp"
               width="100%"
               height="100%"
               style={{ border: 0 }}
