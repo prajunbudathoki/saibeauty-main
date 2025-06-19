@@ -51,12 +51,12 @@ function RouteComponent() {
             <img
               src="/saibeauty1.png"
               alt="Sai Beauty"
-              className="h-10 hidden md:block object-contain"
+              className="h-13 hidden md:block object-cover absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:translate-x-0 md:translate-y-0 md:left-0 md:top-0 md:h-full md:w-auto"
             />
             <img
               src="/saibeauty2.png"
               alt="Sai Beauty"
-              className="h-10 md:hidden object-contain"
+              className="h-13 md:hidden object-contain absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:translate-x-0 md:translate-y-0 md:left-0 md:top-0 md:h-full md:w-auto"
             />
           </Link>
 
