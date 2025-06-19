@@ -282,7 +282,6 @@ export const getAppointmentStats = createServerFn({
     });
 
     const totalCount = await prisma.appointment.count();
-    console.log(totalCount);
 
     return {
       today: todayCount,

@@ -30,6 +30,7 @@ export const Route = createFileRoute("/admin/")({
 
 function RouteComponent() {
   const { dashstats, dashrecents } = Route.useLoaderData();
+  console.log(dashstats)
   return (
     <div className="min-h-screen pb-8">
       <AdminHeader title="Dashboard" />
@@ -38,7 +39,11 @@ function RouteComponent() {
         <Suspense fallback={<StatsLoading />}>
           <DashboardStats
             galleryCount={dashstats.galleryItemCount}
-            {...dashstats}
+            categoryCount={dashstats.categoryCount}
+            contactCount={dashstats.contactCount}
+            locationCount={dashstats.locationCount}
+            testimonialCount={dashstats.testimonialCount}
+            serviceCount={dashstats.serviceCount}
             appointmentStats={dashstats.appointmentStats}
           />
         </Suspense>

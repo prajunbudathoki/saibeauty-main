@@ -14,12 +14,14 @@ const transporter = createTransport({
   auth: { user: "user", pass: "pass" },
 });
 
-async function sendEmail(options: Mail) {
+export async function sendEmail(options: Mail) {
   return await transporter.sendMail({
     from: '"Sai Beauty Salon" <noreply@saibeauty.com>',
     ...options,
   });
 }
+
+
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
