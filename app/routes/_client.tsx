@@ -31,7 +31,7 @@ function RouteComponent() {
             <a href="tel:+971508471241" className="hover:text-gray-500">
               <span className="hidden md:inline">Call us: </span>
               <span className="md:hidden">📞</span>
-              +971 50 847 1241
+              +971 50 916 7521
             </a>
           </p>
         </div>
@@ -214,7 +214,7 @@ function RouteComponent() {
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <address className="not-italic text-muted-foreground space-y-2">
               <p>Email: info@saibeauty.com</p>
-              <p>Phone: +971 50 847 1241</p>
+              <p>Phone: +971 50 916 7521</p>
             </address>
             <div className="flex space-x-4 mt-4">
               <a
