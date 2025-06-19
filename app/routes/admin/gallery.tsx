@@ -9,13 +9,13 @@ import { Plus } from "lucide-react";
 export const Route = createFileRoute("/admin/gallery")({
   component: RouteComponent,
   loader: async () => {
-    const gallery = await getGalleryItems();
-    return gallery;
+    const galleryItems = await getGalleryItems();
+    return { galleryItems };
   },
 });
 
 function RouteComponent() {
-  const galleryItems = Route.useLoaderData();
+  const { galleryItems } = Route.useLoaderData();
   return (
     <div>
       <AdminHeader title="Gallery" />

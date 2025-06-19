@@ -61,11 +61,15 @@ export function AppointmentListWithFilters({ locations }) {
   const [loading, setLoading] = useState(true);
 
   // Initial fetch of appointments
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     fetchAppointments();
+    console.log("Appointment sample:", appointments[0]);
+    console.log("start_time type:", typeof appointments[0]?.start_time);
   }, []);
 
   // Fetch staff for selected location
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     async function fetchStaffForLocation() {
       if (!locationId || locationId === "all") {
@@ -77,14 +81,17 @@ export function AppointmentListWithFilters({ locations }) {
       setLoadingStaff(true);
       try {
         const staff = await getAvailableStaffByLocation({ data: locationId });
-        const normalizedStaff = staff.map((s: any) => ({
-          ...s,
-          created_at:
-            typeof s.created_at === "string"
-              ? s.created_at
-              : s.created_at.toISOString(),
+        const normalizedAppointments = appointments.map((a) => ({
+          ...a,
+          start_time:
+            a.start_time instanceof Date
+              ? a.start_time.toISOString()
+              : a.start_time,
+          end_time:
+            a.end_time instanceof Date ? a.end_time.toISOString() : a.end_time,
         }));
-        setLocationStaff(normalizedStaff);
+
+        setLocationStaff(normalizedAppointments);
         setStaffId("");
       } catch (error) {
         console.error("Error fetching staff for location:", error);
@@ -105,8 +112,8 @@ export function AppointmentListWithFilters({ locations }) {
       let startDate, endDate;
 
       if (date) {
-        startDate = startOfDay(date).toISOString();
-        endDate = endOfDay(date).toISOString();
+        startDate = startOfDay(date);
+        endDate = endOfDay(date);
       }
 
       const filters = {
@@ -315,18 +322,13 @@ export function AppointmentListWithFilters({ locations }) {
                     <div className="flex flex-col">
                       <div className="flex items-center">
                         <CalendarIcon className="h-4 w-4 mr-1 text-muted-foreground" />
-                        <span>
-                          {format(
-                            parseISO(appointment.start_time),
-                            "MMM d, yyyy"
-                          )}
-                        </span>
+                        <span>{format(appointment.start_time, "h:mm a")}</span>
                       </div>
                       <div className="flex items-center text-muted-foreground text-sm">
                         <Clock className="h-3 w-3 mr-1" />
                         <span>
-                          {format(parseISO(appointment.start_time), "h:mm a")} -
-                          {format(parseISO(appointment.end_time), "h:mm a")}
+                          {format(appointment.start_time, "h:mm a")} -
+                          {format(appointment.end_time, "h:mm a")}
                         </span>
                       </div>
                     </div>
@@ -364,7 +366,10 @@ export function AppointmentListWithFilters({ locations }) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
-                          <Link to="/admin/appointments/$id" params={{ id: appointment.id }}>
+                          <Link
+                            to="/admin/appointments/$id"
+                            params={{ id: appointment.id }}
+                          >
                             <Eye className="h-4 w-4 mr-2" />
                             View Details
                           </Link>

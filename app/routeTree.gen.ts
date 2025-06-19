@@ -21,7 +21,7 @@ import { Route as AuthSignupImport } from './routes/auth/signup'
 import { Route as AuthLoginImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordImport } from './routes/auth/forgot-password'
 import { Route as AdminUsersImport } from './routes/admin/users'
-import { Route as AdminTestimonialImport } from './routes/admin/testimonial'
+import { Route as AdminTestimonialsImport } from './routes/admin/testimonials'
 import { Route as AdminServicesImport } from './routes/admin/services'
 import { Route as AdminGalleryImport } from './routes/admin/gallery'
 import { Route as ClientTeamImport } from './routes/_client/team'
@@ -107,9 +107,9 @@ const AdminUsersRoute = AdminUsersImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminTestimonialRoute = AdminTestimonialImport.update({
-  id: '/testimonial',
-  path: '/testimonial',
+const AdminTestimonialsRoute = AdminTestimonialsImport.update({
+  id: '/testimonials',
+  path: '/testimonials',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -333,11 +333,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminServicesImport
       parentRoute: typeof AdminImport
     }
-    '/admin/testimonial': {
-      id: '/admin/testimonial'
-      path: '/testimonial'
-      fullPath: '/admin/testimonial'
-      preLoaderRoute: typeof AdminTestimonialImport
+    '/admin/testimonials': {
+      id: '/admin/testimonials'
+      path: '/testimonials'
+      fullPath: '/admin/testimonials'
+      preLoaderRoute: typeof AdminTestimonialsImport
       parentRoute: typeof AdminImport
     }
     '/admin/users': {
@@ -562,7 +562,7 @@ const AdminLocationsIdRouteWithChildren =
 interface AdminRouteChildren {
   AdminGalleryRoute: typeof AdminGalleryRoute
   AdminServicesRoute: typeof AdminServicesRoute
-  AdminTestimonialRoute: typeof AdminTestimonialRoute
+  AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminAppointmentsIdRoute: typeof AdminAppointmentsIdRoute
@@ -576,7 +576,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminGalleryRoute: AdminGalleryRoute,
   AdminServicesRoute: AdminServicesRoute,
-  AdminTestimonialRoute: AdminTestimonialRoute,
+  AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminAppointmentsIdRoute: AdminAppointmentsIdRoute,
@@ -616,7 +616,7 @@ export interface FileRoutesByFullPath {
   '/team': typeof ClientTeamRoute
   '/admin/gallery': typeof AdminGalleryRoute
   '/admin/services': typeof AdminServicesRoute
-  '/admin/testimonial': typeof AdminTestimonialRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -651,7 +651,7 @@ export interface FileRoutesByTo {
   '/team': typeof ClientTeamRoute
   '/admin/gallery': typeof AdminGalleryRoute
   '/admin/services': typeof AdminServicesRoute
-  '/admin/testimonial': typeof AdminTestimonialRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -689,7 +689,7 @@ export interface FileRoutesById {
   '/_client/team': typeof ClientTeamRoute
   '/admin/gallery': typeof AdminGalleryRoute
   '/admin/services': typeof AdminServicesRoute
-  '/admin/testimonial': typeof AdminTestimonialRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -728,7 +728,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/admin/gallery'
     | '/admin/services'
-    | '/admin/testimonial'
+    | '/admin/testimonials'
     | '/admin/users'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -762,7 +762,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/admin/gallery'
     | '/admin/services'
-    | '/admin/testimonial'
+    | '/admin/testimonials'
     | '/admin/users'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -798,7 +798,7 @@ export interface FileRouteTypes {
     | '/_client/team'
     | '/admin/gallery'
     | '/admin/services'
-    | '/admin/testimonial'
+    | '/admin/testimonials'
     | '/admin/users'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -873,7 +873,7 @@ export const routeTree = rootRoute
       "children": [
         "/admin/gallery",
         "/admin/services",
-        "/admin/testimonial",
+        "/admin/testimonials",
         "/admin/users",
         "/admin/",
         "/admin/appointments/$id",
@@ -921,8 +921,8 @@ export const routeTree = rootRoute
       "filePath": "admin/services.tsx",
       "parent": "/admin"
     },
-    "/admin/testimonial": {
-      "filePath": "admin/testimonial.tsx",
+    "/admin/testimonials": {
+      "filePath": "admin/testimonials.tsx",
       "parent": "/admin"
     },
     "/admin/users": {

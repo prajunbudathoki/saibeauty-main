@@ -54,6 +54,7 @@ export const getAppointments = createServerFn({
           staff: { select: { name: true } },
         },
       });
+      console.log("Fetched appointments:", appointments);
 
       return appointments;
     } catch (error) {
@@ -106,10 +107,18 @@ export const updateAppointmentStatus = createServerFn({
         throw new Error("Appointment not found");
       }
 
+      // Allowed status values as per Prisma enum
+      const allowedStatuses = ["pending", "confirmed", "cancelled", "completed", "no_show"] as const;
+      type AppointmentStatus = typeof allowedStatuses[number];
+
+      if (!allowedStatuses.includes(status as AppointmentStatus)) {
+        throw new Error("Invalid status value");
+      }
+
       const updatedAppointment = await prisma.appointment.update({
         where: { id },
         data: {
-          status,
+          status: status as AppointmentStatus,
           updated_at: new Date(),
         },
         include: {

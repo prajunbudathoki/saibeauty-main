@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 
-export const Route = createFileRoute("/admin/testimonial")({
+export const Route = createFileRoute("/admin/testimonials")({
   component: RouteComponent,
   loader: async () => {
     return {
