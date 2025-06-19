@@ -24,9 +24,8 @@ import { Suspense } from "react";
 export const Route = createFileRoute("/admin/")({
   component: RouteComponent,
   loader: async () => {
-    return await getAdminDashboardData()
+    return await getAdminDashboardData();
   },
-
 });
 
 function RouteComponent() {
@@ -38,6 +37,7 @@ function RouteComponent() {
       <div className="container py-6 space-y-6">
         <Suspense fallback={<StatsLoading />}>
           <DashboardStats
+            galleryCount={dashstats.galleryItemCount}
             {...dashstats}
             appointmentStats={dashstats.appointmentStats}
           />

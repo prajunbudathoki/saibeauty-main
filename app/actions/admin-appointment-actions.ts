@@ -108,8 +108,14 @@ export const updateAppointmentStatus = createServerFn({
       }
 
       // Allowed status values as per Prisma enum
-      const allowedStatuses = ["pending", "confirmed", "cancelled", "completed", "no_show"] as const;
-      type AppointmentStatus = typeof allowedStatuses[number];
+      const allowedStatuses = [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed",
+        "no_show",
+      ] as const;
+      type AppointmentStatus = (typeof allowedStatuses)[number];
 
       if (!allowedStatuses.includes(status as AppointmentStatus)) {
         throw new Error("Invalid status value");
@@ -276,6 +282,7 @@ export const getAppointmentStats = createServerFn({
     });
 
     const totalCount = await prisma.appointment.count();
+    console.log(totalCount);
 
     return {
       today: todayCount,
@@ -296,6 +303,7 @@ export const getAdminDashboardData = createServerFn({
       locationCount,
       categoryCount,
       serviceCount,
+      galleryItemCount,
       testimonialCount,
       contactCount,
       appointmentStats,
@@ -309,6 +317,7 @@ export const getAdminDashboardData = createServerFn({
       prisma.service.count(),
       prisma.testimonial.count(),
       prisma.contact.count(),
+      prisma.galleryItem.count(),
       getAppointmentStats(),
       prisma.location.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
       prisma.contact.findMany({ orderBy: { created_at: "desc" }, take: 3 }),
@@ -321,6 +330,7 @@ export const getAdminDashboardData = createServerFn({
         locationCount,
         categoryCount,
         serviceCount,
+        galleryItemCount,
         testimonialCount,
         contactCount,
         appointmentStats,
