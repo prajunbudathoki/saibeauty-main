@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { authClient, useSession } from "@/lib/auth-client";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { EyeIcon, EyeOffIcon, MailIcon, PhoneIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -17,10 +17,11 @@ export const Route = createFileRoute("/_client/profile/user-info")({
 
 function RouteComponent() {
   const { data: session } = useSession();
+  const navigate = useNavigate();
 
-  //   if (!session) {
-  //   return null;
-  // }
+  if (!session) {
+    navigate({ to: "/" });
+  }
 
   const isVerified = session?.user.emailVerified;
 

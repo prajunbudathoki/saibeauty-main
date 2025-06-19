@@ -36,7 +36,6 @@ import { Route as AdminLocationsIdImport } from './routes/admin/locations/$id'
 import { Route as AdminCategoriesIdImport } from './routes/admin/categories/$id'
 import { Route as AdminAppointmentsIdImport } from './routes/admin/appointments/$id'
 import { Route as ClientProfileUserInfoImport } from './routes/_client/profile/user-info'
-import { Route as ClientProfileUserAppointmentsImport } from './routes/_client/profile/user-appointments'
 import { Route as ClientProfileMyBookingsIndexImport } from './routes/_client/profile/my-bookings/index'
 import { Route as ClientProfileBookingIndexImport } from './routes/_client/profile/booking/index'
 import { Route as AdminLocationsIdStaffsIndexImport } from './routes/admin/locations/$id/staffs/index'
@@ -196,13 +195,6 @@ const ClientProfileUserInfoRoute = ClientProfileUserInfoImport.update({
   path: '/profile/user-info',
   getParentRoute: () => ClientRoute,
 } as any)
-
-const ClientProfileUserAppointmentsRoute =
-  ClientProfileUserAppointmentsImport.update({
-    id: '/profile/user-appointments',
-    path: '/profile/user-appointments',
-    getParentRoute: () => ClientRoute,
-  } as any)
 
 const ClientProfileMyBookingsIndexRoute =
   ClientProfileMyBookingsIndexImport.update({
@@ -389,13 +381,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexImport
       parentRoute: typeof AdminImport
     }
-    '/_client/profile/user-appointments': {
-      id: '/_client/profile/user-appointments'
-      path: '/profile/user-appointments'
-      fullPath: '/profile/user-appointments'
-      preLoaderRoute: typeof ClientProfileUserAppointmentsImport
-      parentRoute: typeof ClientImport
-    }
     '/_client/profile/user-info': {
       id: '/_client/profile/user-info'
       path: '/profile/user-info'
@@ -513,7 +498,6 @@ interface ClientRouteChildren {
   ClientServicesRoute: typeof ClientServicesRoute
   ClientTeamRoute: typeof ClientTeamRoute
   ClientIndexRoute: typeof ClientIndexRoute
-  ClientProfileUserAppointmentsRoute: typeof ClientProfileUserAppointmentsRoute
   ClientProfileUserInfoRoute: typeof ClientProfileUserInfoRoute
   ClientProfileBookingIndexRoute: typeof ClientProfileBookingIndexRoute
   ClientProfileMyBookingsIndexRoute: typeof ClientProfileMyBookingsIndexRoute
@@ -527,7 +511,6 @@ const ClientRouteChildren: ClientRouteChildren = {
   ClientServicesRoute: ClientServicesRoute,
   ClientTeamRoute: ClientTeamRoute,
   ClientIndexRoute: ClientIndexRoute,
-  ClientProfileUserAppointmentsRoute: ClientProfileUserAppointmentsRoute,
   ClientProfileUserInfoRoute: ClientProfileUserInfoRoute,
   ClientProfileBookingIndexRoute: ClientProfileBookingIndexRoute,
   ClientProfileMyBookingsIndexRoute: ClientProfileMyBookingsIndexRoute,
@@ -624,7 +607,6 @@ export interface FileRoutesByFullPath {
   '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/': typeof ClientIndexRoute
   '/admin/': typeof AdminIndexRoute
-  '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
   '/admin/appointments/$id': typeof AdminAppointmentsIdRoute
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
@@ -659,7 +641,6 @@ export interface FileRoutesByTo {
   '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/': typeof ClientIndexRoute
   '/admin': typeof AdminIndexRoute
-  '/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/profile/user-info': typeof ClientProfileUserInfoRoute
   '/admin/appointments/$id': typeof AdminAppointmentsIdRoute
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
@@ -697,7 +678,6 @@ export interface FileRoutesById {
   '/auth/update-password': typeof AuthUpdatePasswordRoute
   '/_client/': typeof ClientIndexRoute
   '/admin/': typeof AdminIndexRoute
-  '/_client/profile/user-appointments': typeof ClientProfileUserAppointmentsRoute
   '/_client/profile/user-info': typeof ClientProfileUserInfoRoute
   '/admin/appointments/$id': typeof AdminAppointmentsIdRoute
   '/admin/categories/$id': typeof AdminCategoriesIdRoute
@@ -736,7 +716,6 @@ export interface FileRouteTypes {
     | '/auth/update-password'
     | '/'
     | '/admin/'
-    | '/profile/user-appointments'
     | '/profile/user-info'
     | '/admin/appointments/$id'
     | '/admin/categories/$id'
@@ -770,7 +749,6 @@ export interface FileRouteTypes {
     | '/auth/update-password'
     | '/'
     | '/admin'
-    | '/profile/user-appointments'
     | '/profile/user-info'
     | '/admin/appointments/$id'
     | '/admin/categories/$id'
@@ -806,7 +784,6 @@ export interface FileRouteTypes {
     | '/auth/update-password'
     | '/_client/'
     | '/admin/'
-    | '/_client/profile/user-appointments'
     | '/_client/profile/user-info'
     | '/admin/appointments/$id'
     | '/admin/categories/$id'
@@ -861,7 +838,6 @@ export const routeTree = rootRoute
         "/_client/services",
         "/_client/team",
         "/_client/",
-        "/_client/profile/user-appointments",
         "/_client/profile/user-info",
         "/_client/profile/booking/",
         "/_client/profile/my-bookings/",
@@ -952,10 +928,6 @@ export const routeTree = rootRoute
     "/admin/": {
       "filePath": "admin/index.tsx",
       "parent": "/admin"
-    },
-    "/_client/profile/user-appointments": {
-      "filePath": "_client/profile/user-appointments.tsx",
-      "parent": "/_client"
     },
     "/_client/profile/user-info": {
       "filePath": "_client/profile/user-info.tsx",

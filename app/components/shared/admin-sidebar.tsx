@@ -37,7 +37,7 @@ export function AdminSidebar() {
     const fetchSession = async () => {
       const { data } = await authClient.getSession();
       if (data?.session?.token) {
-        setRole(data?.user?.role ?? "user");
+        setRole(data?.user?.role ?? "admin");
       }
     };
     fetchSession();
@@ -61,7 +61,7 @@ export function AdminSidebar() {
   }, []);
 
   const adminLinks: SidebarItem[] =
-    role === "user"
+    role === "superadmin"
       ? [
           {
             title: "Users",

@@ -35,12 +35,7 @@ export function UserSidebar() {
       title: "Profile",
       href: "/profile/user-info",
       icon: <User className="h-5 w-5" />,
-    },
-    {
-      title: "My Appointments",
-      href: "/profile/user-appointments",
-      icon: <Calendar className="h-5 w-5" />,
-    },
+    }
   ];
 
   const toggleMobileSidebar = () => setMobileOpen(!mobileOpen);
